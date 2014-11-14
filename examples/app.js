@@ -18,9 +18,10 @@ jQuery(function($) {
     state: {
       height: 400,
       width: 400,
+      graphType: "multiBarChart",
       // Label field.
       xfield: "country",
-      yfield: "z",
+      seriesFields: {x: "y", y: "x"},
       group: true
     }
   });
@@ -33,6 +34,9 @@ function createDemoDataset() {
   var dataset = new recline.Model.Dataset({
     records: [
       {id: 0, date: '2011-01-01', x: 1, y: 2, z: 3, country: 'DE', title: 'first', lat:52.56, lon:13.40},
+      {id: 10, date: '2011-08-01', x: 12, y: 4, z: 24, country: 'US', title: 'second', lat:54.97, lon:-1.60},
+
+
       {id: 1, date: '2011-02-02', x: 2, y: 4, z: 24, country: 'UK', title: 'second', lat:54.97, lon:-1.60},
       {id: 2, date: '2011-03-03', x: 3, y: 6, z: 9, country: 'US', title: 'third', lat:40.00, lon:-75.5},
       {id: 3, date: '2011-04-04', x: 4, y: 8, z: 6, country: 'UK', title: 'fourth', lat:57.27, lon:-6.20},
