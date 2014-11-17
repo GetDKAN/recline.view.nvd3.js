@@ -61,9 +61,7 @@ my.nvd3 = Backbone.View.extend({
         var graphType = options.graphType;
         var requiredFields = [];
         switch(graphType) {
-            case "historicalBar":
             case "multiBarChart": 
-            case "multiBarWithBrushChart":
             case "multiBarHorizontalChart":
                 requiredFields = ['xfield', 'seriesFields']
                 break;
@@ -105,11 +103,10 @@ my.nvd3 = Backbone.View.extend({
     
         var htmls = Mustache.render(this.template, tmplData);
         $(this.el).html(htmls);
-//            this.$graph = this.el.find('.panel.nvd3graph_' + tmplData["viewId"]);
+        this.$graph = this.el.find('.panel.nvd3graph_' + tmplData["viewId"]);
         self.trigger("chart:endDrawing");
 
         var records = this.model.records.models;
-
 
         var graphType = self.state.attributes.graphType;
         var data = this.createSeries(graphType, records);
@@ -121,10 +118,9 @@ my.nvd3 = Backbone.View.extend({
             self.chart.width(self.state.attributes.width);
 
             var svgElem = self.el.find('#nvd3chart_' + self.uid + ' svg')
-            var graphModel = self.getGraphModel(self, graphType)
-            if (typeof graphModel == "undefined")
-                throw "NVD3 Graph type " + graphType + " not found!"
+            console.log(graphType);
 
+           
             d3.select("#nvd3chart_" + self.uid + " svg")
                 .datum(data)
                 .transition().duration(1200)
@@ -133,6 +129,23 @@ my.nvd3 = Backbone.View.extend({
        
         return this;
     },
+        getActionsForEvent:function (eventType) {
+            var actions = [];
+
+            _.each(this.options.actions, function (d) {
+                if (_.contains(d.event, eventType))
+                    actions.push(d);
+            });
+
+            return actions;
+        },
+        doActions:function (actions, records) {
+
+            _.each(actions, function (d) {
+                d.action.doAction(records, d.mapping);
+            });
+
+        },
         redraw:function () {
             console.log("redraw");
             var self = this;
@@ -155,7 +168,6 @@ my.nvd3 = Backbone.View.extend({
             if ($("div.noData", this.el).length)
                 self.render(); // remove previous noData frame
 
-            console.log('sdddasdddddd');    
                 
             var svgElem = this.el.find('#nvd3chart_' + self.uid+ ' svg') 
             svgElem.css("display", "block")
@@ -175,7 +187,6 @@ my.nvd3 = Backbone.View.extend({
             // Create Series
 
             self.series =  results;
-            console.log(results);
                             
             var totalValues = 0;
             if (results)
@@ -197,40 +208,71 @@ my.nvd3 = Backbone.View.extend({
     createSeries: function(graphType, records) {
         var self = this;
         var results = [];
-        console.log(graphType);    
         switch(graphType) {
-            case "historicalBar":
             case "multiBarChart": 
             case "multiBarWithBrushChart":
             case "multiBarHorizontalChart":
                 var xfield = self.state.attributes.xfield.toLowerCase();
-                var seriesX = self.state.attributes.seriesFields.x.toLowerCase();
-                var seriesy = self.state.attributes.seriesFields.y.toLowerCase();
+                var seriesFields = self.state.attributes.seriesFields;
                 var initResults = {};
+                var results = new Array();
+                var groupResults = new Array();
 
-                _.each(records, function(record) {
-                    if (typeof initResults[record.attributes[xfield]] == 'undefined') {
-                        initResults[record.attributes[xfield]] = new Array();
-                    }
-
-                    initResults[record.attributes[xfield]].push({
-                        x: record.attributes[seriesX],
-                        y: record.attributes[seriesy]
+                if (self.state.attributes.group) {
+                    _.each(records, function(record) {
+                        if (typeof initResults[record.attributes[xfield]] == 'undefined') {
+                            initResults[record.attributes[xfield]] = new Array();
+                        };
+                        _.each(seriesFields, function(field) {
+                            if (typeof initResults[record.attributes[xfield]][field] == 'undefined') {
+                               initResults[record.attributes[xfield]][field] = 0;
+                            };
+                            initResults[record.attributes[xfield]][field] = record.attributes[field] + initResults[record.attributes[xfield]][field];
+                        });
                     });
-                });
-                console.log(initResults);
+                    values = {};
+                    _.each(initResults, function(value, key) {
+                        _.each(seriesFields, function(field) {
+                           if (typeof groupResults[field] == 'undefined') {
+                                groupResults[field] = new Array();
+                            };       
+                            groupResults[field].push({
+                                x: key,
+                                y: value[field]
+                            });
+                        });
+                  
+                    });
+                    _.each(seriesFields, function(field) {
+                        results.push({
+                            key: field,
+                            values: groupResults[field],
+                        });
+                    });
+           
+                }
+                else {
+                     _.each(seriesFields, function(field) {
+                        _.each(records, function(record) {
+                            if (typeof initResults[field] == 'undefined') {
+                                initResults[field] = new Array();
+                            };
+                            initResults[field].push({
+                                x: record.attributes[xfield],
+                                y: record.attributes[field]
+                            });
+                        });
+                    });
+                    i = 0;         
+                    _.each(initResults, function(values, key) {
+                        results[i] = {
+                            key: key,
+                            values: values
+                        };
+                        i++;
+                    });
 
-                i = 0;
-         
-                _.each(initResults, function(values, key) {
-                    results[i] = {
-                        key: key,
-                        values: values
-                    };
-                    i++;
-
-                });
-                console.log(results);
+                }
                 break;
 
             case "lineChart":
@@ -242,6 +284,7 @@ my.nvd3 = Backbone.View.extend({
             case "bulletChart":
             case "scatterChart":
             case "stackedAreaChart":
+            case "discreteBarChart":
             case "pieChart":
                 var xfield = self.state.attributes.xfield.toLowerCase();
                 var yfield = self.state.attributes.yfield.toLowerCase();
@@ -250,7 +293,7 @@ my.nvd3 = Backbone.View.extend({
                     _.each(records, function(record) {
                         if (record.attributes[xfield] && record.attributes[yfield]) {
                             results.push({
-                                key: record.attributes[xfield],
+                                x: record.attributes[xfield],
                                 y: record.attributes[yfield]
                             });
 
@@ -277,8 +320,14 @@ my.nvd3 = Backbone.View.extend({
                     });
                     results = grouped;
                 }
+                console.log(graphType);
+                if (graphType == 'discreteBarChart') {
+                    results = [{
+                        key: "Bar Chart",
+                        values: results
+                        }]
+                }
                 break;
-            case "discreteBarChart":
         }
         return results;
     },
@@ -326,7 +375,7 @@ my.nvd3 = Backbone.View.extend({
                 // axis are switched when using horizontal bar chart
                 if (self.state.get("graphType").indexOf("Horizontal") < 0)
                 {
-                    var xfield = self.model.fields.get(self.state.attributes.group);
+                    var xfield = self.model.fields.get(self.state.attributes.xfield);
                     xAxisFormat = self.state.get("tickFormatX") || self.getFormatter(xfield.get('type'));
                     if (xLabel == null || xLabel == "" || typeof xLabel == 'undefined')
                         xLabel = xfield.get('label');
@@ -428,12 +477,11 @@ my.nvd3 = Backbone.View.extend({
         },
         getGraph: {
             "multiBarChart":function (view) {
-                console.log('ssss');
                 var chart;
                 if (view.chart != null)
                     chart = view.chart;
                 else
-                    chart = nv.models.multiBarChart();
+                    chart = nv.models.multiBarChart().reduceXTicks(false) ;
 
 //                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
   //              var actions = view.getActionsForEvent("selection");
@@ -459,6 +507,7 @@ my.nvd3 = Backbone.View.extend({
                     chart = view.chart;
                 else
                     chart = nv.models.lineChart();
+                return chart;
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
                 if (actions.length > 0)
@@ -550,15 +599,6 @@ my.nvd3 = Backbone.View.extend({
                         view.doActions(actionsH, [e.point.record]);
                     });
                 }
-                return chart;
-            },
-
-            "historicalBar":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.historicalBar();
                 return chart;
             },
             "multiBarHorizontalChart":function (view) {
@@ -681,19 +721,22 @@ my.nvd3 = Backbone.View.extend({
                 return chart;
             },
             "discreteBarChart":function (view) {
-                var actions = view.getActionsForEvent("selection");
+              //  var actions = view.getActionsForEvent("selection");
+             //   console.log(actions);
                 var chart;
+                    chart = nv.models.discreteBarChart();
+                return chart;
+
                 if (view.chart != null)
                     chart = view.chart;
                 else
                     chart = nv.models.discreteBarChart();
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
+           //     view.setAxis(view.options.state.axisTitlePresent || "all", chart);
 
                 if (actions.length > 0)
                     chart.discretebar.dispatch.on('elementClick', function (e) {
                         view.doActions(actions, [e.point.record]);
                     });
-                return chart;
                 var options = {};
 
                 if (view.state.attributes.options) {
@@ -737,47 +780,6 @@ my.nvd3 = Backbone.View.extend({
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 return  chart
             },
-            "multiBarWithBrushChart":function (view) {
-                var actions = view.getActionsForEvent("selection");
-                var options = {};
-
-                if (view.state.attributes.options) {
-                    if (view.state.attributes.options["trendlines"])
-                        options["trendlines"] = view.state.attributes.options("trendlines");
-                    if (view.state.attributes.options["minmax"])
-                        options["minmax"] = view.state.attributes.options("minmax");
-
-                }
-
-                if (actions.length > 0) {
-                    options["callback"] = function (x) {
-
-                        // selection is done on x axis so I need to take the record with range [min_x, max_x]
-                        // is the group attribute
-                        /*var record_min = _.min(x, function (d) {
-                            return d.min.x
-                        });
-                        var record_max = _.max(x, function (d) {
-                            return d.max.x
-                        });*/
-                        var record_min = x[0][0].record;
-                        var record_max = x[0][x[0].length-1].record;
-
-                        view.doActions(actions, [record_min, record_max]);
-
-                    };
-                } else
-                    options["callback"] = function () {
-                    };
-
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.multiBarWithBrushChart(options);
-
-                return chart;
-            },
 
             "pieChart":function (view) {
                 var chart;
@@ -796,9 +798,7 @@ my.nvd3 = Backbone.View.extend({
         getGraphModel: function(self, graphType) {
 
             switch(graphType) {
-            case "historicalBar":
             case "multiBarChart": 
-            case "multiBarWithBrushChart":
             case "multiBarHorizontalChart":
                 return self.chart.multibar;
             case "lineChart":

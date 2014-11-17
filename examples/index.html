@@ -56,12 +56,66 @@
 
 
 <body>
-<div id="grid" style="height:250px; border: 1px solid;"></div>
-<div id="graph"></svg>
+<select id="s1" onChange="reDraw();">
+            <option value="multiBarChart">multiBarChart</option>
+            <option value="pieChart">pieChart</option>
+            <option value="lineWithFocusChart">lineWithFocusChart</option>
+            <option value="cumulativeLineChart">cumulativeLineChart</option>
+            <option value="multiBarHorizontalChart">multiBarHorizontalChart</option>
+            <option value="discreteBarChart">discreteBarChart (events)</option>
+            <option value="scatterChart">scatterChart</option>
+            <option value="lineChart">lineChart</option>
 
-<svg id="wtf"></svg>
-<svg id="test1"></svg>
+                               <!--     <option value="bulletChart">bulletChart</option>
+            <option value="stackedAreaChart">stackedAreaChart</option>
 
+            <option value="sparkline">sparkline</option>
+            <option value="sparklinePlus">sparklinePlus</option>
+            <option value="multiChart">multiChart</option>
+            <option value="line">line</option>
+            <option value="legend">legend</option>
+            <option value="historicalBar">historicalBar</option>
+            <option value="indentedTree">NOT IMPL-indentedTree</option>
+
+            <option value="lineWithBrushChart">MOV-lineWithBrushChart (events)</option>
+            <option value="multiBarWithBrushChart">MOV-multiBarWithBrushChart (events)</option>
+-->
+        </select>
+
+
+<h2>Data</h2>
+<div id="grid" style="height:250px;"></div>
+<table>
+<tr><td>
+<h2>Multi Bar</h2>
+<div id="graph1" style="float: left;"></div>
+</td><td>
+<h2>Pie </h2>
+<div id="pieChart"  style="float: left;"></div>
+</td></tr>
+
+<tr><td>
+<h2>Discrete Bar</h2>
+<div id="discreteBarChart" style="float: left;"></div>
+</td><td>
+<h2>Multi Bar Horizontal</h2>
+<div id="multiBarHorizontalChart" style="float: left;"></div>
+</td></tr>
+
+<tr><td>
+<h2>Line</h2>
+<div id="lineChart1" style="float: left;"></div>
+</td><td>
+<h2>Scatter</h2>
+<div id="scatterChart" style="float: left;"></div>
+</td></tr>
+
+<tr><td>
+<h2>Stacked Area</h2>
+<div id="" style="float: left;"></div>
+</td><td>
+</td></tr>
+</table>
 
 
 
