@@ -3222,11 +3222,7 @@ nv.models.cumulativeLineChart = function() {
       if (!line.values) {
          return line;
       }
-      var indexValue = line.values[idx];
-      if (indexValue == null) {
-        return line;
-      }
-      var v = lines.y()(indexValue, idx);
+      var v = lines.y()(line.values[idx], idx);
 
       //TODO: implement check below, and disable series if series loses 100% or more cause divide by 0 issue
       if (v < -.95 && !noErrorCheck) {
@@ -4650,7 +4646,8 @@ nv.models.indentedTree = function() {
 
             d3.select(this).select('span')
               .attr('class', d3.functor(column.classes) )
-              .text(function(d) { return column.format ? (d[column.key] ? column.format(d[column.key]) : '-') :  (d[column.key] || '-'); });
+              .text(function(d) { return column.format ? column.format(d) :
+                                        (d[column.key] || '-') });
           });
 
         if  (column.showCount) {
@@ -6299,8 +6296,8 @@ nv.models.lineWithFocusChart = function() {
   // Public Variables with Default Settings
   //------------------------------------------------------------
 
-  var lines = nv.models.line()
-    , lines2 = nv.models.line()
+  var lines = nv.models.historicalBar()
+    , lines2 = nv.models.historicalBar()
     , xAxis = nv.models.axis()
     , yAxis = nv.models.axis()
     , x2Axis = nv.models.axis()
@@ -6488,7 +6485,7 @@ nv.models.lineWithFocusChart = function() {
         );
 
       lines2
-        .defined(lines.defined())
+ //       .defined(lines.defined())
         .width(availableWidth)
         .height(availableHeight2)
         .color(
@@ -7008,9 +7005,9 @@ nv.models.linePlusBarWithFocusChart = function() {
       //------------------------------------------------------------
       // Setup Scales
 
-      var dataLines = data.filter(function(d) { return !d.disabled && d.bar });
-      var dataBars = data.filter(function(d) { return !d.bar }); // removed the !d.disabled clause here to fix Issue #240
-console.log(dataBars);
+      var dataBars = data.filter(function(d) { return !d.disabled && d.bar });
+      var dataLines = data.filter(function(d) { return !d.bar }); // removed the !d.disabled clause here to fix Issue #240
+
       x = bars.xScale();
       x2 = x2Axis.scale();
       y1 = bars.yScale();

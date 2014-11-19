@@ -80,14 +80,28 @@ jQuery(function($) {
       width: 400,
       graphType: "lineChart",
       // Label field.
-      xfield: "state",
-      yfield: "total",
+      xfield: "id",
+      seriesFields: ["total", "ratio"],
       group: true
     }
   });
   lineChart.render();
-
- var $scatterChart = $('#scatterChart');
+ var $lineChart2 = $('#lineChart2');
+  var lineChart2 = new recline.View.nvd3({
+    model: dataset,
+    el: $lineChart2,
+    state: {
+      height: 400,
+      width: 400,
+      graphType: "lineWithFocusChart",
+      // Label field.
+      xfield: "id",
+      seriesFields: ["total", "ratio"],
+      group: true
+    }
+  });
+  lineChart2.render();
+  var $scatterChart = $('#scatterChart');
   var scatterChart = new recline.View.nvd3({
     model: dataset,
     el: $scatterChart,
@@ -96,9 +110,9 @@ jQuery(function($) {
       width: 400,
       graphType: "scatterChart",
       // Label field.
-      xfield: "state",
-      yfield: "total",
-      group: true
+      xfield: "id",
+      seriesFields: ["total", "ratio"],
+//      group: true
     }
   });
   scatterChart.render();
@@ -112,8 +126,8 @@ jQuery(function($) {
       width: 400,
       graphType: "stackedAreaChart",
       // Label field.
-      xfield: "state",
-      yfield: "total",
+      xfield: "id",
+      seriesFields: ["total", "ratio"],
       group: true
     }
   });

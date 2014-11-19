@@ -61,19 +61,21 @@ my.nvd3 = Backbone.View.extend({
         var graphType = options.graphType;
         var requiredFields = [];
         switch(graphType) {
+            case "lineChart":
+            case "linePlusBarChart":
             case "multiBarChart": 
             case "multiBarHorizontalChart":
+            case "lineWithFocusChart":
+            case "stackedAreaChart":
+
+            case "linePlusBarWithFocusChart":
                 requiredFields = ['xfield', 'seriesFields']
                 break;
-            case "lineChart":
             case "lineDottedChart":
-            case "lineWithFocusChart":
-            case "linePlusBarChart":
             case "cumulativeLineChart":
             case "lineWithBrushChart":
             case "bulletChart":
             case "scatterChart":
-            case "stackedAreaChart":
             case "discreteBarChart":
             case "pieChart":
                 requiredFields = ['xfield', 'yfield'];
@@ -209,7 +211,18 @@ my.nvd3 = Backbone.View.extend({
         var self = this;
         var results = [];
         switch(graphType) {
+            case "lineChart":
+
             case "multiBarChart": 
+            case "linePlusBarChart":
+            case "lineDottedChart":
+            case "linePlusBarWithFocusChart":
+            case "lineWithFocusChart":
+            case "cumulativeLineChart":
+            case "lineWithBrushChart":
+            case "bulletChart":
+            case "scatterChart":
+            case "stackedAreaChart":
             case "multiBarWithBrushChart":
             case "multiBarHorizontalChart":
                 var xfield = self.state.attributes.xfield.toLowerCase();
@@ -273,17 +286,10 @@ my.nvd3 = Backbone.View.extend({
                     });
 
                 }
+                console.log(results);
                 break;
 
-            case "lineChart":
-            case "lineDottedChart":
-            case "lineWithFocusChart":
-            case "linePlusBarChart":
-            case "cumulativeLineChart":
-            case "lineWithBrushChart":
-            case "bulletChart":
-            case "scatterChart":
-            case "stackedAreaChart":
+     
             case "discreteBarChart":
             case "pieChart":
                 var xfield = self.state.attributes.xfield.toLowerCase();
@@ -327,6 +333,7 @@ my.nvd3 = Backbone.View.extend({
                         values: results
                         }]
                 }
+
                 break;
         }
         return results;
@@ -482,6 +489,7 @@ my.nvd3 = Backbone.View.extend({
                     chart = view.chart;
                 else
                     chart = nv.models.multiBarChart().reduceXTicks(false) ;
+  
 
 //                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
   //              var actions = view.getActionsForEvent("selection");
@@ -506,7 +514,7 @@ my.nvd3 = Backbone.View.extend({
                 if (view.chart != null)
                     chart = view.chart;
                 else
-                    chart = nv.models.lineChart();
+                    chart = nv.models.lineChart().useInteractiveGuideline(true);
                 return chart;
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
@@ -531,6 +539,7 @@ my.nvd3 = Backbone.View.extend({
                     chart = view.chart;
                 else
                     chart = nv.models.lineDottedChart();
+                return chart;
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
                 if (actions.length > 0)
@@ -583,7 +592,8 @@ my.nvd3 = Backbone.View.extend({
                 if (view.chart != null)
                     chart = view.chart;
                 else
-                    chart = nv.models.stackedAreaChart();
+                    chart = nv.models.stackedAreaChart().useInteractiveGuideline(true);
+                return chart;
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
                 if (actions.length > 0)
@@ -601,12 +611,33 @@ my.nvd3 = Backbone.View.extend({
                 }
                 return chart;
             },
+            "linePlusBarWithFocusChart": function (view) {
+                  var chart;
+                if (view.chart != null)
+                    chart = view.chart;
+                else
+                    chart = nv.models.linePlusBarWithFocusChart();
+                return chart;
+
+
+            },
+            "multiBarWithBrushChart": function (view) {
+                  var chart;
+                if (view.chart != null)
+                    chart = view.chart;
+                else
+                    chart = nv.models.multiBarWithBrushChart();
+                return chart;
+
+
+            },
             "multiBarHorizontalChart":function (view) {
                 var chart;
                 if (view.chart != null)
                     chart = view.chart;
                 else
                     chart = nv.models.multiBarHorizontalChart();
+                return chart;
              //   view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions='';
                                 var actionsH='';
@@ -683,7 +714,7 @@ my.nvd3 = Backbone.View.extend({
                     chart = view.chart;
                 else
                     chart = nv.models.linePlusBarChart();
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
+                //view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 return chart;
             },
             "cumulativeLineChart":function (view) {
@@ -702,7 +733,9 @@ my.nvd3 = Backbone.View.extend({
                 else
                     chart = nv.models.scatterChart();
                 chart.showDistX(true)
-                    .showDistY(true);
+                    .showDistY(true)
+                    .scatter.onlyCircles(false);
+                return chart;
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
                 if (actions.length > 0)
