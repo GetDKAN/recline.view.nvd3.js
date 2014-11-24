@@ -1,4 +1,5 @@
-jQuery(function($) {
+$(document).ready(function(){
+
 
   // Create the demo dataset.
   var dataset = createStateDataset();
@@ -11,130 +12,110 @@ jQuery(function($) {
   grid.visible = true;
   grid.render();
 
-  var $graphEl1 = $('#graph1');
-  var graph1 = new recline.View.nvd3({
+  var $graphEl = $('#graph');
+  var graph = new recline.View.nvd3({
     model: dataset,
-    el: $graphEl1,
-    state: {
-      height: 400,
-      width: 400,
-      graphType: "multiBarChart",
-      // Label field.
-      xfield: "state",
-      seriesFields: ["total", "ratio"],
-      group: true
-    }
-  });
-  graph1.render(); 
-  var $graphEl2 = $('#discreteBarChart');
-  var graph2 = new recline.View.nvd3({
-    model: dataset,
-    el: $graphEl2,
+    el: $graphEl,
     state: {
       height: 400,
       width: 400,
       graphType: "discreteBarChart",
-      // Label field.
-      xfield: "state",
-      seriesFields: ["total"],
-      group: true
-    }
-  });
-  graph2.render(); 
-  var $graphEl3 = $('#pieChart');
-  var graph3 = new recline.View.nvd3({
-    model: dataset,
-    el: $graphEl3,
-    state: {
-      height: 400,
-      width: 400,
-      graphType: "pieChart",
-      // Label field.
       xfield: "state",
       seriesFields: ["total", "ratio"],
-      group: true
-    }
-  });
-  graph3.render(); 
-   var $multiBarHorizontalChart = $('#multiBarHorizontalChart');
-  var multiBarHorizontalChart = new recline.View.nvd3({
-    model: dataset,
-    el: $multiBarHorizontalChart,
-    state: {
-      height: 400,
-      width: 400,
-      graphType: "multiBarHorizontalChart",
-      // Label field.
-      xfield: "state",
-      seriesFields: ["total"],
-      group: true
-    }
-  });
-  multiBarHorizontalChart.render(); 
- var $lineChart = $('#lineChart1');
-  var lineChart = new recline.View.nvd3({
-    model: dataset,
-    el: $lineChart,
-    state: {
-      height: 400,
-      width: 400,
-      graphType: "lineChart",
-      // Label field.
-      xfield: "id",
-      seriesFields: ["total", "ratio"],
-      group: true
-    }
-  });
-  lineChart.render();
- var $lineChart2 = $('#lineChart2');
-  var lineChart2 = new recline.View.nvd3({
-    model: dataset,
-    el: $lineChart2,
-    state: {
-      height: 400,
-      width: 400,
-      graphType: "lineWithFocusChart",
-      // Label field.
-      xfield: "id",
-      seriesFields: ["total", "ratio"],
-      group: true
-    }
-  });
-  lineChart2.render();
-  var $scatterChart = $('#scatterChart');
-  var scatterChart = new recline.View.nvd3({
-    model: dataset,
-    el: $scatterChart,
-    state: {
-      height: 400,
-      width: 400,
-      graphType: "scatterChart",
-      // Label field.
-      xfield: "id",
-      seriesFields: ["total", "ratio"],
-//      group: true
-    }
-  });
-  scatterChart.render();
+      group: true,
+      options: {
+        staggerLabels: true,
+        tooltips: true,
+      }
+    },
 
- var $stackedAreaChart = $('#stackedAreaChart');
-  var stackedAreaChart = new recline.View.nvd3({
-    model: dataset,
-    el: $stackedAreaChart,
-    state: {
-      height: 400,
-      width: 400,
-      graphType: "stackedAreaChart",
-      // Label field.
-      xfield: "id",
-      seriesFields: ["total", "ratio"],
-      group: true
-    }
   });
-  stackedAreaChart.render();  
+  graph.render();
+
+  $("#switch").change(function() {
+    update();
+  });
+  $("#xfield").change(function() {
+    update();
+  });
+  $("#group").change(function() {
+    update();
+  });
+  $("#seried-fields").change(function() {
+    update();
+  });
+  $("#x-axis-label").change(function() {
+    update();
+  });
+  $("#y-axis-label").change(function() {
+    update();
+  });
+  $("#height").change(function() {
+    update();
+  });
+  $("#width").change(function() {
+    update();
+  });
+  $("#stagger-labels").change(function() {
+    update();
+  });
+  $("#tooltips").change(function() {
+    update();
+  });
+  $("#tooltips").change(function() {
+    update();
+  });
+  $("#show-values").change(function() {
+    update();
+  });  
+  function update() {
+    var height = $("#height").val();
+    var width = $("#width").val();
+    var type = $("#switch option:selected").val();
+    var xfield = $("#xfield").val();
+    var seriesFields = $("#seried-fields").val();
+    var group = false;
+    var staggerLabels = false;
+    var tooltips = false;
+    var showValues = false;
+    if ($('#group').is(':checked')) {
+      group = true;
+    }
+    if ($('#stagger-labels').is(':checked')) {
+      staggerLabels = true;
+    }
+    if ($('#tooltips').is(':checked')) {
+      tooltips = true;
+    }
+    if ($('#show-values').is(':checked')) {
+      showValues = true;
+    }      
+    var xLabel = $("#x-axis-label").val();
+    if (xLabel) {
+      graph.state.attributes.xLabel = xLabel;
+    }
+    var yLabel = $("#y-axis-label").val();
+    if (yLabel) {
+      graph.state.attributes.yLabel = yLabel;
+    }
+    graph.state.attributes.xfield = xfield;
+    graph.state.attributes.graphType = type;
+    graph.state.attributes.group = group;
+    graph.state.attributes.options.staggerLabels = staggerLabels;
+    graph.state.attributes.options.tooltips = tooltips;
+    graph.state.attributes.options.showValues = showValues;
+
+    graph.state.attributes.height = height;
+    graph.state.attributes.width = width;
+
+    graph.state.attributes.seriesFields = seriesFields.split(",");
+    graph.render(); 
+  }
 
   
-});
+}); 
+
+
 
 function createStateDataset() {
   var dataset = new recline.Model.Dataset({

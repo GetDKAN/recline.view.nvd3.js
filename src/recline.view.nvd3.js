@@ -5,21 +5,6 @@ this.recline.View = this.recline.View || {};
 
 (function ($, my) {
 
-// ## Linegraph view for a Dataset using nvd3 graphing library.
-//
-// Initialization arguments (in a hash in first parameter):
-//
-// * model: recline.Model.Dataset
-// * state: (optional) configuration hash of form:
-//
-//        { 
-//          group: {column name for x-axis},
-//          series: [{column name for series A}, {column name series B}, ... ],
-//          colors: ["#edc240", "#afd8f8", ...]
-//        }
-//
-// NB: should *not* provide an el argument to the view but must let the view
-// generate the element itself (you can then append view.el to the DOM.
 my.nvd3 = Backbone.View.extend({
 
     template:'<div class="recline-graph"> \
@@ -36,12 +21,8 @@ my.nvd3 = Backbone.View.extend({
 
         this.uid = options.id || ("" + new Date().getTime() + Math.floor(Math.random() * 10000)); // generating an unique id for the chart
         this.el = $(this.el);
-         _.bindAll(this, 'render', 'redraw');
+         _.bindAll(this, 'render');
 
-              // this.state.options.xfield
-            // this.state.options.yfield
-            // this.state.options.seriesFields
-      
         var stateData = _.extend({
                 group:null,
                 seriesNameField:[],
@@ -78,7 +59,7 @@ my.nvd3 = Backbone.View.extend({
             case "scatterChart":
             case "discreteBarChart":
             case "pieChart":
-                requiredFields = ['xfield', 'yfield'];
+                requiredFields = ['xfield', 'seriesFields'];
                 break;
 
         }
@@ -92,11 +73,17 @@ my.nvd3 = Backbone.View.extend({
             }
         });
     },
+    clear: function() {
+        var self = this;
+        var svgElem = self.el.find('#nvd3chart_' + self.uid + 'svg');
+        $(svgElem).empty();
+    },
     render:function () {
         var self = this;
 
         var tmplData = this.model.toTemplateJSON();
         tmplData["viewId"] = this.uid;
+
         if (this.state.attributes.width)
             tmplData.width = this.state.attributes.width;
 
@@ -111,118 +98,50 @@ my.nvd3 = Backbone.View.extend({
         var records = this.model.records.models;
 
         var graphType = self.state.attributes.graphType;
-        var data = this.createSeries(graphType, records);
+        self.data = this.createSeries(graphType, records);
 
         nv.addGraph(function() {
-        
+
             self.chart = self.getGraph[graphType](self);
             self.chart.height(self.state.attributes.height);
             self.chart.width(self.state.attributes.width);
 
-            var svgElem = self.el.find('#nvd3chart_' + self.uid + ' svg')
-            console.log(graphType);
-
-           
             d3.select("#nvd3chart_" + self.uid + " svg")
-                .datum(data)
+                .datum(self.data)
                 .transition().duration(1200)
                 .call(self.chart);
+            self.chart.update();
         }); 
-       
+
         return this;
     },
-        getActionsForEvent:function (eventType) {
-            var actions = [];
+    getActionsForEvent:function (eventType) {
+        var actions = [];
 
-            _.each(this.options.actions, function (d) {
-                if (_.contains(d.event, eventType))
-                    actions.push(d);
-            });
+        _.each(this.options.actions, function (d) {
+            if (_.contains(d.event, eventType))
+                actions.push(d);
+        });
 
-            return actions;
-        },
-        doActions:function (actions, records) {
+        return actions;
+    },
+    doActions:function (actions, records) {
 
-            _.each(actions, function (d) {
-                d.action.doAction(records, d.mapping);
-            });
+        _.each(actions, function (d) {
+            d.action.doAction(records, d.mapping);
+        });
 
-        },
-        redraw:function () {
-            console.log("redraw");
-            var self = this;
-            self.trigger("chart:startDrawing")
-
-            if (typeof self.model.records == "undefined" || self.model.records == null || self.model.records.length == 0)
-            {
-                var svgElem = this.el.find('#nvd3chart_' + self.uid+ ' svg')
-                svgElem.css("display", "block")
-                // get computed dimensions
-                var width = svgElem.width()
-                var height = svgElem.height()
-
-                // display noData message and exit
-                svgElem.css("display", "none")
-                this.el.find('#nvd3chart_' + self.uid).width(width).height(height).html("").append("no data");
-                self.trigger("chart:endDrawing")
-                return;
-            }
-            if ($("div.noData", this.el).length)
-                self.render(); // remove previous noData frame
-
-                
-            var svgElem = this.el.find('#nvd3chart_' + self.uid+ ' svg') 
-            svgElem.css("display", "block")
-            // get computed dimensions
-            var width = svgElem.width()
-            var height = svgElem.height()
-
-            var state = this.state;
-
-            // this.state.options.xfield
-            // this.state.options.yfield
-            // this.state.options.seriesFields
-            var results = [];
-            var result = '';
-            var xfield = "gender";
-            var yfield = "y";
-            // Create Series
-
-            self.series =  results;
-                            
-            var totalValues = 0;
-            if (results)
-            {
-                _.each(results, function(s) {
-                    if (s.y)
-                        totalValues++
-                });
-            }
-            if (!totalValues)
-            {
-                // display noData message and exit
-                svgElem.css("display", "none")
-                this.el.find('#nvd3chart_' + self.uid).width(width).height(height).html("").append(new recline.View.NoDataMsg().create());
-                self.trigger("chart:endDrawing")
-                return null;
-            }           
-        },
+    },
+    redraw:function () {
+        console.log("redraw");
+    },
     createSeries: function(graphType, records) {
         var self = this;
         var results = [];
+        self.chartMap = null;
         switch(graphType) {
-            case "lineChart":
-
+            // These can be correctly grouped.
             case "multiBarChart": 
-            case "linePlusBarChart":
-            case "lineDottedChart":
-            case "linePlusBarWithFocusChart":
-            case "lineWithFocusChart":
-            case "cumulativeLineChart":
-            case "lineWithBrushChart":
-            case "bulletChart":
-            case "scatterChart":
-            case "stackedAreaChart":
             case "multiBarWithBrushChart":
             case "multiBarHorizontalChart":
                 var xfield = self.state.attributes.xfield.toLowerCase();
@@ -286,14 +205,51 @@ my.nvd3 = Backbone.View.extend({
                     });
 
                 }
-                console.log(results);
                 break;
 
-     
+            // These need a map for the X-Axis to work.
+            case "scatterChart":
+            case "lineWithFocusChart":
+            case "lineChart":
+            case "stackedAreaChart":
+            case "linePlusBarWithFocusChart":
+            case "lineWithBrushChart":
+
+                self.chartMap = d3.map();
+                var xfield = self.state.attributes.xfield.toLowerCase();
+                var seriesFields = self.state.attributes.seriesFields;
+                var initResults = {};
+                var results = new Array();
+                var groupResults = new Array();
+                 _.each(seriesFields, function(field) {
+                    var xCount = 0;
+                    _.each(records, function(record) {
+                        if (typeof initResults[field] == 'undefined') {
+                            initResults[field] = new Array();
+                        };
+                        self.chartMap.set(xCount, record.attributes[xfield]);
+                        initResults[field].push({
+                            x: xCount,
+                            y: record.attributes[field]
+                        });
+                        xCount++;
+                    });
+                });
+                i = 0;         
+                _.each(initResults, function(values, key) {
+                    results[i] = {
+                        key: key,
+                        values: values
+                    };
+                    i++;
+                });
+                    break;
+
+            // These can only have a single xfield.
             case "discreteBarChart":
             case "pieChart":
                 var xfield = self.state.attributes.xfield.toLowerCase();
-                var yfield = self.state.attributes.yfield.toLowerCase();
+                var yfield = self.state.attributes.seriesFields[0].toLowerCase();
         
                 if (records) {
                     _.each(records, function(record) {
@@ -326,7 +282,6 @@ my.nvd3 = Backbone.View.extend({
                     });
                     results = grouped;
                 }
-                console.log(graphType);
                 if (graphType == 'discreteBarChart') {
                     results = [{
                         key: "Bar Chart",
@@ -372,18 +327,32 @@ my.nvd3 = Backbone.View.extend({
             if (self.chart && self.chart.update)
                 self.chart.update(); // calls original 'update' function
         },
+        setOptions:function (chart) {
+            var self = this;
+            if (self.state.attributes.options) {
+                var options = self.state.attributes.options;
+                if (options.staggerLabels) {
+                    chart.staggerLabels(options.staggerLabels);
+                }
+                chart.tooltips(options.tooltips);
+                chart.showValues(options.showValues);
+
+                console.log(options);
+            }
+        },
         setAxis:function (axis, chart) {
             var self = this;
 
-            var xLabel = self.state.get("xLabel");
-
             if (axis == "all" || axis == "x") {
+                var xLabel = self.state.get("xLabel");
+
                 var xAxisFormat = function(str) {return str;}
+
                 // axis are switched when using horizontal bar chart
                 if (self.state.get("graphType").indexOf("Horizontal") < 0)
                 {
                     var xfield = self.model.fields.get(self.state.attributes.xfield);
-                    xAxisFormat = self.state.get("tickFormatX") || self.getFormatter(xfield.get('type'));
+                    xAxisFormat = self.state.get("tickFormatX") || xAxisFormat;
                     if (xLabel == null || xLabel == "" || typeof xLabel == 'undefined')
                         xLabel = xfield.get('label');
                 }
@@ -394,15 +363,22 @@ my.nvd3 = Backbone.View.extend({
                         xAxisFormat = self.state.get("tickFormatY");
                 }
 
-                // set data format
+                xAxisFormat = function(id) {
+                    if (self.chartMap) {
+                        return self.chartMap.get(id);
+                    }
+                    else {
+                        return id;
+                    }
+                };
+
                 chart.xAxis
                     .axisLabel(xLabel)
-                    .tickFormat(xAxisFormat)
+                    .tickFormat(xAxisFormat);
 
             } 
             if (axis == "all" || axis == "y") {
                 var yLabel = self.state.get("yLabel");
-
                 var yAxisFormat = function(str) {return str;}
                 // axis are switched when using horizontal bar chart
                 if (self.state.get("graphType").indexOf("Horizontal") >= 0)
@@ -417,11 +393,12 @@ my.nvd3 = Backbone.View.extend({
                         yAxisFormat = self.state.get("tickFormatY");
 
                     if (yLabel == null || yLabel == "" || typeof yLabel == 'undefined')
-                        yLabel = self.state.attributes.seriesValues.join("/");
+                        yLabel = self.state.attributes.seriesFields.join("/");
                 }
-                    
+   
                 chart.yAxis
                     .axisLabel(yLabel)
+                    .axisLabelDistance(40)
                     .tickFormat(yAxisFormat);
             }
         },
@@ -484,23 +461,22 @@ my.nvd3 = Backbone.View.extend({
         },
         getGraph: {
             "multiBarChart":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.multiBarChart().reduceXTicks(false) ;
-  
 
-//                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-  //              var actions = view.getActionsForEvent("selection");
-  var actions = ""
+                var chart;
+                chart = nv.models.multiBarChart().reduceXTicks(false) ;
+                view.setAxis("all", chart);
+
+
+                    //                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
+                    //              var actions = view.getActionsForEvent("selection");
+                var actions = ""
                 if (actions.length > 0)
                     chart.multibar.dispatch.on('elementClick', function (e) {
                         view.doActions(actions, [e.point.record]);
                     });
                   var actionsH = ""
 
-            //    var actionsH = view.getActionsForEvent("hover");
+                //    var actionsH = view.getActionsForEvent("hover");
                 if (actionsH.length > 0)
                 {
                     chart.multibar.dispatch.on('elementMouseover', function (e) {
@@ -511,34 +487,8 @@ my.nvd3 = Backbone.View.extend({
             },
             "lineChart":function (view) {
                 var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.lineChart().useInteractiveGuideline(true);
-                return chart;
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                var actions = view.getActionsForEvent("selection");
-                if (actions.length > 0)
-                {
-                    chart.lines.dispatch.on('elementClick', function (e) {
-                        view.doActions(actions, [e.point.record]);
-                    });
-                }
-                var actionsH = view.getActionsForEvent("hover");
-                if (actionsH.length > 0)
-                {
-                    chart.lines.dispatch.on('elementMouseover', function (e) {
-                        view.doActions(actionsH, [e.point.record]);
-                    });
-                }
-                return chart;
-            },
-            "lineDottedChart":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.lineDottedChart();
+                chart = nv.models.lineChart().useInteractiveGuideline(true);
+                view.setAxis("all", chart);
                 return chart;
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
@@ -559,10 +509,8 @@ my.nvd3 = Backbone.View.extend({
             },
             "lineWithFocusChart":function (view) {
                 var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.lineWithFocusChart();
+                chart = nv.models.lineWithFocusChart();
+                view.setAxis("all", chart);
 
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
@@ -580,19 +528,10 @@ my.nvd3 = Backbone.View.extend({
                     });
                 }                return chart;
             },
-            "indentedTree":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.indentedTree();
-            },
             "stackedAreaChart":function (view) {
                 var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.stackedAreaChart().useInteractiveGuideline(true);
+                chart = nv.models.stackedAreaChart().useInteractiveGuideline(true);
+                view.setAxis("all", chart);
                 return chart;
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
@@ -612,44 +551,27 @@ my.nvd3 = Backbone.View.extend({
                 return chart;
             },
             "linePlusBarWithFocusChart": function (view) {
-                  var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.linePlusBarWithFocusChart();
+                var chart;
+                chart = nv.models.linePlusBarWithFocusChart();
                 return chart;
-
-
-            },
-            "multiBarWithBrushChart": function (view) {
-                  var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.multiBarWithBrushChart();
-                return chart;
-
-
             },
             "multiBarHorizontalChart":function (view) {
                 var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.multiBarHorizontalChart();
+                chart = nv.models.multiBarHorizontalChart();
+               // view.setAxis("all", chart);
                 return chart;
-             //   view.setAxis(view.options.state.axisTitlePresent || "all", chart);
+                //   view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions='';
                                 var actionsH='';
 
-               // var actions = view.getActionsForEvent("selection");
+                // var actions = view.getActionsForEvent("selection");
                 if (actions.length > 0)
                 {
                     chart.multibar.dispatch.on('elementClick', function (e) {
                         view.doActions(actions, [e.point.record]);
                     });
                 }
-            //    var actionsH = view.getActionsForEvent("hover");
+                //    var actionsH = view.getActionsForEvent("hover");
                 if (actionsH.length > 0)
                 {
                     chart.multibar.dispatch.on('elementMouseover', function (e) {
@@ -658,83 +580,14 @@ my.nvd3 = Backbone.View.extend({
                 }
                 return chart;
             },
-            "legend":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.legend();
-                return chart;
-            },
-            "line":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.line();
-                return chart;
-            },
-            "sparkline":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.sparkline();
-                return chart;
-            },
-            "sparklinePlus":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.sparklinePlus();
-                return chart;
-            },
-
-            "multiChart":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.multiChart();
-                return chart;
-            },
-
-            "bulletChart":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.bulletChart();
-                return chart;
-            },
-            "linePlusBarChart":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.linePlusBarChart();
-                //view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                return chart;
-            },
-            "cumulativeLineChart":function (view) {
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.cumulativeLineChart();
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                return chart;
-            },
             "scatterChart":function (view) {
                 var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.scatterChart();
+                chart = nv.models.scatterChart();
                 chart.showDistX(true)
                     .showDistY(true)
                     .scatter.onlyCircles(false);
+                view.setAxis("all", chart);
+
                 return chart;
                 view.setAxis(view.options.state.axisTitlePresent || "all", chart);
                 var actions = view.getActionsForEvent("selection");
@@ -754,18 +607,13 @@ my.nvd3 = Backbone.View.extend({
                 return chart;
             },
             "discreteBarChart":function (view) {
-              //  var actions = view.getActionsForEvent("selection");
-             //   console.log(actions);
                 var chart;
-                    chart = nv.models.discreteBarChart();
+                chart = nv.models.discreteBarChart();
+                view.setAxis("all", chart);
+                view.setOptions(chart);
                 return chart;
 
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.discreteBarChart();
-           //     view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-
+                
                 if (actions.length > 0)
                     chart.discretebar.dispatch.on('elementClick', function (e) {
                         view.doActions(actions, [e.point.record]);
@@ -792,9 +640,6 @@ my.nvd3 = Backbone.View.extend({
                         var record_max = _.max(x, function (d) {
                             return d.max.x
                         });
-                        console.log("Filtering for ");
-                        console.log(record_min);
-                        console.log(record_max);
                         view.doActions(actions, [record_min.min.record, record_max.max.record]);
 
                     };
@@ -802,28 +647,20 @@ my.nvd3 = Backbone.View.extend({
                     options["callback"] = function () {
                     };
             },
-            "lineWithBrushChart":function (view) {
-
-
-                var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.lineWithBrushChart(options);
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                return  chart
-            },
-
             "pieChart":function (view) {
                 var chart;
-                if (view.chart != null)
-                    chart = view.chart;
-                else
-                    chart = nv.models.pieChart()
-                        .x(function(d) { return d.x })
-                        .y(function(d) { return d.y })
-                        .showLabels(true)
-                        .labelType("percent");
+       
+                chart = nv.models.pieChart()
+                    .showLabels(true)
+                    .labelType("percent");
+
+                    var options = {
+                        showControls: true,
+                        showLegend: true,
+                        showLabels: false,
+                    }
+                  //  chart.options(options);
+
                 return chart;
             }
 
@@ -835,11 +672,8 @@ my.nvd3 = Backbone.View.extend({
             case "multiBarHorizontalChart":
                 return self.chart.multibar;
             case "lineChart":
-            case "lineDottedChart":
             case "lineWithFocusChart":
             case "linePlusBarChart":
-            case "cumulativeLineChart":
-            case "lineWithBrushChart":
                 return self.chart.lines;
             case "bulletChart":
                 return self.chart.bullet;
