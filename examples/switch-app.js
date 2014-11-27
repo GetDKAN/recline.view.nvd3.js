@@ -1,6 +1,4 @@
 $(document).ready(function(){
-
-
   // Create the demo dataset.
   var dataset = createStateDataset();
 
@@ -25,97 +23,46 @@ $(document).ready(function(){
       group: true,
       options: {
         staggerLabels: true,
-        tooltips: true,
+        tooltips: true
       }
     },
-
   });
   graph.render();
 
-  $("#switch").change(function() {
-    update();
-  });
-  $("#xfield").change(function() {
-    update();
-  });
-  $("#group").change(function() {
-    update();
-  });
-  $("#seried-fields").change(function() {
-    update();
-  });
-  $("#x-axis-label").change(function() {
-    update();
-  });
-  $("#y-axis-label").change(function() {
-    update();
-  });
-  $("#height").change(function() {
-    update();
-  });
-  $("#width").change(function() {
-    update();
-  });
-  $("#stagger-labels").change(function() {
-    update();
-  });
-  $("#tooltips").change(function() {
-    update();
-  });
-  $("#tooltips").change(function() {
-    update();
-  });
-  $("#show-values").change(function() {
-    update();
-  });  
+  $(".form-control").change(update.bind());
+
   function update() {
     var height = $("#height").val();
     var width = $("#width").val();
     var type = $("#switch option:selected").val();
     var xfield = $("#xfield").val();
     var seriesFields = $("#seried-fields").val();
-    var group = false;
-    var staggerLabels = false;
-    var tooltips = false;
-    var showValues = false;
-    if ($('#group').is(':checked')) {
-      group = true;
-    }
-    if ($('#stagger-labels').is(':checked')) {
-      staggerLabels = true;
-    }
-    if ($('#tooltips').is(':checked')) {
-      tooltips = true;
-    }
-    if ($('#show-values').is(':checked')) {
-      showValues = true;
-    }      
+    var group = $('#group').is(':checked');
+    var staggerLabels = $('#stagger-labels').is(':checked');
+    var tooltips = $('#tooltips').is(':checked');
+    var showValues = $('#show-values').is(':checked');
     var xLabel = $("#x-axis-label").val();
     if (xLabel) {
-      graph.state.attributes.xLabel = xLabel;
+      graph.state.attributes.options.xAxis = graph.state.attributes.options.xAxis || {};
+      graph.state.attributes.options.xAxis.axisLabel = xLabel;
     }
     var yLabel = $("#y-axis-label").val();
     if (yLabel) {
-      graph.state.attributes.yLabel = yLabel;
+      graph.state.attributes.options.yAxis = graph.state.attributes.options.yAxis || {};
+      graph.state.attributes.options.yAxis.axisLabel = yLabel;
     }
-    graph.state.attributes.xfield = xfield;
-    graph.state.attributes.graphType = type;
-    graph.state.attributes.group = group;
+    graph.state.set('xfield', xfield);
+    graph.state.set('graphType',type);
+    graph.state.set('group', group);
     graph.state.attributes.options.staggerLabels = staggerLabels;
     graph.state.attributes.options.tooltips = tooltips;
     graph.state.attributes.options.showValues = showValues;
-
     graph.state.attributes.height = height;
     graph.state.attributes.width = width;
-
-    graph.state.attributes.seriesFields = seriesFields.split(",");
-    graph.render(); 
-  }
-
-  
-}); 
-
-
+    graph.state.set('seriesFields', seriesFields.split(","));
+    graph.render();
+  };
+});
 
 function createStateDataset() {
   var dataset = new recline.Model.Dataset({
@@ -126,11 +73,10 @@ function createStateDataset() {
       {id: 3, state: 'Iowa', total: 1365, ratio: 979},
       {id: 4, state: 'Oregon', total: 1630, ratio: 1028},
       {id: 5, state: 'Idaho', total: 1000, ratio: 500},
-
     ]
   });
   return dataset;
-}
+};
 
 // create standard demo dataset
 function createDemoDataset() {
@@ -154,7 +100,6 @@ function createDemoDataset() {
       {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UK', title: 'sixth', lat:51.04, lon:7.9},
       {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UL', title: 'sixth', lat:51.04, lon:7.9},
       {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'US', title: 'sixth', lat:51.04, lon:7.9}
-
     ],
     // let's be really explicit about fields
     // Plus take opportunity to set date to be a date field and set some labels
@@ -171,63 +116,4 @@ function createDemoDataset() {
     ]
   });
   return dataset;
-}
-
-// make MultivView
-//
-// creation / initialization in a function so we can call it again and again
-var createMultiView = function(dataset, state) {
-  // remove existing multiview if present
-  var reload = false;
-  if (window.multiView) {
-    window.multiView.remove();
-    window.multiView = null;
-    reload = true;
-  }
-
-  var $el = $('<div />');
-  $el.appendTo(window.explorerDiv);
-
-  // customize the subviews for the MultiView
-  var views = [
-    {
-      id: 'grid',
-      label: 'Grid',
-      view: new recline.View.SlickGrid({
-        model: dataset,
-        state: {
-          gridOptions: {
-            editable: true,
-            // Enable support for row add
-            enabledAddRow: true,
-            // Enable support for row delete
-            enabledDelRow: true,
-            // Enable support for row ReOrder
-            enableReOrderRow:true,
-            autoEdit: false,
-            enableCellNavigation: true
-          },
-          columnsEditor: [
-            { column: 'date', editor: Slick.Editors.Date },
-            { column: 'title', editor: Slick.Editors.Text }
-          ]
-        }
-      })
-    },
-    {
-      id: 'map',
-      label: 'Map',
-      view: new recline.View.Map({
-        model: dataset
-      })
-    }
-  ];
-
-  var multiView = new recline.View.MultiView({
-    model: dataset,
-    el: $el,
-    state: state,
-    views: views
-  });
-  return multiView;
-}
+};

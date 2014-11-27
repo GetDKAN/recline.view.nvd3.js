@@ -19,7 +19,7 @@ my.nvd3 = Backbone.View.extend({
     initialize:function (options) {
         var self = this;
 
-        this.uid = options.id || ("" + new Date().getTime() + Math.floor(Math.random() * 10000)); // generating an unique id for the chart
+        this.uid = options.id || ('' + new Date().getTime() + Math.floor(Math.random() * 10000)); // generating an unique id for the chart
         this.el = $(this.el);
          _.bindAll(this, 'render');
 
@@ -27,215 +27,109 @@ my.nvd3 = Backbone.View.extend({
                 group:null,
                 seriesNameField:[],
                 seriesValues:[],
-                colors:["#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"],
-                graphType: "pieChart",
+                colors:['#edc240', '#afd8f8', '#cb4b4b', '#4da74d', '#9440ed'],
+                graphType: 'pieChart',
                 id:0
             },
             this.options.state
         );
-
+        self.initialOptions = _.clone(this.options.state.options);
+        // TODO:this validation should be triggered everytime model changes.
         this.validateState(stateData);
         this.state = new recline.Model.ObjectState(stateData);
 
     },
     validateState: function(options) {
         var graphType = options.graphType;
-        var requiredFields = [];
-        switch(graphType) {
-            case "lineChart":
-            case "linePlusBarChart":
-            case "multiBarChart": 
-            case "multiBarHorizontalChart":
-            case "lineWithFocusChart":
-            case "stackedAreaChart":
-
-            case "linePlusBarWithFocusChart":
-                requiredFields = ['xfield', 'seriesFields']
-                break;
-            case "lineDottedChart":
-            case "cumulativeLineChart":
-            case "lineWithBrushChart":
-            case "bulletChart":
-            case "scatterChart":
-            case "discreteBarChart":
-            case "pieChart":
-                requiredFields = ['xfield', 'seriesFields'];
-                break;
-
-        }
+        var requiredFields = ['xfield', 'seriesFields'];
         this.validateFields(graphType, requiredFields, options);
     },
     validateFields: function(graphType, requiredFields, options) {
         requiredFields.forEach(function(field) {
-            if (typeof options[field] == 'undefined' || options[field] == '') {
-                 console.log("Graph " + graphType + " requires " + field);
-
+            if (typeof options[field] === 'undefined' || options[field] === '') {
             }
         });
-    },
-    clear: function() {
-        var self = this;
-        var svgElem = self.el.find('#nvd3chart_' + self.uid + 'svg');
-        $(svgElem).empty();
     },
     render:function () {
         var self = this;
 
         var tmplData = this.model.toTemplateJSON();
-        tmplData["viewId"] = this.uid;
+        tmplData.viewId = this.uid;
 
-        if (this.state.attributes.width)
-            tmplData.width = this.state.attributes.width;
+        if (this.state.get('width'))
+            tmplData.width = this.state.get('width');
 
-        if (this.state.attributes.height)
-            tmplData.height = this.state.attributes.height;
-    
+        if (this.state.get('height'))
+            tmplData.height = this.state.get('height');
+
         var htmls = Mustache.render(this.template, tmplData);
         $(this.el).html(htmls);
-        this.$graph = this.el.find('.panel.nvd3graph_' + tmplData["viewId"]);
-        self.trigger("chart:endDrawing");
+        this.$graph = this.el.find('.panel.nvd3graph_' + tmplData.viewId);
+        self.trigger('chart:endDrawing');
 
         var records = this.model.records.models;
 
-        var graphType = self.state.attributes.graphType;
+        var graphType = self.state.get('graphType');
         self.data = this.createSeries(graphType, records);
 
         nv.addGraph(function() {
-
-            self.chart = self.getGraph[graphType](self);
-            self.chart.height(self.state.attributes.height);
-            self.chart.width(self.state.attributes.width);
-
-            d3.select("#nvd3chart_" + self.uid + " svg")
+            self.chart = self.createGraph(self);
+            self.chart.height(self.state.get('height'));
+            self.chart.width(self.state.get('width'));
+            d3.select('#nvd3chart_' + self.uid + ' svg')
                 .datum(self.data)
                 .transition().duration(1200)
                 .call(self.chart);
             self.chart.update();
-        }); 
+        });
 
         return this;
-    },
-    getActionsForEvent:function (eventType) {
-        var actions = [];
-
-        _.each(this.options.actions, function (d) {
-            if (_.contains(d.event, eventType))
-                actions.push(d);
-        });
-
-        return actions;
-    },
-    doActions:function (actions, records) {
-
-        _.each(actions, function (d) {
-            d.action.doAction(records, d.mapping);
-        });
-
-    },
-    redraw:function () {
-        console.log("redraw");
     },
     createSeries: function(graphType, records) {
         var self = this;
         var results = [];
+        var seriesFields;
         self.chartMap = null;
+        var xfield = self.state.get('xfield').toLowerCase();
         switch(graphType) {
             // These can be correctly grouped.
-            case "multiBarChart": 
-            case "multiBarWithBrushChart":
-            case "multiBarHorizontalChart":
-                var xfield = self.state.attributes.xfield.toLowerCase();
-                var seriesFields = self.state.attributes.seriesFields;
-                var initResults = {};
-                var results = new Array();
-                var groupResults = new Array();
-
-                if (self.state.attributes.group) {
-                    _.each(records, function(record) {
-                        if (typeof initResults[record.attributes[xfield]] == 'undefined') {
-                            initResults[record.attributes[xfield]] = new Array();
-                        };
-                        _.each(seriesFields, function(field) {
-                            if (typeof initResults[record.attributes[xfield]][field] == 'undefined') {
-                               initResults[record.attributes[xfield]][field] = 0;
-                            };
-                            initResults[record.attributes[xfield]][field] = record.attributes[field] + initResults[record.attributes[xfield]][field];
-                        });
+            case 'multiBarChart':
+            case 'multiBarWithBrushChart':
+            case 'multiBarHorizontalChart':
+                seriesFields = self.state.get('seriesFields');
+                _.each(seriesFields, function(field) {
+                    results.push({
+                        key: field,
+                        values: self.recordsToGraph(records, self.state.get('group'), xfield, field),
                     });
-                    values = {};
-                    _.each(initResults, function(value, key) {
-                        _.each(seriesFields, function(field) {
-                           if (typeof groupResults[field] == 'undefined') {
-                                groupResults[field] = new Array();
-                            };       
-                            groupResults[field].push({
-                                x: key,
-                                y: value[field]
-                            });
-                        });
-                  
-                    });
-                    _.each(seriesFields, function(field) {
-                        results.push({
-                            key: field,
-                            values: groupResults[field],
-                        });
-                    });
-           
-                }
-                else {
-                     _.each(seriesFields, function(field) {
-                        _.each(records, function(record) {
-                            if (typeof initResults[field] == 'undefined') {
-                                initResults[field] = new Array();
-                            };
-                            initResults[field].push({
-                                x: record.attributes[xfield],
-                                y: record.attributes[field]
-                            });
-                        });
-                    });
-                    i = 0;         
-                    _.each(initResults, function(values, key) {
-                        results[i] = {
-                            key: key,
-                            values: values
-                        };
-                        i++;
-                    });
-
-                }
+                });
                 break;
-
             // These need a map for the X-Axis to work.
-            case "scatterChart":
-            case "lineWithFocusChart":
-            case "lineChart":
-            case "stackedAreaChart":
-            case "linePlusBarWithFocusChart":
-            case "lineWithBrushChart":
-
+            case 'scatterChart':
+            case 'lineWithFocusChart':
+            case 'lineChart':
+            case 'stackedAreaChart':
+            case 'linePlusBarWithFocusChart':
+            case 'lineWithBrushChart':
                 self.chartMap = d3.map();
-                var xfield = self.state.attributes.xfield.toLowerCase();
-                var seriesFields = self.state.attributes.seriesFields;
+                seriesFields = self.state.get('seriesFields');
                 var initResults = {};
-                var results = new Array();
-                var groupResults = new Array();
+                var groupResults = [];
                  _.each(seriesFields, function(field) {
                     var xCount = 0;
                     _.each(records, function(record) {
-                        if (typeof initResults[field] == 'undefined') {
-                            initResults[field] = new Array();
-                        };
-                        self.chartMap.set(xCount, record.attributes[xfield]);
+                        if (_.isUndefined(initResults[field])) {
+                            initResults[field] = [];
+                        }
+                        self.chartMap.set(xCount, record.get(xfield));
                         initResults[field].push({
                             x: xCount,
-                            y: record.attributes[field]
+                            y: record.get(field)
                         });
                         xCount++;
                     });
                 });
-                i = 0;         
+                i = 0;
                 _.each(initResults, function(values, key) {
                     results[i] = {
                         key: key,
@@ -243,493 +137,122 @@ my.nvd3 = Backbone.View.extend({
                     };
                     i++;
                 });
-                    break;
-
+                break;
             // These can only have a single xfield.
-            case "discreteBarChart":
-            case "pieChart":
-                var xfield = self.state.attributes.xfield.toLowerCase();
-                var yfield = self.state.attributes.seriesFields[0].toLowerCase();
-        
-                if (records) {
-                    _.each(records, function(record) {
-                        if (record.attributes[xfield] && record.attributes[yfield]) {
-                            results.push({
-                                x: record.attributes[xfield],
-                                y: record.attributes[yfield]
-                            });
-
-                        }
-                    });
-                }
-          
-                if (self.state.attributes.group) {
-                    // Group has to group on the xfield.
-                    var groupField = 'x';
-                    var totalField = 'y';
-                    var groups = {};
-                    var grouped = [];
-                    results.forEach(function (o) {
-                        groups[o[groupField]] = groups[o[groupField]] || [];
-                        var total = groups[o[groupField]] || 0;
-                        groups[o[groupField]] = +total + +o[totalField];
-                    });
-                    _.each(groups, function (group, total) {
-                        grouped.push({
-                            x: total,
-                            y: group
-                        });
-                    });
-                    results = grouped;
-                }
+            case 'discreteBarChart':
+            case 'pieChart':
+                var yfield = self.state.get('seriesFields')[0].toLowerCase();
+                results = self.recordsToGraph(records, self.state.get('group'), xfield, yfield);
                 if (graphType == 'discreteBarChart') {
-                    results = [{
-                        key: "Bar Chart",
-                        values: results
-                        }]
+                    results = [{ key: 'Bar Chart', values: results}];
                 }
-
                 break;
         }
         return results;
     },
-
-        graphResize:function () {
-            var self = this;
-            var viewId = this.uid;
-
-            if (!self.$el.is(":visible"))
-                return;         
-
-            // this only works by previously setting the body height to a numeric pixel size (percentage size don't work)
-            // so we assign the window height to the body height with the command below
-            var container = self.el;
-            while (!container.hasClass('container-fluid') && !container.hasClass('container') && container.length)
-                container = container.parent();
-            
-            if (typeof container != "undefined" && container != null 
-                    && (container.hasClass('container') || container.hasClass('container-fluid'))
-                    && container[0].style && container[0].style.height
-                    && container[0].style.height.indexOf("%") > 0) 
-            {
-                $("body").height($(window).innerHeight() - 10);
-    
-                var currAncestor = self.el;
-                while (!currAncestor.hasClass('row-fluid') && !currAncestor.hasClass('row'))
-                    currAncestor = currAncestor.parent();
-    
-                if (typeof currAncestor != "undefined" && currAncestor != null && (currAncestor.hasClass('row-fluid') || currAncestor.hasClass('row'))) {
-                    var newH = currAncestor.height();
-                    $('#nvd3chart_' + viewId).height(newH);
-                    $('#nvd3chart_' + viewId + '  svg').height(newH);
-                }
+    recordsToGraph: function  (records, group, xfield, yfield) {
+        var results = _.map(records, function  (record) {
+            if(record.get(xfield) && record.get(yfield)) {
+                return  {x: record.get(xfield), y: record.get(yfield)};
             }
-            if (self.chart && self.chart.update)
-                self.chart.update(); // calls original 'update' function
-        },
-        setOptions:function (chart) {
-            var self = this;
-            if (self.state.attributes.options) {
-                var options = self.state.attributes.options;
-                if (options.staggerLabels) {
-                    chart.staggerLabels(options.staggerLabels);
-                }
-                chart.tooltips(options.tooltips);
-                chart.showValues(options.showValues);
+            return false;
+        });
+        results = _(results).without(undefined);
 
-                console.log(options);
-            }
-        },
-        setAxis:function (axis, chart) {
-            var self = this;
-
-            if (axis == "all" || axis == "x") {
-                var xLabel = self.state.get("xLabel");
-
-                var xAxisFormat = function(str) {return str;}
-
-                // axis are switched when using horizontal bar chart
-                if (self.state.get("graphType").indexOf("Horizontal") < 0)
-                {
-                    var xfield = self.model.fields.get(self.state.attributes.xfield);
-                    xAxisFormat = self.state.get("tickFormatX") || xAxisFormat;
-                    if (xLabel == null || xLabel == "" || typeof xLabel == 'undefined')
-                        xLabel = xfield.get('label');
-                }
-                else
-                {
-                    xLabel = self.state.get("yLabel");
-                    if (self.state.get("tickFormatY"))
-                        xAxisFormat = self.state.get("tickFormatY");
-                }
-
-                xAxisFormat = function(id) {
-                    if (self.chartMap) {
-                        return self.chartMap.get(id);
-                    }
-                    else {
-                        return id;
-                    }
-                };
-
-                chart.xAxis
-                    .axisLabel(xLabel)
-                    .tickFormat(xAxisFormat);
-
-            } 
-            if (axis == "all" || axis == "y") {
-                var yLabel = self.state.get("yLabel");
-                var yAxisFormat = function(str) {return str;}
-                // axis are switched when using horizontal bar chart
-                if (self.state.get("graphType").indexOf("Horizontal") >= 0)
-                {
-                    var yfield = self.model.fields.get(self.state.attributes.group);                
-                    yAxisFormat = self.state.get("tickFormatX") || self.getFormatter(yfield.get('type'))
-                    yLabel = self.state.get("xLabel");
-                }
-                else
-                {
-                    if (self.state.get("tickFormatY"))
-                        yAxisFormat = self.state.get("tickFormatY");
-
-                    if (yLabel == null || yLabel == "" || typeof yLabel == 'undefined')
-                        yLabel = self.state.attributes.seriesFields.join("/");
-                }
-   
-                chart.yAxis
-                    .axisLabel(yLabel)
-                    .axisLabelDistance(40)
-                    .tickFormat(yAxisFormat);
-            }
-        },
-        getFormatter: function(type) {
-            var self = this;
-            switch(type)
-            {
-            case "string": return d3.format(',s');
-            case "float": return d3.format(',r');
-            case "integer": return d3.format(',r');
-            case "date": return d3.time.format('%x');
-            }
-        },
-        addOption:{
-            "staggerLabels":function (chart, value) {
-                chart.staggerLabels(value);
-            },
-            "tooltips":function (chart, value) {
-                chart.tooltips(value);
-            },
-            "showValues":function (chart, value) {
-                chart.showValues(value);
-            },
-            "tooltip": function(chart, value) {
-                var t = function(key, x, y, e, graph) {
-                    return value.replace("{x}", x)
-                        .replace("{y}", y)
-                        .replace("{key}", key);
-                };
-                chart.tooltip(t);
-            },
-            "minmax":function (chart, value) {
-            },
-            "trendlines":function (chart, value) {
-            },
-            "showLegend":function(chart, value) {
-                chart.showLegend(value);
-            },
-            "showControls":function(chart, value) {
-                if (chart.showControls)
-                    chart.showControls(value);
-            },
-            "showMaxMin":function(chart, value) {
-                chart.showMaxMin(value);
-            },
-            showValues: function(chart, value) {
-                chart.showValues(value);
-            },
-            "customTooltips":function (chart, value) { 
-            },
-            "stacked":function(chart, value) {
-                chart.stacked(value);
-            },
-            "grouped":function(chart, value) {
-                chart.stacked(!value);
-            },
-            "margin":function(chart, value) {
-                chart.margin(value);
-            },
-        },
-        getGraph: {
-            "multiBarChart":function (view) {
-
-                var chart;
-                chart = nv.models.multiBarChart().reduceXTicks(false) ;
-                view.setAxis("all", chart);
-
-
-                    //                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                    //              var actions = view.getActionsForEvent("selection");
-                var actions = ""
-                if (actions.length > 0)
-                    chart.multibar.dispatch.on('elementClick', function (e) {
-                        view.doActions(actions, [e.point.record]);
-                    });
-                  var actionsH = ""
-
-                //    var actionsH = view.getActionsForEvent("hover");
-                if (actionsH.length > 0)
-                {
-                    chart.multibar.dispatch.on('elementMouseover', function (e) {
-                        view.doActions(actionsH, [e.point.record]);
-                    });
-                }
-                return chart;
-            },
-            "lineChart":function (view) {
-                var chart;
-                chart = nv.models.lineChart().useInteractiveGuideline(true);
-                view.setAxis("all", chart);
-                return chart;
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                var actions = view.getActionsForEvent("selection");
-                if (actions.length > 0)
-                {
-                    chart.lines.dispatch.on('elementClick', function (e) {
-                        view.doActions(actions, [e.point.record]);
-                    });
-                }
-                var actionsH = view.getActionsForEvent("hover");
-                if (actionsH.length > 0)
-                {
-                    chart.lines.dispatch.on('elementMouseover', function (e) {
-                        view.doActions(actionsH, [e.point.record]);
-                    });
-                }
-                return chart;
-            },
-            "lineWithFocusChart":function (view) {
-                var chart;
-                chart = nv.models.lineWithFocusChart();
-                view.setAxis("all", chart);
-
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                var actions = view.getActionsForEvent("selection");
-                if (actions.length > 0)
-                {
-                    chart.lines.dispatch.on('elementClick', function (e) {
-                        view.doActions(actions, [e.point.record]);
-                    });
-                }
-                var actionsH = view.getActionsForEvent("hover");
-                if (actionsH.length > 0)
-                {
-                    chart.lines.dispatch.on('elementMouseover', function (e) {
-                        view.doActions(actionsH, [e.point.record]);
-                    });
-                }                return chart;
-            },
-            "stackedAreaChart":function (view) {
-                var chart;
-                chart = nv.models.stackedAreaChart().useInteractiveGuideline(true);
-                view.setAxis("all", chart);
-                return chart;
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                var actions = view.getActionsForEvent("selection");
-                if (actions.length > 0)
-                {
-                    chart.stacked.dispatch.on('elementClick', function (e) {
-                        view.doActions(actions, [e.point.record]);
-                    });
-                }
-                var actionsH = view.getActionsForEvent("hover");
-                if (actionsH.length > 0)
-                {
-                    chart.stacked.dispatch.on('elementMouseover', function (e) {
-                        view.doActions(actionsH, [e.point.record]);
-                    });
-                }
-                return chart;
-            },
-            "linePlusBarWithFocusChart": function (view) {
-                var chart;
-                chart = nv.models.linePlusBarWithFocusChart();
-                return chart;
-            },
-            "multiBarHorizontalChart":function (view) {
-                var chart;
-                chart = nv.models.multiBarHorizontalChart();
-               // view.setAxis("all", chart);
-                return chart;
-                //   view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                var actions='';
-                                var actionsH='';
-
-                // var actions = view.getActionsForEvent("selection");
-                if (actions.length > 0)
-                {
-                    chart.multibar.dispatch.on('elementClick', function (e) {
-                        view.doActions(actions, [e.point.record]);
-                    });
-                }
-                //    var actionsH = view.getActionsForEvent("hover");
-                if (actionsH.length > 0)
-                {
-                    chart.multibar.dispatch.on('elementMouseover', function (e) {
-                        view.doActions(actionsH, [e.point.record]);
-                    });
-                }
-                return chart;
-            },
-            "scatterChart":function (view) {
-                var chart;
-                chart = nv.models.scatterChart();
-                chart.showDistX(true)
-                    .showDistY(true)
-                    .scatter.onlyCircles(false);
-                view.setAxis("all", chart);
-
-                return chart;
-                view.setAxis(view.options.state.axisTitlePresent || "all", chart);
-                var actions = view.getActionsForEvent("selection");
-                if (actions.length > 0)
-                {
-                    chart.scatter.dispatch.on('elementClick', function (e) {
-                        view.doActions(actions, [e.point.record]);
-                    });
-                }
-                var actionsH = view.getActionsForEvent("hover");
-                if (actionsH.length > 0)
-                {
-                    chart.scatter.dispatch.on('elementMouseover', function (e) {
-                        view.doActions(actionsH, [e.point.record]);
-                    });
-                }                
-                return chart;
-            },
-            "discreteBarChart":function (view) {
-                var chart;
-                chart = nv.models.discreteBarChart();
-                view.setAxis("all", chart);
-                view.setOptions(chart);
-                return chart;
-
-                
-                if (actions.length > 0)
-                    chart.discretebar.dispatch.on('elementClick', function (e) {
-                        view.doActions(actions, [e.point.record]);
-                    });
-                var options = {};
-
-                if (view.state.attributes.options) {
-                    if (view.state.attributes.options("trendlines"))
-                        options["trendlines"] = view.state.attributes.options("trendlines");
-                    if (view.state.attributes.options("minmax"))
-                        options["minmax"] = view.state.attributes.options("minmax");
-
-                }
-
-
-                if (actions.length > 0) {
-                    options["callback"] = function (x) {
-
-                        // selection is done on x axis so I need to take the record with range [min_x, max_x]
-                        // is the group attribute
-                        var record_min = _.min(x, function (d) {
-                            return d.min.x
-                        });
-                        var record_max = _.max(x, function (d) {
-                            return d.max.x
-                        });
-                        view.doActions(actions, [record_min.min.record, record_max.max.record]);
-
-                    };
-                } else
-                    options["callback"] = function () {
-                    };
-            },
-            "pieChart":function (view) {
-                var chart;
-       
-                chart = nv.models.pieChart()
-                    .showLabels(true)
-                    .labelType("percent");
-
-                    var options = {
-                        showControls: true,
-                        showLegend: true,
-                        showLabels: false,
-                    }
-                  //  chart.options(options);
-
-                return chart;
-            }
-
-        },
-        getGraphModel: function(self, graphType) {
-
-            switch(graphType) {
-            case "multiBarChart": 
-            case "multiBarHorizontalChart":
-                return self.chart.multibar;
-            case "lineChart":
-            case "lineWithFocusChart":
-            case "linePlusBarChart":
-                return self.chart.lines;
-            case "bulletChart":
-                return self.chart.bullet;
-            case "scatterChart":
-                return self.chart.scatter;
-            case "stackedAreaChart":
-                return self.chart.stacked;
-            case "pieChart":
-                return self.chart.pie;
-            case "discreteBarChart":
-                return self.chart.discretebar;
-            }
-        },
-        doActions:function (actions, records) {
-
-            _.each(actions, function (d) {
-                d.action.doAction(records, d.mapping);
+        if (group) {
+            var groups = _(results).groupBy('x');
+            var grouped = _(groups).map(function(g, key) {
+              var y = _(g).reduce(function(m, item) { return m + item.y; }, 0);
+              return {x: key, y: y};
             });
-
-        },
-        getFieldLabel: function(field){
-            var self=this;
-            var fieldLabel = field.attributes.label;
-            if (field.attributes.is_partitioned)
-                fieldLabel = field.attributes.partitionValue;
-
-            if (typeof self.state.attributes.fieldLabels != "undefined" && self.state.attributes.fieldLabels != null) {
-                var fieldLabel_alternateObj = _.find(self.state.attributes.fieldLabels, function (fl) {
-                    return fl.id == fieldLabel
-                });
-                if (typeof fieldLabel_alternateObj != "undefined" && fieldLabel_alternateObj != null)
-                    fieldLabel = fieldLabel_alternateObj.label;
+            results = grouped;
+        }
+        return results;
+    },
+    setOptions:function (chart, options) {
+        var self = this;
+        for(optionName in options){
+            var optionValue = options[optionName];
+            if(typeof optionValue === 'object'){
+                self.setOptions(chart[optionName], optionValue);
+            // if value is a valid function in the chart then we call it.
+            } else if(chart && _.isFunction(chart[optionName])){
+                chart[optionName](optionValue);
             }
-
-            return fieldLabel;
-        },
-    });
-
+        }
+    },
+    createGraph: function(view){
+        var self = this;
+        var graphType = self.state.get('graphType');
+        var chart = nv.models[graphType]();
+        var defaults = _.clone(view.getDefaults()[graphType]);
+        //merge initial options with defaults
+        defaults = _.extend(defaults || {}, self.initialOptions, self.state.get('options'));
+        self.state.set('options', defaults);
+        view.setOptions(chart,self.state.get('options'));
+        return chart;
+    },
+    getDefaults: function(){
+        var self = this;
+        var defaults = {
+            multiBarChart: {
+                reduceXTicks: false,
+            },
+            lineChart:{
+                useInteractiveGuideline: true,
+                xAxis:{
+                    tickFormat: function(id) {
+                        return (self.chartMap) ? self.chartMap.get(id) : id;
+                    }
+                }
+            },
+            lineWithFocusChart:{
+                xAxis:{
+                    tickFormat: function(id) {
+                        return (self.chartMap) ? self.chartMap.get(id) : id;
+                    }
+                }
+            },
+            stackedAreaChart: {
+                useInteractiveGuideline: true,
+                xAxis:{
+                    tickFormat: function(id) {
+                        return (self.chartMap) ? self.chartMap.get(id) : id;
+                    }
+                }
+            },
+            scatterChart: {
+                showDistX: true,
+                showDistY: true,
+                onlyCircles: false,
+                xAxis:{
+                    tickFormat: function(id) {
+                        return (self.chartMap) ? self.chartMap.get(id) : id;
+                    }
+                }
+            },
+            pieChart: {
+                showLabels: true,
+                labelType: 'percent'
+            },
+        };
+        return defaults;
+    }
+});
 
 })(jQuery, recline.View);
-
-function groupBy(array, f) {
-  var groups = [];
-  var grouped = []
-  array.forEach(function (o) {
-    var group = JSON.stringify(f(o));
-    groups[group] = groups[group] || [];
-    var total = groups[group] || 0;
-    groups[group] = +total + +o.y;
-  });
-  groups.forEach(function (x,y) {
-    grouped.push({
-        x: x,
-        y: y
-    });
-  });
-
-  return grouped;
+//dont remove. could be used later.
+function merge(obj1, obj2) {
+  for (var p in obj2) {
+    try {
+      if ( obj2[p].constructor==Object ) {
+        obj1[p] = merge(obj1[p], obj2[p]);
+      } else {
+        obj1[p] = obj2[p];
+      }
+    } catch(e) {
+      obj1[p] = obj2[p];
+    }
+  }
+  return obj1;
 }
