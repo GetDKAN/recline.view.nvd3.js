@@ -23,7 +23,7 @@ $(document).ready(function(){
       group: true,
       options: {
         staggerLabels: true,
-        tooltips: true,
+        tooltips: true
       }
     },
   });
@@ -43,11 +43,13 @@ $(document).ready(function(){
     var showValues = $('#show-values').is(':checked');
     var xLabel = $("#x-axis-label").val();
     if (xLabel) {
-      graph.state.set('xLabel', xLabel);
+      graph.state.attributes.options.xAxis = graph.state.attributes.options.xAxis || {};
+      graph.state.attributes.options.xAxis.axisLabel = xLabel;
     }
     var yLabel = $("#y-axis-label").val();
     if (yLabel) {
-      graph.state.set('yLabel', yLabel);
+      graph.state.attributes.options.yAxis = graph.state.attributes.options.yAxis || {};
+      graph.state.attributes.options.yAxis.axisLabel = yLabel;
     }
     graph.state.set('xfield', xfield);
     graph.state.set('graphType',type);
