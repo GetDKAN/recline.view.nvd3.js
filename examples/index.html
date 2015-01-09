@@ -37,17 +37,8 @@
   <script type="text/javascript" src="../vendor/slickgrid/plugins/slick.rowmovemanager.js"></script>
   <script type="text/javascript" src="../vendor/moment/moment.js"></script>
 
-  <!--[if lte IE 7]>
-  <script language="javascript" type="text/javascript" src="../vendor/json/json2.js"></script>
-  <![endif]-->
-
-  <!--
-    ## Just use the all in one library version rather than individual files
-  <script type="text/javascript" src="dist/recline.js"></script>
-  -->
-
-  <script src="http://okfnlabs.org/recline/dist/recline.js"></script>
-
+  <script type="text/javascript" src="http://okfnlabs.org/recline/dist/recline.js"></script>
+  <script type="text/javascript" src="http://okfnlabs.org/csv.js/csv.js"></script>
   <!-- D3 JS libraries -->
   <script type="text/javascript" src="../vendor/d3/d3.js"></script>
 
@@ -61,6 +52,10 @@
     }
     #form {
       width: 400px;
+    }
+    svg {
+      width: auto;
+      height: auto;
     }
     .group {
       margin-right: 0;
@@ -76,7 +71,10 @@
 </head>
 
 <body style="padding: 10px;">
-
+<section class="col-sm-12"> 
+  <h2>Data Source</h2>
+  <input type="text" class="form-control" id="source" placeholder="http://demo.getdkan.com/sites/default/files/us_foreclosures_jan_2012_by_state.csv" value="http://demo.getdkan.com/sites/default/files/us_foreclosures_jan_2012_by_state_0.csv">
+</section>  
 <section class="col-sm-4"> 
   <h2>Chart Settings</h2>
   <form class="form-horizontal" role="form">
@@ -184,22 +182,23 @@
 <h2>Chart</h2>
 <div id="graph" style="position: relative;"></div>
 </section>
-
-<h3>Option Index</h3>
-<table class="table">
-  <tr>
-    <th>chart</th>
-    <th>option</th>
-  </tr>
-  <tr>
-    <td>Discrete Bar</td>
-    <td>staggerLabels, tooltips, showValues, transitionDuration</td>
-  </tr>
-  <tr>
-    <td>Line</td>
-    <td>useInteractiveGuideline, showLegend</td>
-  </tr>
-</table>
+<section class="col-sm-12"> 
+  <h3>Option Index</h3>
+  <table class="table">
+    <tr>
+      <th>chart</th>
+      <th>option</th>
+    </tr>
+    <tr>
+      <td>Discrete Bar</td>
+      <td>staggerLabels, tooltips, showValues, transitionDuration</td>
+    </tr>
+    <tr>
+      <td>Line</td>
+      <td>useInteractiveGuideline, showLegend</td>
+    </tr>
+  </table>
+</section>
 
 <script type="text/javascript" src="switch-app.js"></script>
 <script type="text/javascript" src="../src/recline.view.nvd3.js"></script>

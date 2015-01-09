@@ -32,35 +32,60 @@ $(document).ready(function(){
   $(".form-control").change(update.bind());
 
   function update() {
-    var height = $("#height").val();
-    var width = $("#width").val();
-    var type = $("#switch option:selected").val();
-    var xfield = $("#xfield").val();
-    var seriesFields = $("#seried-fields").val();
-    var group = $('#group').is(':checked');
-    var staggerLabels = $('#stagger-labels').is(':checked');
-    var tooltips = $('#tooltips').is(':checked');
-    var showValues = $('#show-values').is(':checked');
-    var xLabel = $("#x-axis-label").val();
-    if (xLabel) {
-      graph.state.attributes.options.xAxis = graph.state.attributes.options.xAxis || {};
-      graph.state.attributes.options.xAxis.axisLabel = xLabel;
-    }
-    var yLabel = $("#y-axis-label").val();
-    if (yLabel) {
-      graph.state.attributes.options.yAxis = graph.state.attributes.options.yAxis || {};
-      graph.state.attributes.options.yAxis.axisLabel = yLabel;
-    }
-    graph.state.set('xfield', xfield);
-    graph.state.set('graphType',type);
-    graph.state.set('group', group);
-    graph.state.attributes.options.staggerLabels = staggerLabels;
-    graph.state.attributes.options.tooltips = tooltips;
-    graph.state.attributes.options.showValues = showValues;
-    graph.state.attributes.height = height;
-    graph.state.attributes.width = width;
-    graph.state.set('seriesFields', seriesFields.split(","));
-    graph.render();
+    var datasource = $("#source").val();
+    var ajax_options = reclineCSV(datasource);
+    $.ajax(ajax_options).done(function(data) {
+      var dataset;
+      // Converts line endings in either format to unix format.
+      data = data.replace(/(\r\n|\n|\r)/gm,"\n");
+      var records = CSV.parse(data);
+      dataset = new recline.Model.Dataset({
+        records: records,
+        size: 10,
+        query: {
+          size: 10
+        }
+      });
+      var query = new recline.Model.Query({size:10});
+      dataset.query(query);
+            console.log(dataset);
+      dataset.fetch();
+
+      console.log(dataset);
+
+      var height = $("#height").val();
+      var width = $("#width").val();
+      var type = $("#switch option:selected").val();
+      var xfield = $("#xfield").val();
+      var seriesFields = $("#seried-fields").val();
+      var group = $('#group').is(':checked');
+      var staggerLabels = $('#stagger-labels').is(':checked');
+      var tooltips = $('#tooltips').is(':checked');
+      var showValues = $('#show-values').is(':checked');
+      var xLabel = $("#x-axis-label").val();
+      if (xLabel) {
+        graph.state.attributes.options.xAxis = graph.state.attributes.options.xAxis || {};
+        graph.state.attributes.options.xAxis.axisLabel = xLabel;
+      }
+      var yLabel = $("#y-axis-label").val();
+      if (yLabel) {
+        graph.state.attributes.options.yAxis = graph.state.attributes.options.yAxis || {};
+        graph.state.attributes.options.yAxis.axisLabel = yLabel;
+      }
+      graph.state.set('xfield', xfield);
+      graph.state.set('graphType',type);
+      graph.state.set('group', group);
+      graph.state.attributes.options.staggerLabels = staggerLabels;
+      graph.state.attributes.options.tooltips = tooltips;
+      graph.state.attributes.options.showValues = showValues;
+      graph.state.attributes.height = height;
+      graph.state.attributes.width = width;
+      graph.state.set('seriesFields', seriesFields.split(","));
+      graph.model = dataset;
+      graph.render();
+      grid.model = dataset;
+      grid.render();
+    });
   };
 });
 
@@ -77,6 +102,33 @@ function createStateDataset() {
   });
   return dataset;
 };
+
+function reclineCSV(file) {
+  var options = {delimiter: ","};
+
+
+  CSV.fetch({
+    url: "http://demo.getdkan.com/sites/default/files/us_foreclosures_jan_2012_by_state_0.csv"
+  }
+  ).done(function(dataset) {
+    console.log(dataset);
+  });
+  var ajax_options = {
+      type: 'GET',
+      url: file,
+      dataType: 'text'      
+  };      
+  ajax_options.timeout = 500;
+  ajax_options.error = function(x, t, m) {
+      if (t === "timeout") {
+          $('.data-explorer').append('<div class="messages status">File was too large or unavailable for preview.</div>');
+      } else {
+          $('.data-explorer').append('<div class="messages status">Data preview unavailable.</div>');
+      }
+  };
+
+  return ajax_options;
+}
 
 // create standard demo dataset
 function createDemoDataset() {
