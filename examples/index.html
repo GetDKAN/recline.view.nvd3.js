@@ -42,6 +42,9 @@
   <!-- D3 JS libraries -->
   <script type="text/javascript" src="../vendor/d3/d3.js"></script>
 
+  <script type="text/javascript" src="../dist/select2.full.js"></script>
+  <link rel="stylesheet" href="../dist/select2.min.css">
+
   <!-- NVD3 JS libraries -->
   <script type="text/javascript" src="../vendor/nvd3/nv.d3.js"></script>
 
@@ -67,15 +70,15 @@
       -webkit-box-shadow: none;
       box-shadow: none;
     }
-  </style> 
+  </style>
 </head>
 
 <body style="padding: 10px;">
-<section class="col-sm-12"> 
+<section class="col-sm-12">
   <h2>Data Source</h2>
-  <input type="text" class="form-control" id="source" placeholder="http://demo.getdkan.com/sites/default/files/us_foreclosures_jan_2012_by_state.csv" value="http://demo.getdkan.com/sites/default/files/us_foreclosures_jan_2012_by_state_0.csv">
-</section>  
-<section class="col-sm-4"> 
+  <input type="text" class="form-control bind datasource" id="source" placeholder="http://demo.getdkan.com/sites/default/files/us_foreclosures_jan_2012_by_state.csv" value="http://demo.getdkan.com/sites/default/files/us_foreclosures_jan_2012_by_state_0.csv">
+</section>
+<section class="col-sm-3">
   <h2>Chart Settings</h2>
   <form class="form-horizontal" role="form">
     <div class="group">
@@ -83,7 +86,7 @@
       <div class="form-group">
         <label for="type" class="col-sm-2 control-label">type</label>
         <div class="col-sm-10">
-            <select id="switch" class="form-control">
+            <select id="switch" class="form-control bind">
               <option value="discreteBarChart">Discrete Bar Chart</option>
               <option value="multiBarChart">Multi Bar Chart</option>
               <option value="stackedAreaChart">Stacked Area Chart</option>
@@ -93,7 +96,7 @@
               <option value="lineWithFocusChart">Line with Focus Chart</option>
               <option value="scatterChart">Scatter Chart</option>
               <option value="linePlusBarWithFocusChart">Line Plus Bar With Focus Chart</option>
-              <!--  
+              <!--
               <option value="multiBarWithBrushChart">multiBarWithBrushChart</option>
               <option value="multiChart">multiChart</option>
               <option value="linePlusBarChart">linePlusBarChart</option>-->
@@ -106,19 +109,19 @@
       <div class="form-group">
         <label for="xfield" class="col-sm-2 control-label">X-Field</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="xfield" placeholder="x-field data" value="state">
+          <select class="form-control" id="xfield"></select>
         </div>
       </div>
        <div class="form-group">
         <label for="series-field" class="col-sm-2 control-label">Series Fields</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="seried-fields" placeholder="series field data" value="total,ratio">
+          <select class="series-fields form-control" multiple="multiple"></select>
         </div>
       </div>
        <div class="form-group">
         <label for="group" class="col-sm-2 control-label">Group</label>
         <div class="col-sm-10">
-          <input type="checkbox" class="form-control" id="group" checked="true">
+          <input type="checkbox" class="form-control bind" id="group" checked="true">
         </div>
       </div>
     </div>
@@ -127,13 +130,13 @@
       <div class="form-group">
         <label for="x-axis-label" class="col-sm-2 control-label">X-Axis Label</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="x-axis-label" placeholder="x-axis label">
+          <input type="text" class="form-control bind" id="x-axis-label" placeholder="x-axis label">
         </div>
       </div>
        <div class="form-group">
         <label for="y-axis-label" class="col-sm-2 control-label">Y-Axis Label</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="y-axis-label" placeholder="y-axis label">
+          <input type="text" class="form-control bind" id="y-axis-label" placeholder="y-axis label">
         </div>
       </div>
     </div>
@@ -142,47 +145,47 @@
       <div class="form-group">
         <label for="width" class="col-sm-2 control-label">Width</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="width" placeholder="400" value="400">
+          <input type="text" class="form-control bind" id="width" placeholder="400" value="600">
         </div>
       </div>
       <div class="form-group">
         <label for="height" class="col-sm-2 control-label">Height</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="height" placeholder="400" value="400">
+          <input type="text" class="form-control bind" id="height" placeholder="400" value="400">
         </div>
-      </div> 
+      </div>
     </div>
     <div class="group">
       <h4 class="col-sm-10 col-sm-offset-2">Options</h4>
       <div class="form-group">
         <label class="col-sm-2 control-label">Stagger Labels</label>
         <div class="col-sm-10">
-          <input type="checkbox" class="form-control" id="stagger-labels" checked="true">
+          <input type="checkbox" class="form-control bind" id="stagger-labels" checked="true">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Tooltips</label>
         <div class="col-sm-10">
-          <input type="checkbox" class="form-control" id="tooltips" checked="true">
+          <input type="checkbox" class="form-control bind" id="tooltips" checked="true">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">Show Values</label>
         <div class="col-sm-10">
-          <input type="checkbox" class="form-control" id="show-values">
+          <input type="checkbox" class="form-control bind" id="show-values">
         </div>
       </div>
 
     </div>
   </form>
 </section>
-<section class="col-sm-8">
+<section class="col-sm-9">
 <h2>Data</h2>
 <div id="grid" style="height:180px; width: 400px;"></div>
 <h2>Chart</h2>
 <div id="graph" style="position: relative;"></div>
 </section>
-<section class="col-sm-12"> 
+<section class="col-sm-12">
   <h3>Option Index</h3>
   <table class="table">
     <tr>
@@ -204,4 +207,4 @@
 <script type="text/javascript" src="../src/recline.view.nvd3.js"></script>
 </body>
 </html>
-  
+

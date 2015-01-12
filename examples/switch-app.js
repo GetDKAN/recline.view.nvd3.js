@@ -16,10 +16,10 @@ $(document).ready(function(){
     el: $graphEl,
     state: {
       height: 400,
-      width: 400,
+      width: 600,
       graphType: "discreteBarChart",
       xfield: "state",
-      seriesFields: ["total", "ratio"],
+      seriesFields: ["total.foreclosures", "foreclosure.ratio"],
       group: true,
       options: {
         staggerLabels: true,
@@ -29,9 +29,18 @@ $(document).ready(function(){
   });
   graph.render();
 
-  $(".form-control").change(update.bind());
+  $(".series-fields").select2({
+    data: [{id: 0, text: "total.foreclosures"}, {id:1, text: "foreclosure.ratio"}, {id:2, text: "state"}]
+  })
+  $(".series-fields").val([0,1]).trigger("change");
+  $("#xfield").select2({
+    data: [{id: 0, text: "total.foreclosures"}, {id:1, text: "foreclosure.ratio"}, {id:2, text: "state"}]
+  })
+  $("#xfield").val([2]).trigger("change");
 
-  function update() {
+  $(".bind").change(update.bind());
+
+  function update(change) {
     var datasource = $("#source").val();
     var ajax_options = reclineCSV(datasource);
     $.ajax(ajax_options).done(function(data) {
@@ -48,16 +57,36 @@ $(document).ready(function(){
       });
       var query = new recline.Model.Query({size:10});
       dataset.query(query);
-            console.log(dataset);
       dataset.fetch();
+      var fields = [];
+      for (var i = 0; i < dataset.fields.length; i++) {
+        fields.push({"id": i, "text": dataset.fields.models[i].id});
+      };
+      if ($(change.target).hasClass('datasource')) {
+        $(".series-fields").select2("destroy");
+        $(".series-fields").empty();
+        $(".series-fields").select2({
+          data: fields
+        });
+        $(".series-fields").val([1]).trigger("change");
+        $("#xfield").select2("destroy");
+        $("#xfield").empty();
+        $("#xfield").select2({
+          data: fields
+        });
+        $("#xfield").val([0]).trigger("change");
+      }
 
-      console.log(dataset);
+      var seriesFields = [];
+      $('.series-fields :selected').each(function(s, select) {
+        seriesFields[s] = $(select).text();
+      });
+      seriesFields = seriesFields.join(',');
 
       var height = $("#height").val();
       var width = $("#width").val();
       var type = $("#switch option:selected").val();
-      var xfield = $("#xfield").val();
-      var seriesFields = $("#seried-fields").val();
+      var xfield = fields[$("#xfield").val()].text;
       var group = $('#group').is(':checked');
       var staggerLabels = $('#stagger-labels').is(':checked');
       var tooltips = $('#tooltips').is(':checked');
@@ -92,12 +121,12 @@ $(document).ready(function(){
 function createStateDataset() {
   var dataset = new recline.Model.Dataset({
      records: [
-      {id: 0, state: 'Idaho', total: 861, ratio: 776},
-      {id: 1, state: 'Minnesota', total: 3017, ratio: 778},
-      {id: 2, state: 'Hawaii', total: 652, ratio: 797},
-      {id: 3, state: 'Iowa', total: 1365, ratio: 979},
-      {id: 4, state: 'Oregon', total: 1630, ratio: 1028},
-      {id: 5, state: 'Idaho', total: 1000, ratio: 500},
+      {id: 0, state: 'Idaho', "total.foreclosures": 861, "foreclosure.ratio": 776},
+      {id: 1, state: 'Minnesota', "total.foreclosures": 3017, "foreclosure.ratio": 778},
+      {id: 2, state: 'Hawaii', "total.foreclosures": 652, "foreclosure.ratio": 797},
+      {id: 3, state: 'Iowa', "total.foreclosures": 1365, "foreclosure.ratio": 979},
+      {id: 4, state: 'Oregon', "total.foreclosures": 1630, "foreclosure.ratio": 1028},
+      {id: 5, state: 'Idaho', "total.foreclosures": 1000, "foreclosure.ratio": 500},
     ]
   });
   return dataset;
@@ -106,18 +135,11 @@ function createStateDataset() {
 function reclineCSV(file) {
   var options = {delimiter: ","};
 
-
-  CSV.fetch({
-    url: "http://demo.getdkan.com/sites/default/files/us_foreclosures_jan_2012_by_state_0.csv"
-  }
-  ).done(function(dataset) {
-    console.log(dataset);
-  });
   var ajax_options = {
       type: 'GET',
       url: file,
-      dataType: 'text'      
-  };      
+      dataType: 'text'
+  };
   ajax_options.timeout = 500;
   ajax_options.error = function(x, t, m) {
       if (t === "timeout") {
@@ -130,42 +152,3 @@ function reclineCSV(file) {
   return ajax_options;
 }
 
-// create standard demo dataset
-function createDemoDataset() {
-  var dataset = new recline.Model.Dataset({
-    records: [
-      {id: 0, date: '2011-01-01', x: 1, y: 2, z: 1, country: 'DE', title: 'first', lat:52.56, lon:13.40},
-      {id: 1, date: '2011-02-02', x: 2, y: 4, z: 1, country: 'UK', title: 'second', lat:54.97, lon:-1.60},
-      {id: 2, date: '2011-03-03', x: 3, y: 6, z: 1, country: 'US', title: 'third', lat:40.00, lon:-75.5},
-      {id: 3, date: '2011-04-04', x: 4, y: 8, z: 2, country: 'DE', title: 'fourth', lat:57.27, lon:-6.20},
-      {id: 4, date: '2011-05-04', x: 5, y: 10, z: 2, country: 'UK', title: 'fifth', lat:51.58, lon:0},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'US', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UB', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UC', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UD', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UE', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UF', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UG', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UH', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UI', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UJ', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UK', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'UL', title: 'sixth', lat:51.04, lon:7.9},
-      {id: 6, date: '2011-06-02', x: 6, y: 24, z: 2, country: 'US', title: 'sixth', lat:51.04, lon:7.9}
-    ],
-    // let's be really explicit about fields
-    // Plus take opportunity to set date to be a date field and set some labels
-    fields: [
-      {id: 'id'},
-      {id: 'date', type: 'date'},
-      {id: 'x', type: 'number'},
-      {id: 'y', type: 'number'},
-      {id: 'z', type: 'number'},
-      {id: 'country', 'label': 'Country'},
-      {id: 'title', 'label': 'Title'},
-      {id: 'lat'},
-      {id: 'lon'}
-    ]
-  });
-  return dataset;
-};
