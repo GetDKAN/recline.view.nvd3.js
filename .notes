@@ -1,0 +1,65 @@
+###	recline.View.nvd3.Base
+allow override x and y getters
+
+###	recline.View.nvd3.LineChart
+[
+	{values: [{x:1, y:1 }], key: 'Name of serie', color:'#cccccc'},
+	{values: [{x:1, y:1 }], key: 'Name of serie', color:'#cccccc'}
+]
+
+###	recline.View.nvd3.scatterChart
+[
+	{values: [{x:1, y:1, size: 20, shape: 'circle'}], key: 'Name of serie'},
+	{values: [{x:1, y:1, size: 20, shape: 'circle'}], key: 'Name of serie'}
+]
+
+###	recline.View.nvd3.stackedAreaChart
+[
+	{values: [{x:1, y:1 }], key: 'Name of serie'},
+	{values: [{x:1, y:1 }], key: 'Name of serie'}
+]
+
+###	recline.View.nvd3.discreteBarChart
+[
+	{values: [{x:1, y:1 }], key: 'Name of serie'},
+	{values: [{x:1, y:1 }], key: 'Name of serie'}
+]
+
+###	recline.View.nvd3.multiBarHorizontalChart
+[
+	{values: [{x:1, y:1 }], key: 'Name of serie', color:'#cccccc'},
+	{values: [{x:1, y:1 }], key: 'Name of serie 2', color:'#cccccc'}
+]
+
+###	recline.View.nvd3.linePlusBarChart
+[
+	{values: [{x:1, y:1 }], key: 'Name of serie', color:'#cccccc', bar: true},
+	{values: [{x:1, y:1 }], key: 'Name of serie 2', color:'#cccccc'}
+]
+
+###	recline.View.nvd3.multiBarChart
+[
+	{values: [{x:1, y:1 }], key: 'Name of serie', color:'#cccccc'},
+	{values: [{x:1, y:1 }], key: 'Name of serie 2', color:'#cccccc'}
+]
+
+###	recline.View.nvd3.cumulativeLineChart
+[
+	{values: [{x:1, y:1 }], key: 'Name of serie', color:'#cccccc'},
+	{values: [{x:1, y:1 }], key: 'Name of serie 2', color:'#cccccc'}
+]
+
+###	recline.View.nvd3.lineWithFocusChart
+[
+	{values: [{x:1, y:1 }], key: 'Name of serie', color:'#cccccc'},
+	{values: [{x:1, y:1 }], key: 'Name of serie 2', color:'#cccccc'}
+]
+
+###	recline.View.nvd3.pieChart
+[
+	{x: 1, y: 1},
+	{x: 1, y: 1}
+]
+
+
+Quiero comparar columnas o todos los valores posibles de una columna?

@@ -14,8 +14,8 @@
     "tests"
   ],
   "dependencies": {
+    "lodash.data": "git@github.com:NuCivic/lodash.data.git",
     "backbone": "1.0.0",
-    "underscore": "1.4.4",
     "jquery": "2.0.3",
     "json": "*",
     "moment": "2.0.0",
