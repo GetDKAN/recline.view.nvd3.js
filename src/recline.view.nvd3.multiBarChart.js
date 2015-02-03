@@ -13,7 +13,8 @@ this.recline.View = this.recline.View || {};
       //self.state.set('group', true);
       self.menu = new my.multiBarChartControls({
         model: self.model,
-        state: self.state
+        state: self.state,
+        parent: self
       });
     },
     render: function(){

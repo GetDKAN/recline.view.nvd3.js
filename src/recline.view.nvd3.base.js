@@ -109,10 +109,12 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
           return data;
         });
+        console.log(series);
         return series;
       },
       setOptions: function (chart, options) {
         var self = this;
+
         for(var optionName in options){
           var optionValue = options[optionName];
           if(typeof optionValue === 'object'){
@@ -137,7 +139,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       setSavedState: function(state){
         var self = this;
         var defaults = _.clone(self.getDefaults());
-        var options = _.deepMerge(_.deepMerge(defaults, self.state.get('options')), self.initialOptions);
+        var options = _.deepMerge(_.deepMerge(state.options,defaults), self.initialOptions);
         state.options = options;
         self.state.set(state);
       },

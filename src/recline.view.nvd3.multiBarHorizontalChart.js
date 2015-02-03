@@ -13,7 +13,8 @@ this.recline.View = this.recline.View || {};
       self.state.set('computeXLabels', false);
       self.menu = new my.multiBarHorizontalChartControls({
         model: self.model,
-        state: self.state
+        state: self.state,
+        parent: self
       });
     },
     render: function(){

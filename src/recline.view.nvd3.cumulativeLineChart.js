@@ -12,7 +12,8 @@ this.recline.View = this.recline.View || {};
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
       self.menu = new my.cumulativeLineChartControls({
         model: self.model,
-        state: self.state
+        state: self.state,
+        parent: self
       });
     },
     render: function(){

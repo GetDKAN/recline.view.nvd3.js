@@ -37,7 +37,6 @@ this.recline = this.recline || {};
      * @param  {[String]} serializedState Url serialized state
      */
     self._init = function(serializedState){
-      console.log('init');
       var state = self.transform(serializedState, self.toState);
       _.each(dependencies, inv('update', state));
       self.currentState = state;

@@ -6,7 +6,7 @@ this.recline.View = this.recline.View || {};
 (function ($, my) {
 
 my.BaseControl = Backbone.View.extend({
-  template: '' +
+  template: '<form id="control-chart">' +
               '<div class="form-group">' +
                 '<label for="control-chart-width">Width</label>' +
                 '<input value="{{width}}" type="text" id="control-chart-width" class="form-control" />' +
@@ -29,24 +29,42 @@ my.BaseControl = Backbone.View.extend({
               '</div>' +
               '<div class="form-group checkbox">' +
                 '<label for="control-chart-group">' +
-                '<input type="checkbox" id="control-chart-group" {{#group}}checked{{/group}}/> Group' +
+                '<input type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group' +
                 '</label>' +
               '</div>' +
               '<div class="form-group checkbox">' +
                 '<label for="control-chart-compute-x-labels">' +
-                '<input type="checkbox" id="control-chart-compute-x-labels" {{#computeXLabels}}checked{{/computeXLabels}}/> X as label' +
+                '<input type="checkbox" id="control-chart-compute-x-labels" {{#computeXLabels}}checked{{/computeXLabels}}/> Use x for label' +
+                '</label>' +
+              '</div>' +
+              '<div class="form-group checkbox">' +
+                '<label for="control-chart-compute-stagger-labels">' +
+                '<input type="checkbox" id="control-chart-compute-stagger-labels" {{#options.staggerLabels}}checked{{/options.staggerLabels}}/> Stagger Labels' +
+                '</label>' +
+              '</div>' +
+              '<div class="form-group checkbox">' +
+                '<label for="control-chart-compute-show-tooltips">' +
+                '<input type="checkbox" id="control-chart-compute-show-tooltips" {{#options.tooltips}}checked{{/options.tooltips}}/> Show Tooltips' +
+                '</label>' +
+              '</div>' +
+              '<div class="form-group checkbox">' +
+                '<label for="control-chart-compute-show-values">' +
+                '<input type="checkbox" id="control-chart-compute-show-values" {{#options.showValues}}checked{{/options.showValues}}/> Show Values' +
                 '</label>' +
               '</div>' +
               '<button id="control-chart-update" class="btn btn-primary">Update</button>' +
-            '',
+            '</form>',
   initialize: function(options){
     var self = this;
     self.state = options.state;
     self.model = options.model;
+    self.parent = options.parent;
+    console.log(self.parent);
     self.render();
   },
   events: {
-    'click #control-chart-update': 'update'
+    'click #control-chart-update': 'update',
+    'submit #control-chart': 'submit'
   },
   render: function(){
     var self = this;
@@ -57,17 +75,49 @@ my.BaseControl = Backbone.View.extend({
   },
   update: function(e){
     var self = this;
-    console.log(self.$el.find('#control-chart-compute-x-labels').is(':checked'));
+    var state = self.getUIState();
+    try{
+      self.validate(state);
+      self.parent.setSavedState(state);
+    } catch(err) {
+      alert(err.message);
+      self.render();
+    }
+  },
+  validate: function(state){
+    if(isNaN(state.width)){
+      throw new Error("Width must be a number");
+    }
+    if(isNaN(state.height)){
+      throw new Error("Height must be a number");
+    }
+  },
+  submit: function(e){
+    var self = this;
+    e.preventDefault();
+    self.update(e);
+  },
+  getUIState: function(){
+    var self = this;
+
     var seriesFields = self.$el.find('#control-chart-series').val().split(',');
     seriesFields = _.invoke(seriesFields, 'trim');
-    self.state.set({
-      width: self.$el.find('#control-chart-width').val(),
-      height: self.$el.find('#control-chart-height').val(),
+
+    // FIX ME: point id to view dom
+    var computedState = {
+      width: $('#control-chart-width').val(),
+      height: $('#control-chart-height').val(),
       seriesFields: seriesFields,
-      xfield: self.$el.find('#control-chart-xfield').val(),
-      group: self.$el.find('#control-chart-group').is(':checked'),
-      computeXLabels: self.$el.find('#control-chart-compute-x-labels').is(':checked'),
-    });
+      xfield: $('#control-chart-xfield').val(),
+      group: $('#control-chart-group').is(':checked'),
+      computeXLabels: $('#control-chart-compute-x-labels').is(':checked'),
+    };
+
+    computedState.options = computedState.options || {};
+    computedState.options.staggerLabels = $('#control-chart-compute-stagger-labels').is(':checked');
+    computedState.options.tooltips = $('#control-chart-compute-show-tooltips').is(':checked');
+    computedState.options.showValues = $('#control-chart-compute-show-values').is(':checked');
+    return computedState;
   }
 });
 

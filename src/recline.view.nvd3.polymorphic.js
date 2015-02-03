@@ -33,7 +33,9 @@ this.recline.View = this.recline.View || {};
 
       self.graphType = (self.router.getCurrentState() && self.router.getCurrentState().currentView) || 'lineChart';
       self.graph = new recline.View.nvd3[self.graphType](options);
-      self.graph.setSavedState(self.router.getCurrentState() || state);
+      var urlState = self.router.getCurrentState();
+
+      self.graph.setSavedState(urlState || state);
 
       self.render();
       self.graph.state.on('change', function(e){
@@ -59,7 +61,6 @@ this.recline.View = this.recline.View || {};
 
       self.graph = new recline.View.nvd3[self.graphType](self.options);
       self.graph.setSavedState(savedState);
-      console.log(self.graph.state);
       self.router.navigateToState(self.graph.state);
       self.render();
 
