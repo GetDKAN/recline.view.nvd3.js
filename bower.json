@@ -25,6 +25,7 @@
     "timeline": "2.29.1",
     "underscore.deferred": "*",
     "bootstrap-css": "2.3.2",
-    "nvd3": "*"
+    "nvd3": "*",
+    "recline-deeplink": "git@github.com:NuCivic/recline-deeplink.git#decouple_multiview"
   }
 }

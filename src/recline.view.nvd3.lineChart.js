@@ -10,25 +10,15 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'lineChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      self.state.set('computeXLabels', true);
+      self.menu = new my.lineChartControls({
+        model: self.model,
+        state: self.state
+      });
     },
     render: function(){
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
-    },
-    createSeries: function(records){
-      var self = this;
-      records = records.toJSON();
-      self.chartMap = d3.map();
-
-      return _.map(self.state.get('seriesFields'), function(serie){
-        var data = {};
-        data.key = serie;
-        data.values = _.map(records, function(record, index){
-          self.chartMap.set(index, self.x(record));
-          return {y: self.y(record, serie), x: index, label: self.x(record)};
-        });
-        return data;
-      });
     },
     getDefaults: function(){
       var self = this;
@@ -42,5 +32,17 @@ this.recline.View = this.recline.View || {};
       };
     }
   });
+
+  my.lineChartControls = recline.View.nvd3.BaseControl.extend({
+    initialize: function(options){
+      var self = this;
+      recline.View.nvd3.BaseControl.prototype.initialize.call(self, options);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.BaseControl.prototype.render.call(self, {});
+    }
+  });
+
 
 })(jQuery, recline.View.nvd3);

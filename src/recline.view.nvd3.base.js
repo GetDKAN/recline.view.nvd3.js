@@ -16,29 +16,37 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
   }
 
   my.Base = Backbone.View.extend({
-      template:'<div class="recline-graph">' +
+      template:'<div class="recline-graph row">' +
         '{{data}}' +
-          '<div class="panel {{viewId}}"style="display: block;">' +
+          '<div class="col-md-7 panel {{viewId}}"style="display: block;">' +
             '<div id="{{viewId}}">' +
                 '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
                 'width="{{width}}" height="{{height}}">' +
                 '</svg></div>' +
           '</div>' +
+          '<div class="col-md-5 recline-graph-controls"></div>' +
         '</div> ',
       initialize: function(options) {
         var self = this;
+
         self.$el = $(self.el);
         _.extend(self, options);
         _.bindAll(this, 'render');
 
-        var stateData = _.extend({},
+        var stateData = _.extend({
+            width: 640,
+            height: 480,
+            group: false,
+          },
           options.state
         );
 
-        self.initialOptions = _.clone(this.options.state.options);
+        // FIXME: unify state and options
+        self.initialOptions = _.clone(options.options);
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = new recline.Model.ObjectState(stateData);
+        self.chartMap = d3.map();
       },
       render: function(options){
         var self = this;
@@ -47,8 +55,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         tmplData = self.model.toTemplateJSON();
         tmplData.viewId = self.uuid;
 
-        tmplData.width = self.state.get('width') || DEFAULT_CHART_WIDTH;
-        tmplData.height = self.state.get('height') || DEFAULT_CHART_HEIGHT;
+        tmplData.width = self.state.get('width');
+        tmplData.height = self.state.get('height');
 
         htmls = Mustache.render(self.template, tmplData);
         self.$el.html(htmls);
@@ -67,21 +75,37 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           nv.utils.windowResize(self.chart.update);
           return self.chart;
         });
-
+        self.$('.recline-graph-controls').append(self.menu.$el);
+        self.menu.setElement(self.$('.recline-graph-controls')).render();
         return self;
       },
       createSeries: function(records){
         var self = this;
         records = records.toJSON();
-        return _.map(self.state.get('seriesFields'), function(serie){
+        var series;
+
+
+        series = _.map(self.getSeries(), function(serie){
           var data = {};
           data.key = serie;
-          data.values = _.map(records, function(record){
-            return {y: self.y(record, serie), x: self.x(record)};
+
+          // Group by xfield and acum all the series fields.
+          records = (self.state.get('group'))?
+            _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
+            : records;
+
+          data.values = _.map(records, function(record, index){
+            if(self.state.get('computeXLabels')){
+              self.chartMap.set(index, self.x(record, self.state.get('xfield')));
+              return {y: self.y(record, serie), x: index, label: self.x(record, self.state.get('xfield'))};
+            }
+
+            return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
           });
 
           return data;
         });
+        return series;
       },
       setOptions: function (chart, options) {
         var self = this;
@@ -98,23 +122,34 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       createGraph: function(graphType){
         var self = this;
         var chart = nv.models[graphType]();
-        var defaults = _.clone(self.getDefaults());
-        //merge initial options with defaults
-        defaults = _.extend(defaults || {},
-          self.initialOptions, self.state.get('options'));
-        self.state.set('options', defaults);
+
+        // Set each graph option recursively.
         self.setOptions(chart, self.state.get('options'));
         return chart;
       },
       getDefaults: function(){
         return {};
       },
-      setState: function(state){
+      setStateFromURL: function(state){
         var self = this;
+        var defaults = _.clone(self.getDefaults());
+        var options = _.deepMerge(_.deepMerge(defaults, self.state.get('options')), self.initialOptions);
+        state.options = options;
         self.state.set(state);
       },
       getState: function(state){
+        var self = this;
         return self.state.attributes;
+      },
+      getSeries: function(){
+        var self = this;
+        return self.state.get('seriesFields');
+      },
+      x: function(record, xfield){
+        return record[xfield];
+      },
+      y: function(record, serie){
+        return record[serie];
       }
   });
 

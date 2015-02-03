@@ -10,25 +10,17 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'multiBarChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      //self.state.set('group', true);
+      self.menu = new my.multiBarChartControls({
+        model: self.model,
+        state: self.state
+      });
+
     },
     render: function(){
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
-    },
-    createSeries: function(records){
-      var self = this;
-      records = records.toJSON();
 
-      return _.map(self.state.get('seriesFields'), function(serie){
-        var data = {};
-        data.key = serie;
-        data.values = _.map(
-          _.reportBy(records,self.state.get('xfield')), function(record){
-          return {y: self.y(record, serie), x: self.x(record)};
-        });
-
-        return data;
-      });
     },
     getDefaults: function(){
       var self = this;
@@ -36,6 +28,18 @@ this.recline.View = this.recline.View || {};
         reduceXTicks: false,
       };
     }
+  });
+
+  my.multiBarChartControls = recline.View.nvd3.BaseControl.extend({
+    initialize: function(options){
+      var self = this;
+      recline.View.nvd3.BaseControl.prototype.initialize.call(self, options);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.BaseControl.prototype.render.call(self, {});
+    }
+
   });
 
 })(jQuery, recline.View.nvd3);

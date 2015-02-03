@@ -19,6 +19,7 @@ this.recline.View = this.recline.View || {};
       var self = this;
       records = records.toJSON();
       var serie = self.state.get('seriesFields')[0];
+      console.log(self.state.get('seriesFields'));
       return  _.map(records, function(record){
         return {y: self.y(record, serie), x: self.x(record)};
       });
