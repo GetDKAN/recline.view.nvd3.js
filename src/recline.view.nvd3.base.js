@@ -139,6 +139,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       setSavedState: function(state){
         var self = this;
         var defaults = _.clone(self.getDefaults());
+        state = state || {};
+        state.options = state.options || {};
         var options = _.deepMerge(_.deepMerge(state.options,defaults), self.initialOptions);
         state.options = options;
         self.state.set(state);

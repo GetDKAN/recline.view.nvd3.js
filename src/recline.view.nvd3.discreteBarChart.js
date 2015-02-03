@@ -24,6 +24,11 @@ this.recline.View = this.recline.View || {};
   });
 
   my.discreteBarChartControls = recline.View.nvd3.BaseControl.extend({
+    _template: '<div class="form-group checkbox">' +
+                '<label for="control-chart-show-values">' +
+                '<input type="checkbox" id="control-chart-show-values" {{#options.showValues}}checked{{/options.showValues}}/> Show Values' +
+                '</label>' +
+              '</div>',
     initialize: function(options){
       var self = this;
       recline.View.nvd3.BaseControl.prototype.initialize.call(self, options);
@@ -31,6 +36,13 @@ this.recline.View = this.recline.View || {};
     render: function(){
       var self = this;
       recline.View.nvd3.BaseControl.prototype.render.call(self, {});
+      self.$el.find('#control-chart-container').append(Mustache.render(self._template, self.state.toJSON()));
+    },
+    getUIState:function(){
+      var self = this;
+      var computedState = recline.View.nvd3.BaseControl.prototype.getUIState.call(self, {});
+      computedState.options.showValues = $('#control-chart-show-values').is(':checked');
+      return computedState;
     }
   });
 })(jQuery, recline.View.nvd3);
