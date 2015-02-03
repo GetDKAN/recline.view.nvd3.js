@@ -10,6 +10,10 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'cumulativeLineChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      self.menu = new my.cumulativeLineChartControls({
+        model: self.model,
+        state: self.state
+      });
     },
     render: function(){
       var self = this;
@@ -43,4 +47,14 @@ this.recline.View = this.recline.View || {};
     }
   });
 
+  my.cumulativeLineChartControls = recline.View.nvd3.BaseControl.extend({
+    initialize: function(options){
+      var self = this;
+      recline.View.nvd3.BaseControl.prototype.initialize.call(self, options);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.BaseControl.prototype.render.call(self, {});
+    }
+  });
 })(jQuery, recline.View.nvd3);

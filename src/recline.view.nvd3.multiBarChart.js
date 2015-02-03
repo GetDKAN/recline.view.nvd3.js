@@ -15,7 +15,6 @@ this.recline.View = this.recline.View || {};
         model: self.model,
         state: self.state
       });
-
     },
     render: function(){
       var self = this;

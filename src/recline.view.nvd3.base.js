@@ -47,6 +47,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.uuid = makeId('nvd3chart_');
         self.state = new recline.Model.ObjectState(stateData);
         self.chartMap = d3.map();
+        self.controls = (options.controls)? true : false;
       },
       render: function(options){
         var self = this;
@@ -77,6 +78,9 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         });
         self.$('.recline-graph-controls').append(self.menu.$el);
         self.menu.setElement(self.$('.recline-graph-controls')).render();
+        if(!self.controls){
+          self.$('.recline-graph-controls').hide();
+        }
         return self;
       },
       createSeries: function(records){
@@ -130,7 +134,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       getDefaults: function(){
         return {};
       },
-      setStateFromURL: function(state){
+      setSavedState: function(state){
         var self = this;
         var defaults = _.clone(self.getDefaults());
         var options = _.deepMerge(_.deepMerge(defaults, self.state.get('options')), self.initialOptions);

@@ -28,15 +28,17 @@ this.recline.View = this.recline.View || {};
     initialize: function(options) {
       var self = this;
       var state = options.state;
+      self.router = options.router;
       delete options.state;
-      self.graphType = 'lineChart' || self.graphType;
-      self.graph = new recline.View.nvd3[self.graphType](options);
-      self.graph.setStateFromURL(state);
-      self.render();
 
+      self.graphType = (self.router.getCurrentState() && self.router.getCurrentState().currentView) || 'lineChart';
+      self.graph = new recline.View.nvd3[self.graphType](options);
+      self.graph.setSavedState(self.router.getCurrentState() || state);
+
+      self.render();
       self.graph.state.on('change', function(e){
-        window.router.navigateToState(e);
         self.render();
+        self.router.navigateToState(e);
       });
 
     },
@@ -52,14 +54,18 @@ this.recline.View = this.recline.View || {};
     },
     changeChart: function(e){
       var self = this;
-      self.graph = new recline.View.nvd3[self.graphType](options);
-      self.graph.graphType = $(e.target).val();
-      self.graph.setStateFromURL(savedState);
+      var savedState = _.cloneJSON(self.graph.state);
+      self.graphType = savedState.currentView = $(e.target).val();
+
+      self.graph = new recline.View.nvd3[self.graphType](self.options);
+      self.graph.setSavedState(savedState);
+      console.log(self.graph.state);
+      self.router.navigateToState(self.graph.state);
       self.render();
 
       self.graph.state.on('change', function(e){
-        window.router.navigateToState(e);
         self.render();
+        self.router.navigateToState(e);
       });
     },
     destroy: function(){

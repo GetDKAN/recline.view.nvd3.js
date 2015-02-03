@@ -128,4 +128,31 @@ function stream_index(d, i) {
 ]
 
 
-Quiero comparar columnas o todos los valores posibles de una columna?
+
+instancio la view
+seteo el estado (
+    tengo que computarlo: )
+renderizo
+  instancio el grafico (nvd3)
+  applico las opciones
+  redibujo
+
+
+
+
+var urlAndDefaults = _.deepMerge(url.options, defaults)
+
+_.deepMerge(urlAndDefaults, options);
+
+Esto me da las options que debo aplicar cuando ingreso a esta url.
+
+new recline.View.Polimorphic();
+
+
+
+
+
+ingreso
+levanto la conf
+seteo el objeto con esa conf
+

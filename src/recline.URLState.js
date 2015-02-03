@@ -15,7 +15,9 @@ this.recline = this.recline || {};
     var parser;
     var dependencies = {};
     var router;
+    self.currentState = {};
 
+    options = options || {};
     if(options.parser) {
       parser = new options.parser();
     } else {
@@ -35,9 +37,13 @@ this.recline = this.recline || {};
      * @param  {[String]} serializedState Url serialized state
      */
     self._init = function(serializedState){
+      console.log('init');
       var state = self.transform(serializedState, self.toState);
       _.each(dependencies, inv('update', state));
-      options.init(state);
+      self.currentState = state;
+      if(options.init){
+        options.init(state);
+      }
     };
 
 
@@ -50,6 +56,11 @@ this.recline = this.recline || {};
      */
     self.addDependency = function(ctrl){
       dependencies[ctrl.name] = ctrl;
+    };
+
+
+    self.getCurrentState = function(){
+      return self.currentState;
     };
 
     /**
@@ -97,6 +108,7 @@ this.recline = this.recline || {};
      * @param  {Event} event
      */
     self.navigateToState = function(state){
+      self.currentState = state;
       router.navigate(self.transform(state, self.toParams));
       options.stateChange && options.stateChange(state);
     };

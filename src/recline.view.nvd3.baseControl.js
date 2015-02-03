@@ -6,7 +6,7 @@ this.recline.View = this.recline.View || {};
 (function ($, my) {
 
 my.BaseControl = Backbone.View.extend({
-  template: '<form>' +
+  template: '' +
               '<div class="form-group">' +
                 '<label for="control-chart-width">Width</label>' +
                 '<input value="{{width}}" type="text" id="control-chart-width" class="form-control" />' +
@@ -32,8 +32,13 @@ my.BaseControl = Backbone.View.extend({
                 '<input type="checkbox" id="control-chart-group" {{#group}}checked{{/group}}/> Group' +
                 '</label>' +
               '</div>' +
+              '<div class="form-group checkbox">' +
+                '<label for="control-chart-compute-x-labels">' +
+                '<input type="checkbox" id="control-chart-compute-x-labels" {{#computeXLabels}}checked{{/computeXLabels}}/> X as label' +
+                '</label>' +
+              '</div>' +
               '<button id="control-chart-update" class="btn btn-primary">Update</button>' +
-            '</form>',
+            '',
   initialize: function(options){
     var self = this;
     self.state = options.state;
@@ -52,6 +57,7 @@ my.BaseControl = Backbone.View.extend({
   },
   update: function(e){
     var self = this;
+    console.log(self.$el.find('#control-chart-compute-x-labels').is(':checked'));
     var seriesFields = self.$el.find('#control-chart-series').val().split(',');
     seriesFields = _.invoke(seriesFields, 'trim');
     self.state.set({
@@ -60,6 +66,7 @@ my.BaseControl = Backbone.View.extend({
       seriesFields: seriesFields,
       xfield: self.$el.find('#control-chart-xfield').val(),
       group: self.$el.find('#control-chart-group').is(':checked'),
+      computeXLabels: self.$el.find('#control-chart-compute-x-labels').is(':checked'),
     });
   }
 });
