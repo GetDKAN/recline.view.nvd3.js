@@ -66,6 +66,7 @@ my.BaseControl = Backbone.View.extend({
   },
   update: function(e){
     var self = this;
+    e.preventDefault();
     var state = self.getUIState();
     try{
       self.validate(state);
@@ -87,6 +88,7 @@ my.BaseControl = Backbone.View.extend({
     var self = this;
     e.preventDefault();
     self.update(e);
+
   },
   getUIState: function(){
     var self = this;
