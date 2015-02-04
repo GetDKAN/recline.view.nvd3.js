@@ -18,13 +18,13 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
   my.Base = Backbone.View.extend({
       template:'<div class="recline-graph row">' +
         '{{data}}' +
-          '<div class="col-md-7 panel {{viewId}}"style="display: block;">' +
+          '<div class="{{columnClass}} panel {{viewId}}"style="display: block;">' +
             '<div id="{{viewId}}">' +
                 '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
                 'width="{{width}}" height="{{height}}">' +
                 '</svg></div>' +
           '</div>' +
-          '<div class="col-md-5 recline-graph-controls"></div>' +
+          '<div class="col-md-5 recline-graph-controls {{controlVisibility}}"></div>' +
         '</div> ',
       initialize: function(options) {
         var self = this;
@@ -41,26 +41,47 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           options.state
         );
 
-        // FIXME: unify state and options
+        // FIXME: unify state and options?
         self.initialOptions = _.clone(options.options);
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = new recline.Model.ObjectState(stateData);
         self.chartMap = d3.map();
-        self.controls = (options.controls)? true : false;
+        if(options.mode){
+          self.state.set('mode', options.mode);
+        }
+      },
+      getLayoutParams: function(mode){
+        var self = this;
+        var layout;
+
+        if(mode === 'widget'){
+         layout = {
+            columnClass: 'col-md-12',
+            width: self.$el.parent().width(),
+            height: $(window).height(),
+            controlVisibility: 'hidden'
+          };
+        } else {
+         layout = {
+            columnClass: 'col-md-7',
+            width: self.state.get('width') || DEFAULT_CHART_WIDTH,
+            height: self.state.get('height') || DEFAULT_CHART_HEIGHT,
+            controlVisibility:''
+          };
+        }
+        return layout;
       },
       render: function(options){
         var self = this;
         var tmplData;
         var htmls;
+        var layout = self.getLayoutParams(self.state.get('mode'));
+
         tmplData = self.model.toTemplateJSON();
         tmplData.viewId = self.uuid;
-        if(!self.controls){
-          self.state.set('height', $(window).height());
-          self.state.set('width', $(window).width());
-        }
-        tmplData.width = self.state.get('width');
-        tmplData.height = self.state.get('height');
+
+        _.extend(tmplData,layout);
 
         htmls = Mustache.render(self.template, tmplData);
         self.$el.html(htmls);
@@ -69,8 +90,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.series = self.createSeries(self.model.records);
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
-          self.chart.height(self.state.get('height') || DEFAULT_CHART_HEIGHT);
-          self.chart.width(self.state.get('width') || DEFAULT_CHART_WIDTH);
+          self.chart.height(layout.height);
+          self.chart.width(layout.width);
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
@@ -81,18 +102,12 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         });
         self.$('.recline-graph-controls').append(self.menu.$el);
         self.menu.setElement(self.$('.recline-graph-controls')).render();
-
-        // FIXME: change this by a 'modeView'
-        if(!self.controls){
-          self.$('.recline-graph-controls').hide();
-        }
         return self;
       },
       createSeries: function(records){
         var self = this;
         records = records.toJSON();
         var series;
-
 
         series = _.map(self.getSeries(), function(serie){
           var data = {};

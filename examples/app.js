@@ -7,7 +7,6 @@
     var router = new recline.URLState();
     window.viewer = new recline.View.nvd3.polimorphic({
       model: dataset,
-      controls: true,
       el: $graphEl,
       router: router,
     });
