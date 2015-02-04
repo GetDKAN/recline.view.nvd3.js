@@ -55,7 +55,10 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var htmls;
         tmplData = self.model.toTemplateJSON();
         tmplData.viewId = self.uuid;
-
+        if(!self.controls){
+          self.state.set('height', $(window).height());
+          self.state.set('width', $(window).width());
+        }
         tmplData.width = self.state.get('width');
         tmplData.height = self.state.get('height');
 
@@ -78,6 +81,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         });
         self.$('.recline-graph-controls').append(self.menu.$el);
         self.menu.setElement(self.$('.recline-graph-controls')).render();
+
+        // FIXME: change this by a 'modeView'
         if(!self.controls){
           self.$('.recline-graph-controls').hide();
         }
