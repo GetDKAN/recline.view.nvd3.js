@@ -20,6 +20,12 @@ this.recline.View = this.recline.View || {};
     render: function(){
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    getDefaults: function(){
+      var self = this;
+      return {
+        computeXLabels: false,
+      };
     }
   });
 

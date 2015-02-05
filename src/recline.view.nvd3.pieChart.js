@@ -35,8 +35,10 @@ this.recline.View = this.recline.View || {};
     getDefaults: function(){
       var self = this;
       return {
-        showLabels: true,
-        labelType: 'percent'
+        options: {
+          showLabels: true,
+          labelType: 'percent'
+        }
       };
     }
   });

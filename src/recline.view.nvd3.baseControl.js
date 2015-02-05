@@ -9,6 +9,10 @@ my.BaseControl = Backbone.View.extend({
   template: '<form id="control-chart">' +
               '<div id="control-chart-container">' +
                 '<div class="form-group">' +
+                  '<label for="control-chart-source">Source</label>' +
+                  '<input value="{{source}}" type="text" id="control-chart-source" class="form-control" />' +
+                '</div>' +
+                '<div class="form-group">' +
                   '<label for="control-chart-width">Width</label>' +
                   '<input value="{{width}}" type="text" id="control-chart-width" class="form-control" />' +
                 '</div>' +
@@ -20,6 +24,13 @@ my.BaseControl = Backbone.View.extend({
                   '<label for="control-chart-series">Series</label>' +
                   '<input value="{{seriesFields}}" type="text" id="control-chart-series" class="form-control" />' +
                 '</div>' +
+
+// '<select multiple class="form-control">' +
+//   '{{#fields}}' +
+//     '<option value="{{.}}">{{.}}</option>' +
+//   '{{/fields}}' +
+// '</select>' +
+
                 '<div class="form-group">' +
                   '<label for="control-chart-xfield">x-field</label>' +
                   '<input value="{{xfield}}" type="text" id="control-chart-xfield" class="form-control" />' +
@@ -51,7 +62,7 @@ my.BaseControl = Backbone.View.extend({
     self.state = options.state;
     self.model = options.model;
     self.parent = options.parent;
-    self.render();
+
   },
   events: {
     'click #control-chart-update': 'update',
@@ -59,10 +70,38 @@ my.BaseControl = Backbone.View.extend({
   },
   render: function(){
     var self = this;
-    var state = self.state.toJSON();
-    state.serialized = JSON.stringify(self.state.toJSON());
-    var htmls = Mustache.render(self.template, state);
+    var state = _.cloneJSON(self.state);
+    var htmls;
+    state.mode = 'widget';
+    state.serialized = JSON.stringify(state);
+    state.fields = self.getFields();
+
+
+    console.log(self.getOptionState(state, self.parent.state.get('seriesFields')));
+
+    htmls = Mustache.render(self.template, state);
     self.$el.html(htmls);
+  },
+  getFields: function(){
+    var self = this;
+    var fields = [];
+    try{
+      fields = _.pluck(self.parent.model.fields.toJSON(), 'id');
+    } catch(err) {
+      console.error('Error retrieving dataset fields');
+    }
+    return fields;
+  },
+  getOptionState:function(options, selected){
+    return _.map(options, function(option, index){
+      option.selected = (_.inArray(selected, option.value))? true : false;
+      return option;
+    });
+  },
+  arrayToOptions: function(options){
+    return _.map(options, function(option){
+      return {name:option, value:option, selected: false};
+    });
   },
   update: function(e){
     var self = this;
@@ -103,6 +142,7 @@ my.BaseControl = Backbone.View.extend({
       seriesFields: seriesFields,
       xfield: $('#control-chart-xfield').val(),
       group: $('#control-chart-group').is(':checked'),
+      source: encodeURIComponent($('#control-chart-source').val()),
     };
 
     computedState.options = computedState.options || {};

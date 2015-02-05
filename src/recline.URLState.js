@@ -172,16 +172,15 @@ this.recline = this.recline || {};
      */
     self.parseStrings = function(str){
 
-      // Adding quotes to keys
-      str = str.replace(/([a-zA-Z-_.\+]+)\s?:/g ,  '\"$1\":');
 
+      // Adding quotes to keys
+      str = str.replace(/([{,])([a-zA-Z-_.\+]+)\s?:/g ,  '$1\"$2\":');
       // Replacing underscores with spaces for any word that start with !
       // TODO: make space replacement configurable
       str = str.replace(/![a-zA-Z0-9_. -\+]+/g, function(x) {
         return x.replace(/\+\+/g, ' ');
       });
-
-      return str.replace(new RegExp('!([a-zA-Z0-9-_# .-]+)?', 'g'),  '\"$1\"');
+      return str.replace(new RegExp('!([a-zA-Z0-9-_# .-:]+)?', 'g'),  '\"$1\"');
     };
   };
 

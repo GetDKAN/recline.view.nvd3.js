@@ -38,10 +38,12 @@ this.recline.View = this.recline.View || {};
     getDefaults: function(){
       var self = this;
       return {
-        useInteractiveGuideline: true,
-        xAxis:{
-          tickFormat: function(id) {
-            return (self.chartMap) ? self.chartMap.get(id) : id;
+        options:{
+          useInteractiveGuideline: true,
+          xAxis:{
+            tickFormat: function(id) {
+              return (self.chartMap) ? self.chartMap.get(id) : id;
+            }
           }
         }
       };

@@ -17,28 +17,33 @@ this.recline.View = this.recline.View || {};
                     '<option value="lineChart">Line</option>' +
                     '<option value="lineWithFocusChart">Line with Focus</option>' +
                     '<option value="scatterChart">Scatter</option>' +
-                    '<option value="linePlusBarWithFocusChart">Line Plus Bar With Focus</option>' +
-                    '<option value="linePlusBarChart">linePlusBarChart</option>-->' +
+                    '<option value="linePlusBarChart">Line Plus Bar</option>-->' +
                   '</select>' +
                 '</div>',
-
     events: {
       'change #control-chart-type': 'changeChart'
     },
     initialize: function(options) {
+      console.log('Polimorphic::initialize');
       var self = this;
       var state = options.state;
+      var urlState = options.router.getCurrentState();
+      var dataset;
+
       self.router = options.router;
       delete options.state;
 
-      self.graphType = (self.router.getCurrentState() && self.router.getCurrentState().currentView) || 'lineChart';
+      self.graphType = (urlState && self.router.getCurrentState().currentView) || 'discreteBarChart';
       self.graph = new recline.View.nvd3[self.graphType](options);
-      var urlState = self.router.getCurrentState();
 
+      dataset = new recline.Model.Dataset({url: urlState.source, backend: 'csv'});
+      dataset.fetch().done(self.render.bind(self));
+
+      self.graph.model = dataset;
       self.graph.setSavedState(urlState || state);
 
-      self.render();
       self.graph.state.on('change', function(e){
+        console.log('initial',e);
         self.render();
         self.router.navigateToState(e);
       });
@@ -55,16 +60,20 @@ this.recline.View = this.recline.View || {};
       return self.graph;
     },
     changeChart: function(e){
+      console.log('Polimorphic::changeChart');
       var self = this;
-      var savedState = _.cloneJSON(self.graph.state);
-      self.graphType = savedState.currentView = $(e.target).val();
+      var savedState = _.cloneJSON(self.graph.state.toJSON());
+      var dataset = self.graph.model;
 
+      self.graphType = savedState.currentView = $(e.target).val();
       self.graph = new recline.View.nvd3[self.graphType](self.options);
+      self.graph.model = dataset;
       self.graph.setSavedState(savedState);
       self.router.navigateToState(self.graph.state);
       self.render();
 
       self.graph.state.on('change', function(e){
+        console.log(e);
         self.render();
         self.router.navigateToState(e);
       });

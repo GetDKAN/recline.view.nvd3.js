@@ -24,9 +24,11 @@ this.recline.View = this.recline.View || {};
     getDefaults: function(){
       var self = this;
       return {
-        xAxis:{
-          tickFormat: function(id) {
-            return (self.chartMap) ? self.chartMap.get(id) : id;
+        options: {
+          xAxis:{
+            tickFormat: function(id) {
+              return (self.chartMap) ? self.chartMap.get(id) : id;
+            }
           }
         }
       };

@@ -23,7 +23,7 @@ this.recline.View = this.recline.View || {};
     }
   });
 
-  my.LinePlusChartControls = recline.View.nvd3.BaseControl.extend({
+  my.linePlusBarChartControls = recline.View.nvd3.BaseControl.extend({
     _template: '<div class="form-group checkbox">' +
                 '<label for="control-chart-compute-x-labels">' +
                 '<input type="checkbox" id="control-chart-compute-x-labels" {{#computeXLabels}}checked{{/computeXLabels}}/> X values as labels' +

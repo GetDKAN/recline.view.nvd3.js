@@ -24,10 +24,12 @@ this.recline.View = this.recline.View || {};
     getDefaults: function(){
       var self = this;
       return {
-        useInteractiveGuideline: true,
-        xAxis:{
-          tickFormat: function(id) {
-            return (self.chartMap) ? self.chartMap.get(id) : id;
+        options:{
+          useInteractiveGuideline: true,
+          xAxis:{
+            tickFormat: function(id) {
+              return (self.chartMap) ? self.chartMap.get(id) : id;
+            }
           }
         }
       };
@@ -35,6 +37,11 @@ this.recline.View = this.recline.View || {};
   });
 
   my.stackedChartControls = recline.View.nvd3.BaseControl.extend({
+    _template:  '<div class="form-group checkbox">' +
+                  '<label for="control-chart-compute-x-labels">' +
+                    '<input type="checkbox" id="control-chart-compute-x-labels" {{#computeXLabels}}checked{{/computeXLabels}}/> Force x as labels' +
+                  '</label>' +
+                '</div>',
     initialize: function(options){
       var self = this;
       recline.View.nvd3.BaseControl.prototype.initialize.call(self, options);
@@ -42,6 +49,13 @@ this.recline.View = this.recline.View || {};
     render: function(){
       var self = this;
       recline.View.nvd3.BaseControl.prototype.render.call(self, {});
+      self.$el.find('#control-chart-container').append(Mustache.render(self._template, self.state.toJSON()));
+    },
+    getUIState:function(){
+      var self = this;
+      var computedState = recline.View.nvd3.BaseControl.prototype.getUIState.call(self, {});
+      computedState.computeXLabels = $('#control-chart-compute-x-labels').is(':checked');
+      return computedState;
     }
   });
 })(jQuery, recline.View.nvd3);

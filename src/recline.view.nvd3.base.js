@@ -41,15 +41,13 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           options.state
         );
 
-        // FIXME: unify state and options?
-        self.initialOptions = _.clone(options.options);
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = new recline.Model.ObjectState(stateData);
         self.chartMap = d3.map();
-        if(options.mode){
-          self.state.set('mode', options.mode);
-        }
+
+        // Check current view mode: edit or widget.
+        if(options.mode) self.state.set('mode', options.mode);
       },
       getLayoutParams: function(mode){
         var self = this;
@@ -106,8 +104,9 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       },
       createSeries: function(records){
         var self = this;
-        records = records.toJSON();
         var series;
+
+        records = records.toJSON();
 
         series = _.map(self.getSeries(), function(serie){
           var data = {};
@@ -119,17 +118,29 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             : records;
 
           data.values = _.map(records, function(record, index){
+            var xDataType = self.state.get('xDataType');
             if(self.state.get('computeXLabels')){
               self.chartMap.set(index, self.x(record, self.state.get('xfield')));
               return {y: self.y(record, serie), x: index, label: self.x(record, self.state.get('xfield'))};
+            } else {
+              if(xDataType === 'label'){
+                self.chartMap.set(index, self.x(record, self.state.get('xfield')));
+                return {y: self.y(record, serie), x: index, label: self.x(record, self.state.get('xfield'))};
+              } else if(xDataType === 'number'){
+                return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
+              } else if(xDataType === 'date'){
+                return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
+              } else {
+                return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
+              }
             }
 
-            return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
+
           });
 
           return data;
         });
-        console.log(series);
+
         return series;
       },
       setOptions: function (chart, options) {
@@ -158,11 +169,10 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       },
       setSavedState: function(state){
         var self = this;
-        var defaults = _.clone(self.getDefaults());
+        var defaults = self.getDefaults();
+
         state = state || {};
-        state.options = state.options || {};
-        var options = _.deepMerge(_.deepMerge(state.options,defaults), self.initialOptions);
-        state.options = options;
+        state = _.deepMerge(state, defaults);
         self.state.set(state);
       },
       getState: function(state){
