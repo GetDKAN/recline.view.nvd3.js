@@ -22,18 +22,20 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
                 '<div class="form-group">' +
                   '<label for="control-chart-series">Series</label>' +
-                  '<input value="{{seriesFields}}" type="text" id="control-chart-series" class="form-control" />' +
+                  '<select id="control-chart-series" multiple class="form-control chosen-select">' +
+                    '{{#fields}}' +
+                      '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
+                    '{{/fields}}' +
+                  '</select>' +
                 '</div>' +
-
-// '<select multiple class="form-control">' +
-//   '{{#fields}}' +
-//     '<option value="{{.}}">{{.}}</option>' +
-//   '{{/fields}}' +
-// '</select>' +
-
                 '<div class="form-group">' +
                   '<label for="control-chart-xfield">x-field</label>' +
-                  '<input value="{{xfield}}" type="text" id="control-chart-xfield" class="form-control" />' +
+                  '<select id="control-chart-xfield" class="form-control chosen-select">' +
+                    '{{#xfields}}' +
+                      '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
+                    '{{/xfields}}' +
+                  '</select>' +
+
                 '</div>' +
                 '<div class="form-group">' +
                   '<label for="control-chart-state">State</label>' +
@@ -41,7 +43,7 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-group">' +
-                  '<input type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group' +
+                  '<input type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by x-field' +
                   '</label>' +
                 '</div>' +
                 '<div class="form-group checkbox">' +
@@ -74,13 +76,18 @@ my.BaseControl = Backbone.View.extend({
     var htmls;
     state.mode = 'widget';
     state.serialized = JSON.stringify(state);
-    state.fields = self.getFields();
 
+    state.fields = self.applyOption(
+      self.arrayToOptions(self.getFields()), self.state.get('seriesFields')
+    );
+    state.xfields = self.applyOption(
+      self.arrayToOptions(self.getFields()), [self.state.get('xfield')]
+    );
 
-    console.log(self.getOptionState(state, self.parent.state.get('seriesFields')));
 
     htmls = Mustache.render(self.template, state);
     self.$el.html(htmls);
+    self.$(".chosen-select").chosen({width: "95%"});
   },
   getFields: function(){
     var self = this;
@@ -92,7 +99,7 @@ my.BaseControl = Backbone.View.extend({
     }
     return fields;
   },
-  getOptionState:function(options, selected){
+  applyOption:function(options, selected){
     return _.map(options, function(option, index){
       option.selected = (_.inArray(selected, option.value))? true : false;
       return option;
@@ -112,6 +119,7 @@ my.BaseControl = Backbone.View.extend({
       self.parent.setSavedState(state);
     } catch(err) {
       alert(err.message);
+      console.error(err);
       self.render();
     }
   },
@@ -131,8 +139,7 @@ my.BaseControl = Backbone.View.extend({
   },
   getUIState: function(){
     var self = this;
-
-    var seriesFields = self.$el.find('#control-chart-series').val().split(',');
+    var seriesFields = self.$el.find('#control-chart-series').val();
     seriesFields = _.invoke(seriesFields, 'trim');
 
     // FIX ME: point id to view dom
@@ -142,7 +149,7 @@ my.BaseControl = Backbone.View.extend({
       seriesFields: seriesFields,
       xfield: $('#control-chart-xfield').val(),
       group: $('#control-chart-group').is(':checked'),
-      source: encodeURIComponent($('#control-chart-source').val()),
+      source: $('#control-chart-source').val(),
     };
 
     computedState.options = computedState.options || {};

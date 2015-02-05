@@ -27,27 +27,40 @@ this.recline.View = this.recline.View || {};
       console.log('Polimorphic::initialize');
       var self = this;
       var state = options.state;
-      var urlState = options.router.getCurrentState();
-      var dataset;
+      var urlState = options.router.getCurrentState() || {};
+      var datasetOptions;
 
-      self.router = options.router;
       delete options.state;
 
-      self.graphType = (urlState && self.router.getCurrentState().currentView) || 'discreteBarChart';
+      self.router = options.router;
+      self.graphType = (urlState && urlState.currentView) || 'discreteBarChart';
       self.graph = new recline.View.nvd3[self.graphType](options);
 
-      dataset = new recline.Model.Dataset({url: urlState.source, backend: 'csv'});
-      dataset.fetch().done(self.render.bind(self));
+      if(urlState.source) {
+        datasetOptions = {url: urlState.source, backend: 'csv'};
+      } else {
+        datasetOptions = {records: []};
+      }
 
-      self.graph.model = dataset;
+      self.graph.model = new recline.Model.Dataset(datasetOptions);
+      self.graph.model.fetch().done(self.render.bind(self));
+
       self.graph.setSavedState(urlState || state);
+      self.graph.state.on('change', self.onStateChange.bind(self));
 
-      self.graph.state.on('change', function(e){
-        console.log('initial',e);
+    },
+    onStateChange:function(e){
+      var self = this;
+      if(_.has(self.graph.state.changed, 'source')){
+        self.graph.model = new recline.Model.Dataset({
+          url: self.graph.state.changed.source,
+          backend: 'csv'
+        });
+        self.graph.model.fetch().done(self.render.bind(self));
+      }else {
         self.render();
-        self.router.navigateToState(e);
-      });
-
+      }
+      self.router.navigateToState(e);
     },
     render: function(){
       var self = this;
@@ -71,12 +84,7 @@ this.recline.View = this.recline.View || {};
       self.graph.setSavedState(savedState);
       self.router.navigateToState(self.graph.state);
       self.render();
-
-      self.graph.state.on('change', function(e){
-        console.log(e);
-        self.render();
-        self.router.navigateToState(e);
-      });
+      self.graph.state.on('change', self.onStateChange.bind(self));
     },
     destroy: function(){
       self.graph.state.off();
