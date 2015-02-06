@@ -27,8 +27,9 @@ this.recline.View = this.recline.View || {};
         options:{
           useInteractiveGuideline: true,
           xAxis:{
-            tickFormat: function(id) {
-              return (self.chartMap) ? self.chartMap.get(id) : id;
+            tickFormat: function(d) {
+              return d3.time.format('%Y')(new Date(d))
+              //return (self.chartMap) ? self.chartMap.get(id) : id;
             }
           }
         }

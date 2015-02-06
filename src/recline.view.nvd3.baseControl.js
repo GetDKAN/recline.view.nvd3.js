@@ -13,14 +13,6 @@ my.BaseControl = Backbone.View.extend({
                   '<input value="{{source}}" type="text" id="control-chart-source" class="form-control" />' +
                 '</div>' +
                 '<div class="form-group">' +
-                  '<label for="control-chart-width">Width</label>' +
-                  '<input value="{{width}}" type="text" id="control-chart-width" class="form-control" />' +
-                '</div>' +
-                '<div class="form-group">' +
-                  '<label for="control-chart-height">Height</label>' +
-                  '<input value="{{height}}" type="text" id="control-chart-height" class="form-control" />' +
-                '</div>' +
-                '<div class="form-group">' +
                   '<label for="control-chart-series">Series</label>' +
                   '<select id="control-chart-series" multiple class="form-control chosen-select">' +
                     '{{#fields}}' +
@@ -29,13 +21,39 @@ my.BaseControl = Backbone.View.extend({
                   '</select>' +
                 '</div>' +
                 '<div class="form-group">' +
-                  '<label for="control-chart-xfield">x-field</label>' +
+                  '<label for="control-chart-xfield">X-Field</label>' +
                   '<select id="control-chart-xfield" class="form-control chosen-select">' +
                     '{{#xfields}}' +
                       '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
                     '{{/xfields}}' +
                   '</select>' +
-
+                '</div>' +
+                '<div class="form-group">' +
+                  '{{#xDataTypes}}' +
+                    '<label class="radio-inline">' +
+                      '<input type="radio" name="control-chart-x-data-type" id="control-chart-x-data-type-{{value}}" value="{{value}}" {{#selected}}checked {{/selected}}> {{name}}' +
+                    '</label>' +
+                  '{{/xDataTypes}}' +
+                '</div>' +
+               '<div class="form-group">' +
+                  '<label for="control-chart-x-format">X-Format</label>' +
+                  '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" />' +
+                '</div>' +
+                '<div class="form-group">' +
+                  '<label for="control-chart-width">Width</label>' +
+                  '<input value="{{width}}" type="text" id="control-chart-width" class="form-control" />' +
+                '</div>' +
+                '<div class="form-group">' +
+                  '<label for="control-chart-height">Height</label>' +
+                  '<input value="{{height}}" type="text" id="control-chart-height" class="form-control" />' +
+                '</div>' +
+                '<div class="form-group">' +
+                  '<label for="control-chart-label-x-rotation">Label X Rotation</label>' +
+                  '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" />' +
+                '</div>' +
+                '<div class="form-group">' +
+                  '<label for="control-chart-transition-time">Transition Time</label>' +
+                  '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" />' +
                 '</div>' +
                 '<div class="form-group">' +
                   '<label for="control-chart-state">State</label>' +
@@ -43,7 +61,7 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-group">' +
-                  '<input type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by x-field' +
+                  '<input type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by X-Field' +
                   '</label>' +
                 '</div>' +
                 '<div class="form-group checkbox">' +
@@ -74,11 +92,19 @@ my.BaseControl = Backbone.View.extend({
     var self = this;
     var state = _.cloneJSON(self.state);
     var htmls;
+    var dataTypes;
+
     state.mode = 'widget';
     state.serialized = JSON.stringify(state);
 
+    dataTypes = ['Number', 'String', 'Date', 'Auto'];
+
+    // Populate option fields
     state.fields = self.applyOption(
       self.arrayToOptions(self.getFields()), self.state.get('seriesFields')
+    );
+    state.xDataTypes = self.applyOption(
+      self.arrayToOptions(dataTypes), [self.state.get('xDataType') || 'Auto']
     );
     state.xfields = self.applyOption(
       self.arrayToOptions(self.getFields()), [self.state.get('xfield')]
@@ -150,11 +176,17 @@ my.BaseControl = Backbone.View.extend({
       xfield: $('#control-chart-xfield').val(),
       group: $('#control-chart-group').is(':checked'),
       source: $('#control-chart-source').val(),
+      transitionTime: $('#control-chart-transition-time').val(),
+      xDataType: $('input[name=control-chart-x-data-type]:checked').val(),
+      xFormat: $('#control-chart-x-format').val()
     };
 
     computedState.options = computedState.options || {};
+    computedState.options.xAxis = computedState.options.xAxis || {};
     computedState.options.staggerLabels = $('#control-chart-stagger-labels').is(':checked');
     computedState.options.tooltips = $('#control-chart-show-tooltips').is(':checked');
+    computedState.options.xAxis.rotateLabels = $('#control-chart-label-x-rotation').val();
+
     return computedState;
   }
 });

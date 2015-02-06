@@ -138,21 +138,22 @@ renderizo
   redibujo
 
 
+### To solve
+- Fix x date values
+---- configure url of dataset
+---- Refresh page in the first update
+---- Add x-value field to discrete chart
+- Use options to x field data type.
+- Fix widget resize
+- Review all the type charts
+- Convert state on an embed button
+- Add rotation labels
 
+### Things regarding x type
 
-var urlAndDefaults = _.deepMerge(url.options, defaults)
-
-_.deepMerge(urlAndDefaults, options);
-
-Esto me da las options que debo aplicar cuando ingreso a esta url.
-
-new recline.View.Polimorphic();
-
-
-
-
-
-ingreso
-levanto la conf
-seteo el objeto con esa conf
-
+- Infer type or force type
+- Cast values to this type if they aren't already.
+- Get format function based on type
+- Using the format param, create a tickFormater with the format function.
+- Override tickformater
+- Add tick formatter for forced labels

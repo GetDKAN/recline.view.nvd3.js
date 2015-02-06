@@ -74,12 +74,13 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var self = this;
         var tmplData;
         var htmls;
-        var layout = self.getLayoutParams(self.state.get('mode'));
+        var layout;
 
+        layout = self.getLayoutParams(self.state.get('mode'));
         tmplData = self.model.toTemplateJSON();
         tmplData.viewId = self.uuid;
 
-        _.extend(tmplData,layout);
+        _.extend(tmplData, layout);
 
         htmls = Mustache.render(self.template, tmplData);
         self.$el.html(htmls);
@@ -90,10 +91,11 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           self.chart = self.createGraph(self.graphType);
           self.chart.height(layout.height);
           self.chart.width(layout.width);
+          self.chart.xAxis.tickFormat(self.xFormatter);
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
-            .duration(500)
+            .duration(self.state.get('transitionTime') || 500)
             .call(self.chart);
           nv.utils.windowResize(self.chart.update);
           return self.chart;
@@ -105,8 +107,22 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       createSeries: function(records){
         var self = this;
         var series;
+        var fieldType;
+        var xDataType;
+        // Return no data when x and y are no set.
+        if(!self.state.get('xfield') || !self.getSeries().length) return [];
 
         records = records.toJSON();
+
+        fieldType = _.compose(_.inferType,_.iteratee(self.state.get('xfield')));
+
+        if(!self.state.get('xDataType') || self.state.get('xDataType') === 'Auto'){
+          xDataType =  fieldType(_.last(records));
+        } else {
+          xDataType = self.state.get('xDataType');
+        }
+
+        self.xFormatter = self.getFormatter(xDataType, self.state.get('xFormat'));
 
         series = _.map(self.getSeries(), function(serie){
           var data = {};
@@ -118,30 +134,33 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             : records;
 
           data.values = _.map(records, function(record, index){
-            var xDataType = self.state.get('xDataType');
             if(self.state.get('computeXLabels')){
               self.chartMap.set(index, self.x(record, self.state.get('xfield')));
               return {y: self.y(record, serie), x: index, label: self.x(record, self.state.get('xfield'))};
             } else {
-              if(xDataType === 'label'){
-                self.chartMap.set(index, self.x(record, self.state.get('xfield')));
-                return {y: self.y(record, serie), x: index, label: self.x(record, self.state.get('xfield'))};
-              } else if(xDataType === 'number'){
-                return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
-              } else if(xDataType === 'date'){
-                return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
-              } else {
-                return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
-              }
+              return {
+                y: self.y(record, serie),
+                x: _.cast(self.x(record, self.state.get('xfield')), xDataType)
+              };
             }
-
-
           });
-
           return data;
         });
-
         return series;
+      },
+      isXTypeAllowed: function(){
+        /* IMPLEMENT */
+      },
+      getFormatter: function(type, format){
+        var self = this;
+        if(self.state.get('computeXLabels')) return self.chartMap.get.bind(self.chartMap);
+
+        var formatter = {
+          'String': _.identity,
+          'Date': _.compose(d3.time.format(format || '%x'),_.instantiate(Date)),
+          'Number': d3.format(format || '.02f')
+        };
+        return formatter[type];
       },
       setOptions: function (chart, options) {
         var self = this;
