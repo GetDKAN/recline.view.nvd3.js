@@ -26,6 +26,7 @@
     "underscore.deferred": "*",
     "bootstrap-css": "2.3.2",
     "nvd3": "*",
-    "chosen-bootstrap": "*"
+    "chosen-bootstrap": "*",
+    "lodash": "*"
   }
 }
