@@ -157,6 +157,9 @@ this.recline = this.recline || {};
      */
     self.escapeStrings = function(str){
 
+      // % presence could lead to malformed url.
+      str = str.replace('%', '@@');
+
       // Stripping quotes from keys
       str = str.replace(/"([a-zA-Z-_.]+)"\s?:/g ,  '$1:');
 
@@ -172,6 +175,8 @@ this.recline = this.recline || {};
      */
     self.parseStrings = function(str){
 
+      // Converting all the @@ to %.
+      str = str.replace('@@', '%');
 
       // Adding quotes to keys
       str = str.replace(/([{,])([a-zA-Z-_.\+]+)\s?:/g ,  '$1\"$2\":');
@@ -180,7 +185,7 @@ this.recline = this.recline || {};
       str = str.replace(/![a-zA-Z0-9_. -\+]+/g, function(x) {
         return x.replace(/\+\+/g, ' ');
       });
-      return str.replace(new RegExp('!([a-zA-Z0-9-_# .-:]+)?', 'g'),  '\"$1\"');
+      return str.replace(new RegExp('!([a-zA-Z0-9-_# .-:%]+)?', 'g'),  '\"$1\"');
     };
   };
 
