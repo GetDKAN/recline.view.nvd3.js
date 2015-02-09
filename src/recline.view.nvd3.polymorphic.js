@@ -49,17 +49,15 @@ this.recline.View = this.recline.View || {};
     },
     renderGrid: function(model){
       var $gridEl = $('#grid');
-      window.grid = new recline.View.SlickGrid({
+      grid = new recline.View.SlickGrid({
         model: model,
         el: $gridEl,
         options:{
-           forceFitColumns: true
+           autoExpandColumns: true
         }
       });
       grid.visible = true;
       grid.render();
-      grid.grid.autosizeColumns();
-
     },
     onStateChange:function(e){
       var self = this;
@@ -80,7 +78,10 @@ this.recline.View = this.recline.View || {};
       self.graph.render();
       self.graph.menu.$el.prepend(Mustache.render(self.template));
       self.graph.menu.$el.find('option[value="' + self.graph.graphType + '"]').attr('selected', 'selected');
-      self.renderGrid(self.graph.model);
+      if(!self.graph.state.get('mode') || self.graph.state.get('mode') === 'edit'){
+        self.renderGrid(self.graph.model);
+      }
+
     },
     getCurrentView: function(){
       var self = this;

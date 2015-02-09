@@ -9,6 +9,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
   var DEFAULT_CHART_WIDTH = 640;
   var DEFAULT_CHART_HEIGHT = 480;
+  var MARGIN_RIGHT = 40;
 
   function makeId(prefix) {
       prefix = prefix || '';
@@ -91,7 +92,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
           self.chart.height(layout.height);
-          self.chart.width(layout.width);
+          self.chart.width(layout.width - MARGIN_RIGHT);
 
           if(self.chart.xAxis && self.chart.xAxis.tickFormat)
             self.chart.xAxis.tickFormat(self.xFormatter);
@@ -170,10 +171,9 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       },
       setOptions: function (chart, options) {
         var self = this;
-
         for(var optionName in options){
           var optionValue = options[optionName];
-          if(typeof optionValue === 'object'){
+          if(_.isObject(optionValue) && !_.isArray(optionValue)){
             self.setOptions(chart[optionName], optionValue);
           // if value is a valid function in the chart then we call it.
           } else if(chart && _.isFunction(chart[optionName])){

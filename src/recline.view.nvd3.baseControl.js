@@ -56,8 +56,16 @@ my.BaseControl = Backbone.View.extend({
                   '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" />' +
                 '</div>' +
                 '<div class="form-group">' +
+                    '<label for="control-chart-color">Color</label>' +
+                    '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}"/>' +
+                '</div>' +
+                '<div class="form-group">' +
                   '<label for="control-chart-state">State</label>' +
                   '<input value="{{serialized}}" class="form-control"/>' +
+                '</div>' +
+                '<div class="form-group">' +
+                  '<label for="control-chart-embed">Embed Code</label>' +
+                  '<input value="{{embedCode}}" class="form-control"/>' +
                 '</div>' +
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-group">' +
@@ -72,11 +80,15 @@ my.BaseControl = Backbone.View.extend({
               '</div>' +
               '<button id="control-chart-update" class="btn btn-primary">Update</button>' +
             '</form>',
+
+  embedTmpl: '<iframe src="{{{source}}}" width="{{width}}" height="{{height}}" frameBorder="0" style="overflow:hidden" scrolling="no"></iframe>',
+
   initialize: function(options){
     var self = this;
     self.state = options.state;
     self.model = options.model;
     self.parent = options.parent;
+
 
   },
   events: {
@@ -91,6 +103,15 @@ my.BaseControl = Backbone.View.extend({
 
     state.mode = 'widget';
     state.serialized = JSON.stringify(state);
+    state.embed = self.parent.router.getSerializedState(_.omit(state, 'serialized'));
+
+    var embedData = {
+      source:'http://localhost:8080/examples/index.html#' + state.embed ,
+      width: state.width,
+      height: state.height
+    };
+
+    state.embedCode = Mustache.render(self.embedTmpl, embedData);
 
     dataTypes = ['Number', 'String', 'Date', 'Auto'];
 
@@ -161,6 +182,8 @@ my.BaseControl = Backbone.View.extend({
   getUIState: function(){
     var self = this;
     var seriesFields = self.$el.find('#control-chart-series').val();
+    var color;
+
     seriesFields = _.invoke(seriesFields, 'trim');
 
     // FIX ME: point id to view dom
@@ -180,7 +203,16 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.xAxis = computedState.options.xAxis || {};
     computedState.options.tooltips = $('#control-chart-show-tooltips').is(':checked');
     computedState.options.xAxis.rotateLabels = $('#control-chart-label-x-rotation').val();
+    color = _.invoke($('#control-chart-color').val().split(','), 'trim');
 
+    if($('#control-chart-color').val()){
+      computedState.options.color = color;
+    } else {
+      if(computedState.options.color){
+        console.log('deleting');
+        delete computedState.options.color;
+      }
+    }
     return computedState;
   }
 });

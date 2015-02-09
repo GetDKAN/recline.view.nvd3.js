@@ -62,6 +62,9 @@ this.recline = this.recline || {};
       return self.currentState;
     };
 
+    self.getSerializedState = function(state){
+      return self.transform(state, self.toParams);
+    };
     /**
      * Applies a transform function to the input and return de result.
      * @param  {String} input
@@ -70,11 +73,11 @@ this.recline = this.recline || {};
      */
     self.transform = function(input, transformFunction){
       var result;
-      try{
+      // try{
         result = transformFunction(input);
-      } catch(e){
-        result = null;
-      }
+      // } catch(e){
+      //   result = null;
+      // }
       return result;
     };
 
@@ -94,8 +97,7 @@ this.recline = this.recline || {};
      * @return {String}
      */
     self.toParams = function(state){
-      var filtered = _.omit(state.attributes, options.ignoredKeys);
-      var stringObject = JSON.stringify(filtered);
+      var stringObject = JSON.stringify(state);
       return parser.compress(stringObject);
     };
 
