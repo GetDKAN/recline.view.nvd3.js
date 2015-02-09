@@ -1,0 +1,13 @@
+#grid{
+	height: 300px;
+}
+#grid .slick-viewport {
+    overflow-x: auto;
+}
+
+.slick-header-column {
+  height: 25px !important;
+}
+.recline-slickgrid *{
+	box-sizing: content-box;
+}

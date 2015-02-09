@@ -65,11 +65,6 @@ my.BaseControl = Backbone.View.extend({
                   '</label>' +
                 '</div>' +
                 '<div class="form-group checkbox">' +
-                  '<label for="control-chart-stagger-labels">' +
-                  '<input type="checkbox" id="control-chart-stagger-labels" {{#options.staggerLabels}}checked{{/options.staggerLabels}}/> Stagger Labels' +
-                  '</label>' +
-                '</div>' +
-                '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-tooltips">' +
                   '<input type="checkbox" id="control-chart-show-tooltips" {{#options.tooltips}}checked{{/options.tooltips}}/> Show Tooltips' +
                   '</label>' +

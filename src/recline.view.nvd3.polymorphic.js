@@ -44,9 +44,21 @@ this.recline.View = this.recline.View || {};
 
       self.graph.model = new recline.Model.Dataset(datasetOptions);
       self.graph.model.fetch().done(self.render.bind(self));
-
       self.graph.setSavedState(urlState || state);
       self.graph.state.on('change', self.onStateChange.bind(self));
+    },
+    renderGrid: function(model){
+      var $gridEl = $('#grid');
+      window.grid = new recline.View.SlickGrid({
+        model: model,
+        el: $gridEl,
+        options:{
+           forceFitColumns: true
+        }
+      });
+      grid.visible = true;
+      grid.render();
+      grid.grid.autosizeColumns();
 
     },
     onStateChange:function(e){
@@ -57,6 +69,7 @@ this.recline.View = this.recline.View || {};
           backend: 'csv'
         });
         self.graph.model.fetch().done(self.render.bind(self));
+        self.renderGrid(self.graph.model);
       }else {
         self.render();
       }
@@ -67,6 +80,7 @@ this.recline.View = this.recline.View || {};
       self.graph.render();
       self.graph.menu.$el.prepend(Mustache.render(self.template));
       self.graph.menu.$el.find('option[value="' + self.graph.graphType + '"]').attr('selected', 'selected');
+      self.renderGrid(self.graph.model);
     },
     getCurrentView: function(){
       var self = this;
