@@ -178,7 +178,6 @@ my.BaseControl = Backbone.View.extend({
 
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
-    computedState.options.staggerLabels = $('#control-chart-stagger-labels').is(':checked');
     computedState.options.tooltips = $('#control-chart-show-tooltips').is(':checked');
     computedState.options.xAxis.rotateLabels = $('#control-chart-label-x-rotation').val();
 

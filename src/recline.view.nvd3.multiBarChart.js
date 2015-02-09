@@ -33,7 +33,11 @@ this.recline.View = this.recline.View || {};
   });
 
   my.multiBarChartControls = recline.View.nvd3.BaseControl.extend({
-
+    _template: '<div class="form-group checkbox">' +
+                  '<label for="control-chart-stagger-labels">' +
+                  '<input type="checkbox" id="control-chart-stagger-labels" {{#options.staggerLabels}}checked{{/options.staggerLabels}}/> Stagger Labels' +
+                  '</label>' +
+              '</div>',
     initialize: function(options){
       var self = this;
       recline.View.nvd3.BaseControl.prototype.initialize.call(self, options);
@@ -42,11 +46,13 @@ this.recline.View = this.recline.View || {};
     render: function(){
       var self = this;
       recline.View.nvd3.BaseControl.prototype.render.call(self, {});
+      self.$el.find('#control-chart-container').append(Mustache.render(self._template, self.state.toJSON()));
     },
     getUIState:function(){
       var self = this;
       var computedState = recline.View.nvd3.BaseControl.prototype.getUIState.call(self, {});
       computedState.computeXLabels = $('#control-chart-compute-x-labels').is(':checked');
+      computedState.options.staggerLabels = $('#control-chart-stagger-labels').is(':checked');
       return computedState;
     }
 

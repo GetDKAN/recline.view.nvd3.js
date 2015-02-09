@@ -44,6 +44,11 @@ this.recline.View = this.recline.View || {};
   });
 
   my.pieChartControls = recline.View.nvd3.BaseControl.extend({
+    _template:'<div class="form-group checkbox">' +
+                  '<label for="control-chart-donut">' +
+                  '<input type="checkbox" id="control-chart-donut" {{#options.donut}}checked{{/options.donut}}/> Donut' +
+                  '</label>' +
+              '</div>',
     initialize: function(options){
       var self = this;
       recline.View.nvd3.BaseControl.prototype.initialize.call(self, options);
@@ -51,6 +56,15 @@ this.recline.View = this.recline.View || {};
     render: function(){
       var self = this;
       recline.View.nvd3.BaseControl.prototype.render.call(self, {});
+      self.$el.find('#control-chart-container').append(Mustache.render(self._template, self.state.toJSON()));
+    },
+    getUIState:function(){
+      var self = this;
+      var computedState = recline.View.nvd3.BaseControl.prototype.getUIState.call(self, {});
+      computedState.options = computedState.options || {};
+      computedState.options.donut = $('#control-chart-donut').is(':checked');
+      return computedState;
     }
+
   });
 })(jQuery, recline.View.nvd3);

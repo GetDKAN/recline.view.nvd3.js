@@ -92,8 +92,11 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           self.chart = self.createGraph(self.graphType);
           self.chart.height(layout.height);
           self.chart.width(layout.width);
-          self.chart.xAxis.tickFormat(self.xFormatter);
-          self.chart.x2Axis && self.chart.x2Axis.tickFormat(self.xFormatter);
+
+          if(self.chart.xAxis && self.chart.xAxis.tickFormat)
+            self.chart.xAxis.tickFormat(self.xFormatter);
+          if(self.chart.x2Axis)
+            self.chart.x2Axis.tickFormat(self.xFormatter);
 
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
