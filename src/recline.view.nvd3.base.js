@@ -104,12 +104,28 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             .transition()
             .duration(self.state.get('transitionTime') || 500)
             .call(self.chart);
+
+          // Hack to reduce ticks even if the chart has not that option.
+          if(self.state.get('options').reduceXTicks){
+            self.reduceXTicks();
+          }
+
           nv.utils.windowResize(self.chart.update);
           return self.chart;
         });
         self.$('.recline-graph-controls').append(self.menu.$el);
         self.menu.setElement(self.$('.recline-graph-controls')).render();
         return self;
+      },
+      reduceXTicks: function(){
+        var self = this;
+        var layout = self.getLayoutParams(self.state.get('mode'));
+        d3.select('.nv-x.nv-axis > g').selectAll('g')
+          .filter(function(d, i) {
+              return i % Math.ceil(self.model.records.length / (layout.width / 100)) !== 0;
+          })
+          .selectAll('text, line')
+          .style('opacity', 0);
       },
       createSeries: function(records){
         var self = this;
