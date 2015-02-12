@@ -60,8 +60,7 @@ my.BaseControl = Backbone.View.extend({
                     '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}"/>' +
                 '</div>' +
                 '<div class="form-group">' +
-                  '<label for="control-chart-state">State</label>' +
-                  '<input value="{{serialized}}" class="form-control"/>' +
+                  '<input type="hidden" value="{{serialized}}" class="form-control"/>' +
                 '</div>' +
                 '<div class="form-group">' +
                   '<label for="control-chart-embed">Embed Code</label>' +

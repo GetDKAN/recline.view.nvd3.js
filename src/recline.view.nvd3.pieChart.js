@@ -23,7 +23,7 @@ this.recline.View = this.recline.View || {};
     createSeries: function(records){
       var self = this;
       records = records.toJSON();
-      var serie = self.state.get('seriesFields')[0];
+      var serie = _.first(self.state.get('seriesFields'));
       // Group by xfield and acum all the series fields.
       records = (self.state.get('group'))?
         _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
