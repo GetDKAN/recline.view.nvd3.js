@@ -37,7 +37,10 @@ this.recline.View = this.recline.View || {};
       self.graph = new recline.View.nvd3[self.graphType](options);
 
       if(urlState.source) {
-        datasetOptions = {url: urlState.source, backend: 'csv'};
+        datasetOptions = {
+          url: urlState.source,
+          backend: 'csv'
+        };
       } else {
         datasetOptions = {records: []};
       }
@@ -81,7 +84,6 @@ this.recline.View = this.recline.View || {};
       if(!self.graph.state.get('mode') || self.graph.state.get('mode') === 'edit'){
         self.renderGrid(self.graph.model);
       }
-
     },
     getCurrentView: function(){
       var self = this;

@@ -11,3 +11,8 @@
 .recline-slickgrid *{
 	box-sizing: content-box;
 }
+/* NVD3 Overrides */
+.nvtooltip h3 {
+	font-size: 13px;
+	font-weight: bold !important;
+}

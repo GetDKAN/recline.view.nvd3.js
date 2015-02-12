@@ -176,10 +176,13 @@ renderizo
 
   acum = func(acum, value, condition)
 
+
+
+
   // Returns accesors
   function select(){
     var args = [].slice.call(arguments, 0);
-    var instruction;
+    var op;
 
     this.q = {};
     this.q.select = [];
@@ -188,9 +191,9 @@ renderizo
       if(_.isObject(item)) {
         return item;
       } else {
-          instruction = {};
-          instruction[item] = _.iteratee(item);
-          return instruction;
+          op = {};
+          op[item] = _.iteratee(item);
+          return op;
       }
     });
     return this;

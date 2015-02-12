@@ -24,9 +24,6 @@ this.recline.View = this.recline.View || {};
     getDefaults: function(){
       var self = this;
       return {
-        options: {
-          reduceXTicks: false
-        },
         computeXLabels: false,
       };
     }

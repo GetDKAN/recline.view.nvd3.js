@@ -77,6 +77,11 @@ my.BaseControl = Backbone.View.extend({
                   '<input type="checkbox" id="control-chart-show-tooltips" {{#options.tooltips}}checked{{/options.tooltips}}/> Show Tooltips' +
                   '</label>' +
                 '</div>' +
+                '<div class="form-group checkbox">' +
+                  '<label for="control-chart-reduce-ticks">' +
+                  '<input type="checkbox" id="control-chart-reduce-ticks" {{#options.reduceXTicks}}checked{{/options.reduceXTicks}}/> Reduce Ticks' +
+                  '</label>' +
+                '</div>' +
               '</div>' +
               '<button id="control-chart-update" class="btn btn-primary">Update</button>' +
             '</form>',
@@ -198,10 +203,10 @@ my.BaseControl = Backbone.View.extend({
       xDataType: $('input[name=control-chart-x-data-type]:checked').val(),
       xFormat: $('#control-chart-x-format').val()
     };
-
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
     computedState.options.tooltips = $('#control-chart-show-tooltips').is(':checked');
+    computedState.options.reduceXTicks = $('#control-chart-reduce-ticks').is(':checked');
     computedState.options.xAxis.rotateLabels = $('#control-chart-label-x-rotation').val();
     color = _.invoke($('#control-chart-color').val().split(','), 'trim');
 
