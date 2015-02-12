@@ -22,7 +22,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           '<div class="{{columnClass}} {{viewId}}"style="display: block;">' +
             '<div id="{{viewId}}">' +
                 '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
-                'width="{{width}}" height="{{height}}">' +
+                ' height="{{height}}">' +
                 '</svg></div>' +
             '<div id="grid"></div>' +
           '</div>' +
@@ -91,8 +91,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.series = self.createSeries(self.model.records);
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
-          self.chart.height(layout.height);
-          self.chart.width(layout.width - MARGIN_RIGHT);
 
           if(self.chart.xAxis && self.chart.xAxis.tickFormat)
             self.chart.xAxis.tickFormat(self.xFormatter);
@@ -106,16 +104,23 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             .call(self.chart);
 
           // Hack to reduce ticks even if the chart has not that option.
-          if(self.state.get('options').reduceXTicks){
+          if(self.graphType === 'discreteBarChart' && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
           }
 
-          nv.utils.windowResize(self.chart.update);
+          nv.utils.windowResize(self.updateChart.bind(self));
           return self.chart;
         });
         self.$('.recline-graph-controls').append(self.menu.$el);
         self.menu.setElement(self.$('.recline-graph-controls')).render();
         return self;
+      },
+      updateChart: function(){
+        var self = this;
+        d3.select('#' + self.uuid + ' svg')
+          .transition()
+          .duration(self.state.get('transitionTime') || 500)
+          .call(self.chart);
       },
       reduceXTicks: function(){
         var self = this;
