@@ -104,7 +104,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             .call(self.chart);
 
           // Hack to reduce ticks even if the chart has not that option.
-          if(self.graphType === 'discreteBarChart' && self.state.get('options').reduceXTicks){
+          if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
           }
 
