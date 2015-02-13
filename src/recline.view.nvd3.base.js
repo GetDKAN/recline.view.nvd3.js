@@ -18,16 +18,18 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
   my.Base = Backbone.View.extend({
       template:'<div class="recline-graph row">' +
-        '{{data}}' +
-          '<div class="{{columnClass}} {{viewId}}"style="display: block;">' +
-            '<div id="{{viewId}}">' +
-                '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
-                ' height="{{height}}">' +
-                '</svg></div>' +
-            '<div id="grid"></div>' +
-          '</div>' +
-          '<div class="col-md-5 recline-graph-controls {{controlVisibility}}"></div>' +
-        '</div> ',
+                  '{{data}}' +
+                  '<div class="{{columnClass}} {{viewId}}"style="display: block;">' +
+                    '<div id="{{viewId}}">' +
+                        '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
+                        ' height="{{height}}">' +
+                        '</svg>' +
+                    '</div>' +
+                    '<div id="pager"></div>' +
+                    '<div id="grid"></div>' +
+                  '</div>' +
+                  '<div class="col-md-5 recline-graph-controls {{controlVisibility}}"></div>' +
+                '</div> ',
       initialize: function(options) {
         var self = this;
 
@@ -114,6 +116,15 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.$('.recline-graph-controls').append(self.menu.$el);
         self.menu.setElement(self.$('.recline-graph-controls')).render();
         return self;
+      },
+      lightUpdate: function(){
+        var self = this;
+        self.series = self.createSeries(self.model.records);
+        d3.select('#' + self.uuid + ' svg')
+          .datum(self.series)
+          .transition()
+          .duration(500)
+          .call(self.chart);
       },
       updateChart: function(){
         var self = this;

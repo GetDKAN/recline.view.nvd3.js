@@ -46,19 +46,37 @@ this.recline.View = this.recline.View || {};
       }
 
       self.graph.model = new recline.Model.Dataset(datasetOptions);
+
       self.graph.model.fetch().done(self.render.bind(self));
-      self.graph.setSavedState(urlState || state);
+      state = urlState || state;
+      self.graph.setSavedState(state);
+      self.graph.model.queryState.attributes = self.graph.state.get('queryState') || {from:0, size:10};
+
       self.graph.state.on('change', self.onStateChange.bind(self));
+      self.graph.model.queryState.on('change', self.onQueryStateChange.bind(self));
+    },
+    onQueryStateChange: function(e){
+      var self = this;
+      self.graph.state.set('queryState', self.graph.model.queryState, {silent:true});
+      self.router.navigateToState(self.graph.state);
+      self.graph.lightUpdate();
     },
     renderGrid: function(model){
+      var self = this;
       var $gridEl = $('#grid');
+
+      self.pager = new recline.View.Pager({
+        model: self.graph.model
+      });
+
+      self.graph.$el.find('#pager').html(self.pager.el);
+
       grid = new recline.View.SlickGrid({
         model: model,
         el: $gridEl,
-        options:{
-           autoExpandColumns: true
-        }
+        options:{}
       });
+
       grid.visible = true;
       grid.render();
     },
@@ -102,6 +120,7 @@ this.recline.View = this.recline.View || {};
       self.router.navigateToState(self.graph.state);
       self.render();
       self.graph.state.on('change', self.onStateChange.bind(self));
+      self.graph.model.queryState.on('change', self.graph.lightUpdate.bind(self.graph));
     },
     destroy: function(){
       self.graph.state.off();
