@@ -104,7 +104,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           if(self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
 
-          self.chart.yAxis && self.chart.yAxis.axisLabelDistance(30);
+          //self.chart.yAxis && self.chart.yAxis.axisLabelDistance(30);
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
@@ -178,6 +178,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
             : records;
 
+          records = _.sortBy(records, self.state.get('sort') || self.state.get('xfield'));
+
           data.values = _.map(records, function(record, index){
             if(self.state.get('computeXLabels')){
               self.chartMap.set(index, self.x(record, self.state.get('xfield')));
@@ -234,7 +236,9 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         return chart;
       },
       getDefaults: function(){
-        return {};
+        return {
+          showTooltips: true
+        };
       },
       setSavedState: function(state){
         var self = this;

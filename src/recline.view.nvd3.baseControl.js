@@ -59,13 +59,21 @@ my.BaseControl = Backbone.View.extend({
                     '<label for="control-chart-color">Color</label>' +
                     '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}"/>' +
                 '</div>' +
+                '<div class="form-group">' +
+                  '<label for="control-chart-sort">Sort by</label>' +
+                  '<select id="control-chart-sort" class="form-control chosen-select">' +
+                    '{{#sortFields}}' +
+                      '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
+                    '{{/sortFields}}' +
+                  '</select>' +
+                '</div>' +
 
                 '<div class="form-group">' +
                     '<label for="control-chart-x-axis-label">X Axis Label</label>' +
                     '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
                 '</div>' +
                 '<div class="form-group">' +
-                    '<label for="control-chart-x-axis-label">Y Axis Label</label>' +
+                    '<label for="control-chart-y-axis-label">Y Axis Label</label>' +
                     '<input class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
                 '</div>' +
                 '<div class="form-group">' +
@@ -139,6 +147,10 @@ my.BaseControl = Backbone.View.extend({
       self.arrayToOptions(self.getFields()), [self.state.get('xfield')]
     );
 
+    state.sortFields = self.applyOption(
+      self.arrayToOptions(self.getFields()), self.state.get('sort')
+    );
+
 
     htmls = Mustache.render(self.template, state);
     self.$el.html(htmls);
@@ -209,6 +221,7 @@ my.BaseControl = Backbone.View.extend({
       source: $('#control-chart-source').val(),
       transitionTime: $('#control-chart-transition-time').val(),
       xDataType: $('input[name=control-chart-x-data-type]:checked').val(),
+      sort: $('#control-chart-sort').val(),
       xFormat: $('#control-chart-x-format').val()
     };
     computedState.options = computedState.options || {};
@@ -218,6 +231,7 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.reduceXTicks = $('#control-chart-reduce-ticks').is(':checked');
     computedState.options.xAxis.rotateLabels = $('#control-chart-label-x-rotation').val();
 
+    computedState.options.yAxis.axisLabelDistance = 30;
     computedState.options.xAxis.axisLabel = $('#control-chart-x-axis-label').val();
     computedState.options.yAxis.axisLabel = $('#control-chart-y-axis-label').val();
 
