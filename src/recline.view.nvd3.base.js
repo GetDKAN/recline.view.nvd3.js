@@ -90,7 +90,12 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.$el.html(htmls);
         self.$graph = self.$el.find('.panel.' + tmplData.viewId);
         self.trigger('chart:endDrawing');
+
+        var computeXLabels = self.needForceX(self.model.records, self.graphType);
+        self.state.set('computeXLabels', computeXLabels, {silent:true});
+
         self.series = self.createSeries(self.model.records);
+
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
 
@@ -99,7 +104,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           if(self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
 
-          self.chart.yAxis.axisLabelDistance(30);
+          self.chart.yAxis && self.chart.yAxis.axisLabelDistance(30);
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
@@ -188,8 +193,14 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         });
         return series;
       },
-      isXTypeAllowed: function(){
-        /* IMPLEMENT */
+      needForceX: function(records, graphType){
+        var self = this;
+        var xfield = self.state.get('xfield');
+        records = records.toJSON();
+
+        return _.some(records, function(record){
+          return _.inferType(record[xfield]) === 'String';
+        }) && graphType !== 'discreteBarChart' && graphType !== 'multiBarChart';
       },
       getFormatter: function(type, format){
         var self = this;
