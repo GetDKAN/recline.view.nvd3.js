@@ -99,6 +99,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           if(self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
 
+          self.chart.yAxis.axisLabelDistance(30);
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()

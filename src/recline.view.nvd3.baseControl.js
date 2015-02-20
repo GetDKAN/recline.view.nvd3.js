@@ -59,6 +59,15 @@ my.BaseControl = Backbone.View.extend({
                     '<label for="control-chart-color">Color</label>' +
                     '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}"/>' +
                 '</div>' +
+
+                '<div class="form-group">' +
+                    '<label for="control-chart-x-axis-label">X Axis Label</label>' +
+                    '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
+                '</div>' +
+                '<div class="form-group">' +
+                    '<label for="control-chart-x-axis-label">Y Axis Label</label>' +
+                    '<input class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
+                '</div>' +
                 '<div class="form-group">' +
                   '<input type="hidden" value="{{serialized}}" class="form-control"/>' +
                 '</div>' +
@@ -204,9 +213,14 @@ my.BaseControl = Backbone.View.extend({
     };
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
+    computedState.options.yAxis = computedState.options.yAxis || {};
     computedState.options.tooltips = $('#control-chart-show-tooltips').is(':checked');
     computedState.options.reduceXTicks = $('#control-chart-reduce-ticks').is(':checked');
     computedState.options.xAxis.rotateLabels = $('#control-chart-label-x-rotation').val();
+
+    computedState.options.xAxis.axisLabel = $('#control-chart-x-axis-label').val();
+    computedState.options.yAxis.axisLabel = $('#control-chart-y-axis-label').val();
+
     color = _.invoke($('#control-chart-color').val().split(','), 'trim');
 
     if($('#control-chart-color').val()){
