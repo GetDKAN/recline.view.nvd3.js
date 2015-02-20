@@ -1,0 +1,29 @@
+{
+  "name": "chosen-bootstrap",
+  "version": "1.0.3",
+  "homepage": "https://github.com/dbtek/chosen-bootstrap",
+  "authors": [
+    "İsmail Demirbilek <ce.demirbilek@gmail.com>"
+  ],
+  "description": "Bootstrap look & feel for chosen",
+  "main": "chosen.bootstrap.css",
+  "keywords": [
+    "chosen",
+    "bootstrap",
+    "theme"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "chosen": "https://github.com/harvesthq/chosen/releases/download/v1.1.0/chosen_v1.1.0.zip"
+  },
+  "_release": "1.0.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.3",
+    "commit": "ca0d37dfed467af7f95ecb9d1f0aa92e3a409bbc"
+  },
+  "_source": "git://github.com/dbtek/chosen-bootstrap.git",
+  "_target": "*",
+  "_originalSource": "chosen-bootstrap"
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Recline NVD3</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js" />
+
+
+
+  <link rel="stylesheet" href="public/slickgrid/slick.grid.css">
+  <link rel="stylesheet" href="public/chosen-bootstrap/chosen.bootstrap.css">
+
+  <!-- Recline CSS components -->
+  <link rel="stylesheet" href="css/slickgrid.css">
+
+  <!-- General styles and overrides -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- 3rd party JS libraries -->
+  <script type="text/javascript" src="public/slickgrid/lib/jquery-1.7.min.js"></script>
+  <script type="text/javascript" src="public/chosen_v1.3.0/chosen.jquery.js"></script>
+  <script type="text/javascript" src="lib/csv.js"></script>
+
+  <script type="text/javascript" src="public/lodash/dist/lodash.compat.min.js"></script>
+  <script type="text/javascript" src="public/lodash.data/dist/lodash.data.min.js"></script>
+  <script type="text/javascript" src="public/backbone/backbone.js"></script>
+  <script type="text/javascript" src="public/mustache/mustache.js"></script>
+  <script type="text/javascript" src="public/bootstrap-css/js/bootstrap.js"></script>
+
+  <script type="text/javascript" src="public/slickgrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+  <script src="public/slickgrid/lib/jquery.event.drag-2.0.min.js"></script>
+  <script src="public/slickgrid/lib/jquery.event.drop-2.0.min.js"></script>
+  <script type="text/javascript" src="public/slickgrid/slick.core.js"></script>
+  <script type="text/javascript" src="public/slickgrid/slick.formatters.js"></script>
+  <script type="text/javascript" src="public/slickgrid/slick.editors.js"></script>
+  <script type="text/javascript" src="public/slickgrid/slick.grid.js"></script>
+
+  <script type="text/javascript" src="public/slickgrid/plugins/slick.rowselectionmodel.js"></script>
+  <script type="text/javascript" src="public/slickgrid/plugins/slick.rowmovemanager.js"></script>
+  <script type="text/javascript" src="public/moment/moment.js"></script>
+
+  <!--[if lte IE 7]>
+  <script language="javascript" type="text/javascript" src="public/json/json2.js"></script>
+  <![endif]-->
+
+
+  <script src="http://okfnlabs.org/recline/dist/recline.js"></script>
+
+  <!-- D3 JS libraries -->
+  <script type="text/javascript" src="public/d3/d3.js"></script>
+
+  <!-- NVD3 JS libraries -->
+  <script type="text/javascript" src="public/nvd3/nv.d3.js"></script>
+
+  <link rel="stylesheet" href="public/nvd3/nv.d3.css">
+
+</head>
+
+<body>
+
+<div id="chart" class="container-fluid">
+  <div class="row">
+    <div id="graph" class="container-fluid"></div>
+  </div>
+</div>
+
+<script type="text/javascript" src="datasets.js"></script>
+<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="src/recline.URLState.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.base.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.baseControl.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.polymorphic.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.lineChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.scatterChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.stackedAreaChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.discreteBarChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.multiBarHorizontalChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.linePlusBarChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.multiBarChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.cumulativeLineChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.lineWithFocusChart.js"></script>
+<script type="text/javascript" src="src/recline.view.nvd3.pieChart.js"></script>
+</body>
+</html>

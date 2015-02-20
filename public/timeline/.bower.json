@@ -1,0 +1,14 @@
+{
+  "name": "timeline",
+  "homepage": "https://github.com/blesh/TimelineJS-Bower",
+  "version": "2.29.1",
+  "_release": "2.29.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.29.1",
+    "commit": "7b868696cb327a3e538a2b21cd8443f87d270c8a"
+  },
+  "_source": "git://github.com/blesh/TimelineJS-Bower.git",
+  "_target": "2.29.1",
+  "_originalSource": "timeline"
+}
