@@ -25,30 +25,29 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
                         ' height="{{height}}">' +
                         '</svg>' +
                     '</div>' +
-                    '<div id="pager"></div>' +
-                    '<div id="grid"></div>' +
                   '</div>' +
-                  '<div class="col-md-5 recline-graph-controls {{controlVisibility}}"></div>' +
                 '</div> ',
       initialize: function(options) {
         var self = this;
 
         self.$el = $(self.el);
-        _.extend(self, options);
-        _.bindAll(this, 'render');
+        self.options = _.defaults(options || {}, self.options);
 
         var stateData = _.extend({
             width: 640,
             height: 480,
             group: false,
           },
-          options.state
+          self.options.state.toJSON()
         );
 
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
-        self.state = new recline.Model.ObjectState(stateData);
+        self.state = self.options.state;
+        self.state.set(stateData);
         self.chartMap = d3.map();
+
+        self.state.listenTo(self.state, 'change', self.render.bind(self));
 
         // Check current view mode: edit or widget.
         if(options.mode) self.state.set('mode', options.mode);
@@ -61,15 +60,13 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
          layout = {
             columnClass: 'col-md-12',
             width: self.$el.parent().width(),
-            height: $(window).height(),
-            controlVisibility: 'hidden'
+            height: $(window).height()
           };
         } else {
          layout = {
-            columnClass: 'col-md-7',
+            columnClass: 'col-md-12',
             width: self.state.get('width') || DEFAULT_CHART_WIDTH,
-            height: self.state.get('height') || DEFAULT_CHART_HEIGHT,
-            controlVisibility:''
+            height: self.state.get('height') || DEFAULT_CHART_HEIGHT
           };
         }
         return layout;
@@ -99,6 +96,11 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           if(self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
 
+          var computeXLabels = self.needForceX(self.model.records, self.graphType);
+          self.state.set('computeXLabels', computeXLabels, {silent:true});
+
+          self.chart.yAxis && self.chart.yAxis.axisLabelDistance(30);
+
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
@@ -113,8 +115,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           nv.utils.windowResize(self.updateChart.bind(self));
           return self.chart;
         });
-        self.$('.recline-graph-controls').append(self.menu.$el);
-        self.menu.setElement(self.$('.recline-graph-controls')).render();
         return self;
       },
       lightUpdate: function(){
@@ -148,6 +148,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var series;
         var fieldType;
         var xDataType;
+
         // Return no data when x and y are no set.
         if(!self.state.get('xfield') || !self.getSeries().length) return [];
 
@@ -172,6 +173,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
             : records;
 
+          records = _.sortBy(records, self.state.get('sort') || self.state.get('xfield'));
+
           data.values = _.map(records, function(record, index){
             if(self.state.get('computeXLabels')){
               self.chartMap.set(index, self.x(record, self.state.get('xfield')));
@@ -187,8 +190,13 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         });
         return series;
       },
-      isXTypeAllowed: function(){
-        /* IMPLEMENT */
+      needForceX: function(records, graphType){
+       var self = this;
+       var xfield = self.state.get('xfield');
+       records = records.toJSON();
+       return _.some(records, function(record){
+         return _.inferType(record[xfield]) === 'String';
+       }) && graphType !== 'discreteBarChart' && graphType !== 'multiBarChart';
       },
       getFormatter: function(type, format){
         var self = this;
@@ -199,6 +207,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           'Date': _.compose(d3.time.format(format || '%x'),_.instantiate(Date)),
           'Number': d3.format(format || '.02f')
         };
+
         return formatter[type];
       },
       setOptions: function (chart, options) {
@@ -216,7 +225,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       createGraph: function(graphType){
         var self = this;
         var chart = nv.models[graphType]();
-
         // Set each graph option recursively.
         self.setOptions(chart, self.state.get('options'));
         return chart;

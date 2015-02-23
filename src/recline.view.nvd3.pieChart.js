@@ -10,11 +10,6 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'pieChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
-      self.menu = new my.pieChartControls({
-        model: self.model,
-        state: self.state,
-        parent: self
-      });
     },
     render: function(){
       var self = this;
@@ -44,25 +39,18 @@ this.recline.View = this.recline.View || {};
   });
 
   my.pieChartControls = recline.View.nvd3.BaseControl.extend({
-    _template:'<div class="form-group checkbox">' +
+    template:'<div class="form-group checkbox">' +
                   '<label for="control-chart-donut">' +
                   '<input type="checkbox" id="control-chart-donut" {{#options.donut}}checked{{/options.donut}}/> Donut' +
                   '</label>' +
               '</div>',
-    initialize: function(options){
-      var self = this;
-      recline.View.nvd3.BaseControl.prototype.initialize.call(self, options);
-    },
-    render: function(){
-      var self = this;
-      recline.View.nvd3.BaseControl.prototype.render.call(self, {});
-      self.$el.find('#control-chart-container').append(Mustache.render(self._template, self.state.toJSON()));
+    events: {
+      'change input[type="checkbox"]': 'update',
     },
     getUIState:function(){
       var self = this;
-      var computedState = recline.View.nvd3.BaseControl.prototype.getUIState.call(self, {});
-      computedState.options = computedState.options || {};
-      computedState.options.donut = $('#control-chart-donut').is(':checked');
+      var computedState = {options: {}};
+      computedState.options.donut = self.$('#control-chart-donut').is(':checked');
       return computedState;
     }
 

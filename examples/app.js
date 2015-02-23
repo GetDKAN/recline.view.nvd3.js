@@ -9,11 +9,17 @@
     //   router: router,
     // });
   	var state = new recline.Model.ObjectState();
+    window.sharedObject = {state: state};
 
-  	var msv = new MultiStageView({
-  		state: state
+  	window.msv = new MultiStageView({
+  		state: state,
+  		el: $('#steps')
   	});
-  	msv.addStep(new LoadDataView());
+    msv.addStep(new LoadDataView(sharedObject));
+    msv.addStep(new DataOptionsView(sharedObject));
+    msv.addStep(new ChooseChartView(sharedObject));
+    msv.addStep(new ChartOptionsView(sharedObject));
+  	msv.addStep(new PublishView(sharedObject));
   	msv.render();
 
   });

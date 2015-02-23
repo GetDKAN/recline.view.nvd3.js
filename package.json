@@ -9,5 +9,8 @@
     "grunt-livereload": "^0.1.3",
     "grunt-express": "^1.4.1",
     "grunt-open": "^0.2.3"
+  },
+  "dependencies": {
+    "grunt-contrib-concat": "^0.5.1"
   }
 }

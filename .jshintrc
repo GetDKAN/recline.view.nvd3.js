@@ -66,11 +66,11 @@
   // Suppress warnings about globals.
   "globals": {
     "$": false,
+    "Mustache": false,
+    "nv": false,
+    "recline": false,
     "jQuery": false,
-    "_": false,
-    "Mustache",
-    "d3",
-    "nv"
+    "_": false
   },
   // Suppress warnings about == null comparisons.
   "eqnull": true
