@@ -63,12 +63,12 @@ my.BaseControl = Backbone.View.extend({
   render: function(){
     var self = this;
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
-    self.$(".chosen-select").chosen({width: "95%"});
+    self.$('.chosen-select').chosen({width: '95%'});
   },
   update: function(e){
     var self = this;
     var newState = {};
-    if(e.type === 'keydown' && e.keyCode != 13) return;
+    if(e.type === 'keydown' && e.keyCode !== 13) return;
     newState = _.merge({}, self.state.toJSON(), self.getUIState());
     self.state.set(newState);
   },

@@ -35,6 +35,7 @@ this.recline.View = this.recline.View || {};
       return {
         options:{
           useInteractiveGuideline: true,
+          tooltips: true,
           xAxis:{
             tickFormat: function(id) {
               return (self.chartMap) ? self.chartMap.get(id) : id;

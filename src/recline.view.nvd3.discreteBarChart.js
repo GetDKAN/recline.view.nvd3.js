@@ -20,7 +20,7 @@ this.recline.View = this.recline.View || {};
       return {
         computeXLabels: false,
         options:{
-          tooltips: false
+          tooltips: true
         }
       };
     }

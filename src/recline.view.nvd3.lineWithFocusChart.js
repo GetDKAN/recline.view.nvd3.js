@@ -20,6 +20,7 @@ this.recline.View = this.recline.View || {};
       var self = this;
       return {
         options: {
+          tooltips: true,
           xAxis:{
             tickFormat: function(id) {
               return (self.chartMap) ? self.chartMap.get(id) : id;

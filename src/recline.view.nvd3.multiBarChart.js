@@ -20,6 +20,10 @@ this.recline.View = this.recline.View || {};
       var self = this;
       return {
         computeXLabels: false,
+        options:{
+          reduceXTicks: true,
+          tooltips: true
+        }
       };
     }
   });

@@ -19,12 +19,14 @@ this.recline.View = this.recline.View || {};
     getDefaults: function(){
       var self = this;
       return {
-        showDistX: true,
-        showDistY: true,
-        onlyCircles: false,
-        xAxis:{
-          tickFormat: function(id) {
-            return (self.chartMap) ? self.chartMap.get(id) : id;
+        options: {
+          showDistX: true,
+          showDistY: true,
+          onlyCircles: false,
+          xAxis:{
+            tickFormat: function(id) {
+              return (self.chartMap) ? self.chartMap.get(id) : id;
+            }
           }
         }
       };

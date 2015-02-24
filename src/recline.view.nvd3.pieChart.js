@@ -32,7 +32,8 @@ this.recline.View = this.recline.View || {};
       return {
         options: {
           showLabels: true,
-          labelType: 'percent'
+          labelType: 'percent',
+          tooltips:true
         }
       };
     }

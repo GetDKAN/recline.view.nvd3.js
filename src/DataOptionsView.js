@@ -57,6 +57,7 @@
       self.$('.chosen-select').chosen({width: '95%'});
     },
     updateState: function(state, cb){
+      var self = this;
       state.set('seriesFields', self.$('#control-chart-series').val());
       state.set('xfield', self.$('#control-chart-xfield').val());
       state.set('xDataType', self.$('input[name=control-chart-x-data-type]:checked').val());

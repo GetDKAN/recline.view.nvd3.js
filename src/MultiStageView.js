@@ -2,7 +2,9 @@
   'use strict';
 
   my.MultiStageView = Backbone.View.extend({
-    template: '<h3>{{title}}</h3><div id="step"></div>',
+    template: '<h3>{{title}}</h3>' +
+              '<input type="hidden" value="{{state}}"/>' +
+              '<div id="step"></div>',
     events:{
       'click #next': 'nextStep',
       'click #prev': 'prevStep'
@@ -18,7 +20,7 @@
     render: function(){
       var self = this;
       self.currentView = self.getStep(self._currentStep);
-      console.log(self.currentView.stepInfo);
+      _.extend(self.currentView.stepInfo, {state:JSON.stringify(self.state.toJSON())});
       self.$el.html(Mustache.render(self.template, self.currentView.stepInfo));
 
       self.assign(self.currentView, '#step');

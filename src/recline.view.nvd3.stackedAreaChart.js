@@ -21,6 +21,7 @@ this.recline.View = this.recline.View || {};
       return {
         options:{
           useInteractiveGuideline: true,
+          tooltips: true,
           xAxis:{
             tickFormat: function(d) {
               return d3.time.format('%Y')(new Date(d))

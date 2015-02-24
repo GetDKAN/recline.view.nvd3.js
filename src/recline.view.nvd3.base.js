@@ -22,22 +22,23 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
                   '<div class="{{columnClass}} {{viewId}}"style="display: block;">' +
                     '<div id="{{viewId}}">' +
                         '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
-                        ' height="{{height}}">' +
+                        ' height="{{height}}" width="{{width}}">' +
                         '</svg>' +
                     '</div>' +
                   '</div>' +
                 '</div> ',
       initialize: function(options) {
         var self = this;
-
         self.$el = $(self.el);
+
         self.options = _.defaults(options || {}, self.options);
 
-        var stateData = _.extend({
+        var stateData = _.merge({
             width: 640,
             height: 480,
             group: false,
           },
+          self.getDefaults(),
           self.options.state.toJSON()
         );
 
@@ -46,7 +47,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.state = self.options.state;
         self.state.set(stateData);
         self.chartMap = d3.map();
-
         self.state.listenTo(self.state, 'change', self.render.bind(self));
 
         // Check current view mode: edit or widget.
@@ -54,21 +54,11 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       },
       getLayoutParams: function(mode){
         var self = this;
-        var layout;
-
-        if(mode === 'widget'){
-         layout = {
-            columnClass: 'col-md-12',
-            width: self.$el.parent().width(),
-            height: $(window).height()
-          };
-        } else {
-         layout = {
-            columnClass: 'col-md-12',
-            width: self.state.get('width') || DEFAULT_CHART_WIDTH,
-            height: self.state.get('height') || DEFAULT_CHART_HEIGHT
-          };
-        }
+        var layout = {
+          columnClass: 'col-md-12',
+          width: self.state.get('width') || self.$el.innerWidth() || DEFAULT_CHART_WIDTH,
+          height: self.state.get('height') || DEFAULT_CHART_HEIGHT
+        };
         return layout;
       },
       render: function(options){
@@ -231,14 +221,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       },
       getDefaults: function(){
         return {};
-      },
-      setSavedState: function(state){
-        var self = this;
-        var defaults = self.getDefaults();
-
-        state = state || {};
-        state = _.deepMerge(state, defaults);
-        self.state.set(state);
       },
       getState: function(state){
         var self = this;

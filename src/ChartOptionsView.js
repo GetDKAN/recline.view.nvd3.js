@@ -25,7 +25,7 @@
               '</div>' +
               '<div class="col-md-12" id="controls">' +
                 '<div id="prev" class="btn btn-default pull-left">Back</div>' +
-                '<div id="next" class="btn btn-primary pull-right">Next</div>' +
+                '<button type="submit" class="form-submit btn btn-success pull-right">Finish</button>' +
               '</div>',
     initialize: function(options){
       var self = this;
@@ -77,7 +77,6 @@
       self.$('.chosen-select').chosen({width: '95%'});
     },
     updateState: function(state, cb){
-      var self = this;
       cb(state);
     },
     assign: function(view, selector){

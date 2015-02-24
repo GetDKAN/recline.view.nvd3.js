@@ -20,6 +20,7 @@ this.recline.View = this.recline.View || {};
       var self = this;
       return {
         options: {
+          tooltips: true,
           reduceXTicks: false,
         }
       };
