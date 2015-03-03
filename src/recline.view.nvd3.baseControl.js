@@ -3,8 +3,8 @@
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
-(function ($, my) {
-
+;(function ($, my) {
+'use strict';
 my.BaseControl = Backbone.View.extend({
   template: '<div id="control-chart-container">' +
               '<div class="form-group">' +

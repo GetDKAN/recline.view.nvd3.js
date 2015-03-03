@@ -3,7 +3,8 @@
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
-(function ($, my) {
+;(function ($, my) {
+  'use strict';
 
   my.scatterChart = recline.View.nvd3.Base.extend({
     initialize: function(options) {

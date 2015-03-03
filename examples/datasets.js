@@ -1,3 +1,4 @@
+/* jshint ignore:start */
 function demoFieldAsSeries() {
   var dataset = new recline.Model.Dataset({
      records: [
@@ -37,3 +38,4 @@ function demoValuesAsSeries(){
   });
   return dataset;
 }
+/* jshint ignore:end */

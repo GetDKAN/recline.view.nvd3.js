@@ -9,7 +9,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
   var DEFAULT_CHART_WIDTH = 640;
   var DEFAULT_CHART_HEIGHT = 480;
-  var MARGIN_RIGHT = 40;
 
   function makeId(prefix) {
       prefix = prefix || '';
@@ -48,11 +47,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.state.set(stateData);
         self.chartMap = d3.map();
         self.state.listenTo(self.state, 'change', self.render.bind(self));
-
-        // Check current view mode: edit or widget.
-        if(options.mode) self.state.set('mode', options.mode);
       },
-      getLayoutParams: function(mode){
+      getLayoutParams: function(){
         var self = this;
         var layout = {
           columnClass: 'col-md-12',
@@ -61,13 +57,13 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         };
         return layout;
       },
-      render: function(options){
+      render: function(){
         var self = this;
         var tmplData;
         var htmls;
         var layout;
 
-        layout = self.getLayoutParams(self.state.get('mode'));
+        layout = self.getLayoutParams();
         tmplData = self.model.toTemplateJSON();
         tmplData.viewId = self.uuid;
 
@@ -89,7 +85,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           var computeXLabels = self.needForceX(self.model.records, self.graphType);
           self.state.set('computeXLabels', computeXLabels, {silent:true});
 
-          self.chart.yAxis && self.chart.yAxis.axisLabelDistance(30);
+          self.chart.yAxis && self.chart.yAxis.axisLabelDistance(30); // jshint ignore:line
 
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
@@ -140,7 +136,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var xDataType;
 
         // Return no data when x and y are no set.
-        if(!self.state.get('xfield') || !self.getSeries().length) return [];
+        if(!self.state.get('xfield') || !self.getSeries()) return [];
 
         records = records.toJSON();
 
@@ -222,7 +218,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       getDefaults: function(){
         return {};
       },
-      getState: function(state){
+      getState: function(){
         var self = this;
         return self.state.attributes;
       },

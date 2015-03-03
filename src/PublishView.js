@@ -49,7 +49,6 @@
       self.$('.chosen-select').chosen({width: '95%'});
     },
     updateState: function(state, cb){
-      var self = this;
       cb(state);
     },
     assign: function(view, selector){

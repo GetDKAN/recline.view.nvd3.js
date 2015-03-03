@@ -14,8 +14,10 @@
       self.options = _.defaults(options || {}, self.options);
       self.state = self.options.state;
       self._currentView = null;
-      self._currentStep = 0;
+      self._currentStep = self.state.get('step') || 0;
       self.steps = [];
+
+      self.state.set('step', self._currentStep);
     },
     render: function(){
       var self = this;
@@ -43,6 +45,7 @@
       self.currentView.updateState(self.state, function(newState){
         self.state = newState;
         self._currentStep = self.getNext(self.steps, self._currentStep);
+        self.state.set('step', self._currentStep);
         self.render();
       });
     },
@@ -51,6 +54,7 @@
       self.currentView.updateState(self.state, function(newState){
         self.state = newState;
         self._currentStep = self.getPrev(self.steps, self._currentStep);
+        self.state.set('step', self._currentStep);
         self.render();
       });
     },

@@ -111,7 +111,7 @@ this.recline = this.recline || {};
     self.navigateToState = function(state){
       self.currentState = state;
       router.navigate(self.transform(state, self.toParams));
-      options.stateChange && options.stateChange(state);
+      options.stateChange && options.stateChange(state); // jshint ignore:line
     };
 
     var Router = Backbone.Router.extend({

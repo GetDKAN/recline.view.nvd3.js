@@ -3,7 +3,8 @@
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
-(function ($, my) {
+;(function ($, my) {
+  'use strict';
 
   my.stackedAreaChart = recline.View.nvd3.Base.extend({
     initialize: function(options) {
@@ -17,14 +18,13 @@ this.recline.View = this.recline.View || {};
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
     getDefaults: function(){
-      var self = this;
       return {
         options:{
           useInteractiveGuideline: true,
           tooltips: true,
           xAxis:{
             tickFormat: function(d) {
-              return d3.time.format('%Y')(new Date(d))
+              return d3.time.format('%Y')(new Date(d));
               //return (self.chartMap) ? self.chartMap.get(id) : id;
             }
           }

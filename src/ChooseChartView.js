@@ -1,14 +1,14 @@
 ;(function ($, my) {
   'use strict';
 
+
   my.ChooseChartView = Backbone.View.extend({
     template: '<div class="form-group">' +
-                '<label for="control-chart-type">Chart</label>' +
-                '<select id="control-chart-type" class="form-control bind chosen-select">' +
+                '<ul id="chart-selector">' +
                   '{{#graphTypes}}' +
-                    '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
+                    '<li class="{{value}} {{#selected}}selected{{/selected}}" data-selected="{{value}}"></li>' +
                   '{{/graphTypes}}' +
-                '</select>' +
+                '</ul>' +
               '</div>' +
               '<div id="controls">' +
                 '<div id="prev" class="btn btn-default pull-left">Back</div>' +
@@ -22,6 +22,18 @@
         title: 'Choose Chart',
         name: 'chooseChart'
       };
+    },
+    events: {
+      'click #chart-selector li': 'selectChart'
+    },
+    selectChart: function(e){
+      var self = this;
+      self.$('li').removeClass('selected');
+      self.$(e.target).addClass('selected');
+    },
+    getSelected: function(){
+      var self = this;
+      return self.$('li.selected').data('selected');
     },
     render: function(){
       var self = this;
@@ -37,7 +49,7 @@
     },
     updateState: function(state, cb){
       var self = this;
-      var type = self.$('#control-chart-type').val();
+      var type = self.getSelected();
       state.set('graphType', type);
       cb(state);
     }

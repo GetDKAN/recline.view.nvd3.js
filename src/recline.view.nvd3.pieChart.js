@@ -3,7 +3,8 @@
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
-(function ($, my) {
+;(function ($, my) {
+  'use strict';
 
   my.pieChart = recline.View.nvd3.Base.extend({
     initialize: function(options) {
@@ -28,7 +29,6 @@ this.recline.View = this.recline.View || {};
       });
     },
     getDefaults: function(){
-      var self = this;
       return {
         options: {
           showLabels: true,

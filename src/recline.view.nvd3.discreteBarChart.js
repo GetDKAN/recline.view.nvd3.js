@@ -3,7 +3,8 @@
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
-(function ($, my) {
+;(function ($, my) {
+'use strict';
 
   my.discreteBarChart = recline.View.nvd3.Base.extend({
     initialize: function(options) {
@@ -16,7 +17,6 @@ this.recline.View = this.recline.View || {};
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
     getDefaults: function(){
-      var self = this;
       return {
         computeXLabels: false,
         options:{

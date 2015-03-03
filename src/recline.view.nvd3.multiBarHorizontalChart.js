@@ -3,7 +3,8 @@
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
-(function ($, my) {
+;(function ($, my) {
+  'use strict';
 
   my.multiBarHorizontalChart = recline.View.nvd3.Base.extend({
     initialize: function(options) {
@@ -17,7 +18,6 @@ this.recline.View = this.recline.View || {};
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
     getDefaults: function(){
-      var self = this;
       return {
         options: {
           tooltips: true,
@@ -39,7 +39,7 @@ this.recline.View = this.recline.View || {};
     getUIState:function(){
       var self = this;
       var computedState = {options: {}};
-      computedState.computeXLabels = $('#control-chart-compute-x-labels').is(':checked');
+      computedState.computeXLabels = self.$('#control-chart-compute-x-labels').is(':checked');
       return computedState;
     }
   });

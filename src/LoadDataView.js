@@ -32,7 +32,7 @@
       };
       state.set('model', new recline.Model.Dataset(source));
       state.set('source', source);
-      state.get('model').fetch().done(function(dataset){
+      state.get('model').fetch().done(function(){
         cb(state);
       });
     }

@@ -74,6 +74,15 @@
       self.assign(self.extendedControls, '#extended-controls');
       self.assign(self.grid, '#grid');
 
+      // Slickgrid needs to update after tab content is displayed
+      $('#grid')
+        .closest('.tab-content')
+        .prev()
+        .find('a[data-toggle="tab"]')
+        .on('shown.bs.tab', function () {
+          self.grid.grid.resizeCanvas();
+        });
+
       self.$('.chosen-select').chosen({width: '95%'});
     },
     updateState: function(state, cb){
