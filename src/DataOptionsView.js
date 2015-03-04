@@ -18,7 +18,7 @@
                     '{{/xfields}}' +
                   '</select>' +
                 '</div>' +
-                '<div class="form-group">' +
+                '<div class="form-group relative">' +
                   '{{#xDataTypes}}' +
                     '<label class="radio-inline">' +
                       '<input type="radio" name="control-chart-x-data-type" id="control-chart-x-data-type-{{value}}" value="{{value}}" {{#selected}}checked {{/selected}}> {{name}}' +
