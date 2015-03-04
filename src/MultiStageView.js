@@ -42,21 +42,13 @@
     },
     nextStep: function(){
       var self = this;
-      self.currentView.updateState(self.state, function(newState){
-        self.state = newState;
-        self._currentStep = self.getNext(self.steps, self._currentStep);
-        self.state.set('step', self._currentStep);
-        self.render();
-      });
+      var toNext = self.updateStep(self.getNext(self.steps, self._currentStep));
+      self.currentView.updateState(self.state, toNext);
     },
     prevStep: function(){
       var self = this;
-      self.currentView.updateState(self.state, function(newState){
-        self.state = newState;
-        self._currentStep = self.getPrev(self.steps, self._currentStep);
-        self.state.set('step', self._currentStep);
-        self.render();
-      });
+      var toPrev = self.updateStep(self.getPrev(self.steps, self._currentStep));
+      self.currentView.updateState(self.state, toPrev);
     },
     getNext: function(steps, current){
       var limit = steps.length - 1;
@@ -70,6 +62,19 @@
         return --current;
       }
       return current;
+    },
+    updateStep: function(n){
+      var self = this;
+      return function(state){
+        self.state = state;
+        self.gotoStep(n);
+      };
+    },
+    gotoStep: function(n){
+      var self = this;
+      self._currentStep = n;
+      self.state.set('step', self._currentStep);
+      self.render();
     }
   });
 
