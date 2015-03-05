@@ -69,7 +69,11 @@ my.BaseControl = Backbone.View.extend({
     var self = this;
     var newState = {};
     if(e.type === 'keydown' && e.keyCode !== 13) return;
-    newState = _.merge({}, self.state.toJSON(), self.getUIState());
+    newState = _.merge({}, self.state.toJSON(), self.getUIState(), function(a, b) {
+      if (_.isArray(a)) {
+        return b;
+      }
+    });
     self.state.set(newState);
   },
   getUIState: function(){
