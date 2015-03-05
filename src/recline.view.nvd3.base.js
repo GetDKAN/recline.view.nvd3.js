@@ -202,6 +202,9 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var self = this;
         for(var optionName in options){
           var optionValue = options[optionName];
+          if(optionName === 'margin'){
+            chart.margin(optionValue);
+          }
           if(chart && _.isObject(optionValue) && !_.isArray(optionValue)){
             self.setOptions(chart[optionName], optionValue);
           // if value is a valid function in the chart then we call it.
