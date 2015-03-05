@@ -34,20 +34,7 @@ this.recline.View = this.recline.View || {};
   });
 
   my.lineChartControls = recline.View.nvd3.BaseControl.extend({
-    template: '<div class="form-group checkbox">' +
-                '<label for="control-chart-compute-x-labels">' +
-                '<input type="checkbox" id="control-chart-compute-x-labels" {{#computeXLabels}}checked{{/computeXLabels}}/> X values as labels' +
-                '</label>' +
-              '</div>',
-    events: {
-      'change input[type="checkbox"]': 'update',
-    },
-    getUIState:function(){
-      var self = this;
-      var computedState = {options: {}};
-      computedState.computeXLabels = self.$('#control-chart-compute-x-labels').is(':checked');
-      return computedState;
-    }
+    template: ''
   });
 
 

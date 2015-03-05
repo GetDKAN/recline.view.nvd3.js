@@ -73,6 +73,11 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.$el.html(htmls);
         self.$graph = self.$el.find('.panel.' + tmplData.viewId);
         self.trigger('chart:endDrawing');
+
+        // Infering x value type
+        var computeXLabels = self.needForceX(self.model.records, self.graphType);
+        self.state.set('computeXLabels', computeXLabels, {silent:true});
+
         self.series = self.createSeries(self.model.records);
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
@@ -81,9 +86,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             self.chart.xAxis.tickFormat(self.xFormatter);
           if(self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
-
-          var computeXLabels = self.needForceX(self.model.records, self.graphType);
-          self.state.set('computeXLabels', computeXLabels, {silent:true});
 
           self.chart.yAxis && self.chart.yAxis.axisLabelDistance(30); // jshint ignore:line
 
@@ -200,7 +202,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var self = this;
         for(var optionName in options){
           var optionValue = options[optionName];
-          if(_.isObject(optionValue) && !_.isArray(optionValue)){
+          if(chart && _.isObject(optionValue) && !_.isArray(optionValue)){
             self.setOptions(chart[optionName], optionValue);
           // if value is a valid function in the chart then we call it.
           } else if(chart && _.isFunction(chart[optionName])){

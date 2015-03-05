@@ -40,7 +40,6 @@ this.recline.View = this.recline.View || {};
     getUIState:function(){
       var self = this;
       var computedState = {options: {}};
-      computedState.computeXLabels = self.$('#control-chart-compute-x-labels').is(':checked');
       computedState.options.staggerLabels = self.$('#control-chart-stagger-labels').is(':checked');
       return computedState;
     }
