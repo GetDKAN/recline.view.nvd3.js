@@ -161,7 +161,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
             : records;
 
-          records = _.sortBy(records, self.state.get('sort') || self.state.get('xfield'));
+          // Sorting
+          records = _.sortBy(records, self.getSort(self.state.get('sort')));
 
           data.values = _.map(records, function(record, index){
             if(self.state.get('computeXLabels')){
@@ -177,6 +178,10 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           return data;
         });
         return series;
+      },
+      getSort: function(sort){
+        if(!sort || sort === 'default') return _.identity;
+        return sort;
       },
       needForceX: function(records, graphType){
        var self = this;

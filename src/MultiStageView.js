@@ -13,7 +13,7 @@
       var self = this;
       self.options = _.defaults(options || {}, self.options);
       self.state = self.options.state;
-      self._currentView = null;
+      self.currentView = null;
       self.currentStep = self.state.get('step') || 0;
       self.steps = [];
 
