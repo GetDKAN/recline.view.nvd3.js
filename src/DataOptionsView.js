@@ -3,6 +3,10 @@
 
   my.DataOptionsView = Backbone.View.extend({
     template: '<div class="form-group">' +
+                  '<div class="form-group">' +
+                    '<label>Source</label>' +
+                    '<div>{{source.url}}</div>'+
+                  '</div>' +
                   '<label for="control-chart-series">Series</label>' +
                   '<select id="control-chart-series" multiple class="form-control chosen-select">' +
                     '{{#fields}}' +

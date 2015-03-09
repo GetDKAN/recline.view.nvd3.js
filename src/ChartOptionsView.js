@@ -11,6 +11,22 @@
                   '<div class="tab-content">' +
                     '<div role="tabpanel" class="tab-pane active" id="chart-tab">' +
                       '<div  id="chart-viewport"></div>' +
+                      '<div class="form-group">' +
+                        '<label>Source</label>' +
+                        '<div>{{source.url}}</div>'+
+                      '</div>' +
+                      '<div class="form-group">' +
+                        '<label>X Field</label>' +
+                        '<div>{{xfield}}</div>'+
+                      '</div>' +
+                      '<div class="form-group">' +
+                        '<label>Series fields</label>' +
+                        '<div>{{seriesFields}}</div>'+
+                      '</div>' +
+                      '<div class="form-group">' +
+                        '<label>Graph Type</label>' +
+                        '<div>{{graphType}}</div>'+
+                      '</div>' +
                     '</div>' +
                     '<div role="tabpanel" class="tab-pane" id="dataset-tab">' +
                       '<div id="pager"></div>' +

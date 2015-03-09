@@ -4,6 +4,18 @@
 
   my.ChooseChartView = Backbone.View.extend({
     template: '<div class="form-group">' +
+                '<div class="form-group">' +
+                  '<label>Source</label>' +
+                  '<div>{{source.url}}</div>'+
+                '</div>' +
+                '<div class="form-group">' +
+                  '<label>X Field</label>' +
+                  '<div>{{xfield}}</div>'+
+                '</div>' +
+                '<div class="form-group">' +
+                  '<label>Series fields</label>' +
+                  '<div>{{seriesFields}}</div>'+
+                '</div>' +
                 '<ul id="chart-selector">' +
                   '{{#graphTypes}}' +
                     '<li class="{{value}} {{#selected}}selected{{/selected}}" data-selected="{{value}}"></li>' +
