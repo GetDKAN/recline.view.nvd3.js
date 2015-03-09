@@ -138,10 +138,10 @@ my.BaseControl = Backbone.View.extend({
       }
     }
     var margin = {
-      top: self.$('#control-chart-margin-top').val(),
-      right: self.$('#control-chart-margin-right').val(),
-      bottom: self.$('#control-chart-margin-bottom').val(),
-      left: self.$('#control-chart-margin-left').val(),
+      top: parseInt(self.$('#control-chart-margin-top').val()),
+      right: parseInt(self.$('#control-chart-margin-right').val()),
+      bottom: parseInt(self.$('#control-chart-margin-bottom').val()),
+      left: parseInt(self.$('#control-chart-margin-left').val()),
     };
     computedState.options.margin = margin;
     return computedState;
