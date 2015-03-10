@@ -165,12 +165,15 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           records = _.sortBy(records, self.getSort(self.state.get('sort')));
 
           data.values = _.map(records, function(record, index){
+            var y = self.y(record, serie);
+            y = _.cast(y, _.inferType(y));
+
             if(self.state.get('computeXLabels')){
               self.chartMap.set(index, self.x(record, self.state.get('xfield')));
-              return {y: self.y(record, serie), x: index, label: self.x(record, self.state.get('xfield'))};
+              return {y: y, x: index, label: self.x(record, self.state.get('xfield'))};
             } else {
               return {
-                y: self.y(record, serie),
+                y: y,
                 x: _.cast(self.x(record, self.state.get('xfield')), xDataType)
               };
             }
