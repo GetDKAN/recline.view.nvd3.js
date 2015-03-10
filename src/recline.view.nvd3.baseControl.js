@@ -9,19 +9,19 @@ my.BaseControl = Backbone.View.extend({
   template: '<div id="control-chart-container">' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
-                '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" />' +
+                '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" placeholder="e.g: %Y"/>' +
               '</div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-label-x-rotation">Label X Rotation</label>' +
-                '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" />' +
+                '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
               '</div>' +
               '<div class="form-group">' +
-                '<label for="control-chart-transition-time">Transition Time</label>' +
-                '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" />' +
+                '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
+                '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
               '</div>' +
               '<div class="form-group">' +
                   '<label for="control-chart-color">Color</label>' +
-                  '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}"/>' +
+                  '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
               '</div>' +
               '<div class="form-group">' +
                   '<label for="control-chart-x-axis-label">X Axis Label</label>' +
