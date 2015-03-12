@@ -13,14 +13,22 @@
 
 
   <link rel="stylesheet" href="../vendor/slickgrid/slick.grid.css">
+  <link rel="stylesheet" href="../vendor/chosen-bootstrap/chosen.bootstrap.css">
 
   <!-- Recline CSS components -->
   <link rel="stylesheet" href="../css/slickgrid.css">
 
+  <!-- General styles and overrides -->
+  <link rel="stylesheet" href="../css/style.css">
+
   <!-- 3rd party JS libraries -->
   <script type="text/javascript" src="../vendor/slickgrid/lib/jquery-1.7.min.js"></script>
+  <script type="text/javascript" src="../vendor/chosen_v1.3.0/chosen.jquery.js"></script>
+  <script type="text/javascript" src="../vendor/csv.js/csv.js"></script>
+  <script type="text/javascript" src="../vendor/recline.backend.gdocs/backend.gdocs.js"></script>
 
-  <script type="text/javascript" src="../vendor/underscore/underscore.js"></script>
+  <script type="text/javascript" src="../vendor/lodash/dist/lodash.compat.min.js"></script>
+  <script type="text/javascript" src="../vendor/lodash.data/dist/lodash.data.min.js"></script>
   <script type="text/javascript" src="../vendor/backbone/backbone.js"></script>
   <script type="text/javascript" src="../vendor/mustache/mustache.js"></script>
   <script type="text/javascript" src="../vendor/bootstrap-css/js/bootstrap.js"></script>
@@ -41,10 +49,6 @@
   <script language="javascript" type="text/javascript" src="../vendor/json/json2.js"></script>
   <![endif]-->
 
-  <!--
-    ## Just use the all in one library version rather than individual files
-  <script type="text/javascript" src="dist/recline.js"></script>
-  -->
 
   <script src="http://okfnlabs.org/recline/dist/recline.js"></script>
 
@@ -55,154 +59,41 @@
   <script type="text/javascript" src="../vendor/nvd3/nv.d3.js"></script>
 
   <link rel="stylesheet" href="../vendor/nvd3/nv.d3.css">
-  <style type="text/css">
-    .slick-header-column {
-      height: 25px !important;
-    }
-    #form {
-      width: 400px;
-    }
-    .group {
-      margin-right: 0;
-      margin-left: 0;
-      background-color: #fff;
-      border-color: #ddd;
-      border-width: 1px;
-      border-radius: 4px 4px 0 0;
-      -webkit-box-shadow: none;
-      box-shadow: none;
-    }
-  </style> 
+
 </head>
 
-<body style="padding: 10px;">
+<body>
 
-<section class="col-sm-4"> 
-  <h2>Chart Settings</h2>
-  <form class="form-horizontal" role="form">
-    <div class="group">
-      <h4 class="col-sm-10 col-sm-offset-2">Chart Type</h4>
-      <div class="form-group">
-        <label for="type" class="col-sm-2 control-label">type</label>
-        <div class="col-sm-10">
-            <select id="switch" class="form-control">
-              <option value="discreteBarChart">Discrete Bar Chart</option>
-              <option value="multiBarChart">Multi Bar Chart</option>
-              <option value="stackedAreaChart">Stacked Area Chart</option>
-              <option value="multiBarHorizontalChart">Mulit Bar Horizontal Chart</option>
-              <option value="pieChart">Pie Chart</option>
-              <option value="lineChart">Line Chart</option>
-              <option value="lineWithFocusChart">Line with Focus Chart</option>
-              <option value="scatterChart">Scatter Chart</option>
-              <option value="linePlusBarWithFocusChart">Line Plus Bar With Focus Chart</option>
-              <!--  
-              <option value="multiBarWithBrushChart">multiBarWithBrushChart</option>
-              <option value="multiChart">multiChart</option>
-              <option value="linePlusBarChart">linePlusBarChart</option>-->
-            </select>
-          </div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div id="steps">
       </div>
     </div>
-    <div class="group">
-      <h4 class="col-sm-10 col-sm-offset-2">Data</h4>
-      <div class="form-group">
-        <label for="xfield" class="col-sm-2 control-label">X-Field</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="xfield" placeholder="x-field data" value="state">
-        </div>
-      </div>
-       <div class="form-group">
-        <label for="series-field" class="col-sm-2 control-label">Series Fields</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="seried-fields" placeholder="series field data" value="total,ratio">
-        </div>
-      </div>
-       <div class="form-group">
-        <label for="group" class="col-sm-2 control-label">Group</label>
-        <div class="col-sm-10">
-          <input type="checkbox" class="form-control" id="group" checked="true">
-        </div>
-      </div>
-    </div>
-     <div class="group">
-      <h4 class="col-sm-10 col-sm-offset-2">Labels</h4>
-      <div class="form-group">
-        <label for="x-axis-label" class="col-sm-2 control-label">X-Axis Label</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="x-axis-label" placeholder="x-axis label">
-        </div>
-      </div>
-       <div class="form-group">
-        <label for="y-axis-label" class="col-sm-2 control-label">Y-Axis Label</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="y-axis-label" placeholder="y-axis label">
-        </div>
-      </div>
-    </div>
-    <div class="group">
-      <h4 class="col-sm-10 col-sm-offset-2">Size</h4>
-      <div class="form-group">
-        <label for="width" class="col-sm-2 control-label">Width</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="width" placeholder="400" value="400">
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="height" class="col-sm-2 control-label">Height</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="height" placeholder="400" value="400">
-        </div>
-      </div> 
-    </div>
-    <div class="group">
-      <h4 class="col-sm-10 col-sm-offset-2">Options</h4>
-      <div class="form-group">
-        <label class="col-sm-2 control-label">Stagger Labels</label>
-        <div class="col-sm-10">
-          <input type="checkbox" class="form-control" id="stagger-labels" checked="true">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label">Tooltips</label>
-        <div class="col-sm-10">
-          <input type="checkbox" class="form-control" id="tooltips" checked="true">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label">Show Values</label>
-        <div class="col-sm-10">
-          <input type="checkbox" class="form-control" id="show-values">
-        </div>
-      </div>
+  </div>
+</div>
 
-    </div>
-  </form>
-</section>
-<section class="col-sm-8">
-<h2>Data</h2>
-<div id="grid" style="height:180px; width: 400px;"></div>
-<h2>Chart</h2>
-<div id="graph" style="position: relative;"></div>
-</section>
-
-<h3>Option Index</h3>
-<table class="table">
-  <tr>
-    <th>chart</th>
-    <th>option</th>
-  </tr>
-  <tr>
-    <td>Discrete Bar</td>
-    <td>staggerLabels, tooltips, showValues, transitionDuration</td>
-  </tr>
-  <tr>
-    <td>Line</td>
-    <td>useInteractiveGuideline, showLegend</td>
-  </tr>
-</table>
-
-<script type="text/javascript" src="switch-app.js"></script>
-<script type="text/javascript" src="../src/recline.view.nvd3.js"></script>
+<script type="text/javascript" src="../src/recline.URLState.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.base.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.baseControl.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.embedControl.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.lineChart.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.scatterChart.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.stackedAreaChart.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.discreteBarChart.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.multiBarHorizontalChart.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.multiBarChart.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.cumulativeLineChart.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.lineWithFocusChart.js"></script>
+<script type="text/javascript" src="../src/recline.view.nvd3.pieChart.js"></script>
+<script type="text/javascript" src="../src/MultiStageView.js"></script>
+<script type="text/javascript" src="../src/LoadDataView.js"></script>
+<script type="text/javascript" src="../src/DataOptionsView.js"></script>
+<script type="text/javascript" src="../src/ChooseChartView.js"></script>
+<script type="text/javascript" src="../src/ChartOptionsView.js"></script>
+<script type="text/javascript" src="../src/PublishView.js"></script>
+<script type="text/javascript" src="../src/utils.js"></script>
+<script type="text/javascript" src="datasets.js"></script>
+<script type="text/javascript" src="app.js"></script>
 </body>
 </html>
-  
