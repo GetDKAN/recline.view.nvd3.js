@@ -70,12 +70,8 @@
     "_": false,
     "d3": false,
     "Backbone": false,
-    "LoadDataView": false,
-    "DataOptionsView": false,
-    "ChooseChartView": false,
-    "ChartOptionsView": false,
-    "PublishView": false,
-    "MultiStageView": false
+    "demoFieldAsSeries": false,
+    "demoFieldAsValues": false
   },
   // Suppress warnings about == null comparisons.
   "eqnull": true
