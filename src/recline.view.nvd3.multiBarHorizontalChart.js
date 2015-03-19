@@ -27,7 +27,4 @@ this.recline.View = this.recline.View || {};
     }
   });
 
-  my.multiBarHorizontalChartControls = recline.View.nvd3.BaseControl.extend({
-    template: ''
-  });
 })(jQuery, recline.View.nvd3);
