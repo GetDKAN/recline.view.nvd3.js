@@ -16,12 +16,12 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
   }
 
   my.Base = Backbone.View.extend({
-      template:'<div class="recline-graph row">' +
+      template:'<div class="recline-graph">' +
                   '{{data}}' +
-                  '<div class="{{columnClass}} {{viewId}}"style="display: block;">' +
+                  '<div class="{{viewId}}"style="display: block;">' +
                     '<div id="{{viewId}}">' +
                         '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
-                        ' height="{{height}}" width="{{width}}">' +
+                        ' height="{{height}}">' +
                         '</svg>' +
                     '</div>' +
                   '</div>' +
