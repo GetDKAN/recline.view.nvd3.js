@@ -71,7 +71,8 @@
     "d3": false,
     "Backbone": false,
     "demoFieldAsSeries": false,
-    "demoFieldAsValues": false
+    "demoFieldAsValues": false,
+    "demoValuesAsSeries": false
   },
   // Suppress warnings about == null comparisons.
   "eqnull": true
