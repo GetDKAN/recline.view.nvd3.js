@@ -7,23 +7,29 @@ module.exports = function(grunt) {
       options: {
         separator: ';'
       },
-      dist: {
-        src: ['src/**/*.js'],
+      core: {
+        src: ['src/*.js'],
         dest: 'dist/<%= pkg.name %>.min.js'
+      },
+      controls: {
+        src: ['src/controls/*.js'],
+        dest: 'dist/<%= pkg.name %>.controls.min.js'
       }
     },
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> v0.1 */\n'
       },
-      build: {
-        src: ['src/**/*.js'],
+      core: {
+        src: ['src/*.js'],
         dest: 'dist/<%= pkg.name %>.min.js'
+      },
+      controls: {
+        src: ['src/controls/*.js'],
+        dest: 'dist/<%= pkg.name %>.controls.min.js'
       }
     },
-    livereload: {
-
-    },
+    livereload: {},
     express: {
       all: {
         options: {
