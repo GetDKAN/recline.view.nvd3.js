@@ -16,6 +16,14 @@ this.recline.View = this.recline.View || {};
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
+    alterChart: function(chart){
+      var self = this;
+
+      // we don't want labels to fill all the canvas.
+      if(self.series.length > 10){
+        chart.showLegend(false);
+      }
+    },
     createSeries: function(records){
       var self = this;
       records = records.toJSON();
