@@ -32,6 +32,10 @@ my.BaseControl = Backbone.View.extend({
                   '<input class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
               '</div>' +
               '<div class="form-group">' +
+                  '<label for="control-chart-y-axis-label-distance">Y Axis Label Distance</label>' +
+                  '<input class="form-control" type="text" id="control-chart-y-axis-label-distance" value="{{options.yAxis.axisLabelDistance}}"/>' +
+              '</div>' +
+              '<div class="form-group">' +
                 '<label for="control-chart-sort">Sort</label>' +
                 '<select id="control-chart-sort" class="form-control chosen-select">' +
                   '{{#sortFields}}' +
@@ -130,6 +134,7 @@ my.BaseControl = Backbone.View.extend({
     color = _.invoke(self.$('#control-chart-color').val().split(','), 'trim');
     computedState.options.xAxis.axisLabel = self.$('#control-chart-x-axis-label').val();
     computedState.options.yAxis.axisLabel = self.$('#control-chart-y-axis-label').val();
+    computedState.options.yAxis.axisLabelDistance = parseInt(self.$('#control-chart-y-axis-label-distance').val()) || 0;
     if(self.$('#control-chart-color').val()){
       computedState.options.color = color;
     } else {
