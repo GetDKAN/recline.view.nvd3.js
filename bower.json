@@ -14,7 +14,7 @@
     "tests"
   ],
   "dependencies": {
-    "lodash.data": "git@github.com:NuCivic/lodash.data.git",
+    "lodash.data": "https://github.com/NuCivic/lodash.data.git",
     "backbone": "1.0.0",
     "jquery": "2.0.3",
     "json": "*",
