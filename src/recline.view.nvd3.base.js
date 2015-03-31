@@ -1,5 +1,5 @@
 /*jshint multistr:true */
-
+ /*jshint -W030 */
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
