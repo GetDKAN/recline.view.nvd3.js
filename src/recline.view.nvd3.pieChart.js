@@ -16,6 +16,14 @@ this.recline.View = this.recline.View || {};
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
+    alterChart: function(chart){
+      var self = this;
+
+      // we don't want labels to fill all the canvas.
+      if(self.series.length > 10){
+        chart.showLegend(false);
+      }
+    },
     createSeries: function(records){
       var self = this;
       records = records.toJSON();
@@ -39,21 +47,4 @@ this.recline.View = this.recline.View || {};
     }
   });
 
-  my.pieChartControls = recline.View.nvd3.BaseControl.extend({
-    template:'<div class="form-group checkbox">' +
-                  '<label for="control-chart-donut">' +
-                  '<input type="checkbox" id="control-chart-donut" {{#options.donut}}checked{{/options.donut}}/> Donut' +
-                  '</label>' +
-              '</div>',
-    events: {
-      'change input[type="checkbox"]': 'update',
-    },
-    getUIState:function(){
-      var self = this;
-      var computedState = {options: {}};
-      computedState.options.donut = self.$('#control-chart-donut').is(':checked');
-      return computedState;
-    }
-
-  });
 })(jQuery, recline.View.nvd3);

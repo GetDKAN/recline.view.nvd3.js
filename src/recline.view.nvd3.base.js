@@ -1,5 +1,5 @@
 /*jshint multistr:true */
-
+ /*jshint -W030 */
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
@@ -9,7 +9,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
   var DEFAULT_CHART_WIDTH = 640;
   var DEFAULT_CHART_HEIGHT = 480;
-
+  var MAX_ROW_NUM = 1000;
   function makeId(prefix) {
       prefix = prefix || '';
       return prefix + (Math.random() * 1e16).toFixed(0);
@@ -78,9 +78,14 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var computeXLabels = self.needForceX(self.model.records, self.graphType);
         self.state.set('computeXLabels', computeXLabels, {silent:true});
 
+        // If number of rows is too big then try to group by x.
+        self.state.set('group', self.model.records.length > MAX_ROW_NUM || self.state.get('group', {silent:true}));
+
         self.series = self.createSeries(self.model.records);
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
+          // Give a chance to alter the chart before it is rendered.
+          self.alterChart && self.alterChart(self.chart);
 
           if(self.chart.xAxis && self.chart.xAxis.tickFormat)
             self.chart.xAxis.tickFormat(self.xFormatter);

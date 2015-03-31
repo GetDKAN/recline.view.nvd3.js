@@ -25,7 +25,6 @@ this.recline.View = this.recline.View || {};
           xAxis:{
             tickFormat: function(d) {
               return d3.time.format('%Y')(new Date(d));
-              //return (self.chartMap) ? self.chartMap.get(id) : id;
             }
           }
         }
@@ -33,7 +32,4 @@ this.recline.View = this.recline.View || {};
     }
   });
 
-  my.stackedAreaChartControls = recline.View.nvd3.BaseControl.extend({
-    template: ''
-  });
 })(jQuery, recline.View.nvd3);
