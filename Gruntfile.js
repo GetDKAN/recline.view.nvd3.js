@@ -29,7 +29,6 @@ module.exports = function(grunt) {
         dest: 'dist/<%= pkg.name %>.controls.min.js'
       }
     },
-    livereload: {},
     express: {
       all: {
         options: {
@@ -40,23 +39,22 @@ module.exports = function(grunt) {
         }
       }
     },
+    jshint: {
+      files: ['Gruntfile.js', 'src/**/*.js', 'examples/*.js' ],
+      options: {
+        jshintrc: true
+      }
+    },
     watch: {
-      all: {
-        files: '**/*.html',
-        options: {
-          livereload: true
-        }
+      files:  ['<%= jshint.files %>'],
+      tasks: ['jshint', 'concat', 'uglify'],
+      options: {
+        livereload: true
       }
     },
     open: {
       all: {
         path: 'http://localhost:8080/examples/index.html'
-      }
-    },
-    jshint: {
-      all: ['Gruntfile.js', 'src/**/*.js', 'examples/*.js' ],
-      options: {
-        jshintrc: true
       }
     }
   });
@@ -67,14 +65,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-livereload');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
+
   // Default task(s).
   grunt.registerTask('default', [
     'express',
-    'jshint',
-    'concat',
-    'uglify',
     'open',
-    'watch'
+    'watch',
   ]);
 
   grunt.registerTask('build', [
