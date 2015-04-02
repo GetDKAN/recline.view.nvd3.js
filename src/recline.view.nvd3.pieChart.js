@@ -30,20 +30,13 @@ this.recline.View = this.recline.View || {};
       var serie = _.first(self.state.get('seriesFields'));
       // Group by xfield and acum all the series fields.
       records = (self.state.get('group'))?
-        _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
+        _.reportBy(records, self.xfield, self.state.get('seriesFields'))
         : records;
       return  _.map(records, function(record){
-        return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
+        var rc = {};
+        rc.y = record[serie];
+        return _.defaults(record, rc);
       });
-    },
-    getDefaults: function(){
-      return {
-        options: {
-          showLabels: true,
-          labelType: 'percent',
-          tooltips:true
-        }
-      };
     }
   });
 

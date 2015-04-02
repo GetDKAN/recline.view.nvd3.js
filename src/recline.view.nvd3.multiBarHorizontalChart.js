@@ -11,19 +11,11 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'multiBarHorizontalChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
-      self.state.set('computeXLabels', false);
+      self.state.set('computeXLabels', false, {silent: true});
     },
     render: function(){
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
-    },
-    getDefaults: function(){
-      return {
-        options: {
-          tooltips: true,
-          reduceXTicks: false,
-        }
-      };
     }
   });
 

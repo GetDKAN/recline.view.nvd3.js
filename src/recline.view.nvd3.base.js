@@ -7,13 +7,46 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 ;(function ($, my) {
   'use strict';
 
-  var DEFAULT_CHART_WIDTH = 640;
-  var DEFAULT_CHART_HEIGHT = 480;
-  var MAX_ROW_NUM = 1000;
+  function templateFunc(tpl){
+     return function(key, y, e, graph){
+       return _.template(tpl)({key: key, y: y, e: e, graph: graph});
+     };
+  }
+
   function makeId(prefix) {
       prefix = prefix || '';
       return prefix + (Math.random() * 1e16).toFixed(0);
   }
+
+  function getFormatter(token){
+    var format = _.last(token.split('::'));
+    var type = _.first(token.split('::'));
+    var formatter = {
+      'String': _.identity,
+      'Date': _.compose(d3.time.format(format || '%x'),_.instantiate(Date)),
+      'Number': d3.format(format || '.02f')
+    };
+    return formatter[type];
+  }
+
+  var DEFAULT_CHART_WIDTH = 640;
+  var DEFAULT_CHART_HEIGHT = 480;
+  var MAX_ROW_NUM = 1000;
+  var keyWrapMap = {
+    tickFormat: getFormatter,
+    valueFormat: getFormatter,
+    average: _.iteratee,
+    x: _.iteratee,
+    y: _.iteratee,
+    ranges: _.iteratee,
+    markers: _.iteratee,
+    measures: _.iteratee,
+    rangeLabels: _.iteratee,
+    markerLabels: _.iteratee,
+    measureLabels: _.iteratee,
+    tooltipContent: templateFunc,
+    pointSize: _.iteratee
+  };
 
   my.Base = Backbone.View.extend({
       template:'<div class="recline-graph row">' +
@@ -30,23 +63,15 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var self = this;
         self.$el = $(self.el);
 
-        self.options = _.defaults(options || {}, self.options);
-
-        var stateData = _.merge({
-            width: 640,
-            height: 480,
-            group: false,
-          },
-          self.getDefaults(),
-          self.options.state.toJSON()
-        );
-
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
-        self.state = self.options.state;
-        self.state.set(stateData);
+        self.state = options.state;
+        self.state.set(stateData, {silent: true});
+        self.xfield = self.state.get('options').x;
+        self.series = self.getSeries();
+        self.xDataType = self.state.get('xDataType');
         self.chartMap = d3.map();
-        self.state.listenTo(self.state, 'change', self.render.bind(self));
+        self.state.listenTo(self.state, 'change', _.bind(self.render, self));
       },
       getLayoutParams: function(){
         var self = this;
@@ -84,13 +109,9 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.series = self.createSeries(self.model.records);
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
+
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
-
-          if(self.chart.xAxis && self.chart.xAxis.tickFormat)
-            self.chart.xAxis.tickFormat(self.xFormatter);
-          if(self.chart.x2Axis)
-            self.chart.x2Axis.tickFormat(self.xFormatter);
 
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
@@ -107,15 +128,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           return self.chart;
         });
         return self;
-      },
-      lightUpdate: function(){
-        var self = this;
-        self.series = self.createSeries(self.model.records);
-        d3.select('#' + self.uuid + ' svg')
-          .datum(self.series)
-          .transition()
-          .duration(500)
-          .call(self.chart);
       },
       updateChart: function(){
         var self = this;
@@ -138,22 +150,23 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var self = this;
         var series;
         var fieldType;
-        var xDataType;
 
-        // Return no data when x and y are no set.
-        if(!self.state.get('xfield') || !self.getSeries()) return [];
+        // Return no data when x or y are no set.
+        if(!self.xfield || !self.getSeries()) return [];
 
         records = records.toJSON();
 
-        fieldType = _.compose(_.inferType,_.iteratee(self.state.get('xfield')));
+        fieldType = _.compose(_.inferType,_.iteratee(self.xfield));
 
-        if(!self.state.get('xDataType') || self.state.get('xDataType') === 'Auto'){
-          xDataType =  fieldType(_.last(records));
-        } else {
-          xDataType = self.state.get('xDataType');
+        if(!self.xDataType || self.xDataType === 'Auto'){
+          self.xDataType =  fieldType(_.last(records));
         }
 
-        self.xFormatter = self.getFormatter(xDataType, self.state.get('xFormat'));
+        var xAxis = self.state.get('options').xAxis;
+        if(xAxis && !xAxis.tickFormat){
+          self.xFormatter = self.getFormatter(self.xDataType, self.state.get('xFormat'));
+          self.chart
+        }
 
         series = _.map(self.getSeries(), function(serie){
           var data = {};
@@ -161,25 +174,23 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
           // Group by xfield and acum all the series fields.
           records = (self.state.get('group'))?
-            _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
+            _.reportBy(records, self.xfield, self.series)
             : records;
 
           // Sorting
           records = _.sortBy(records, self.getSort(self.state.get('sort')));
-
           data.values = _.map(records, function(record, index){
-            var y = self.y(record, serie);
-            y = _.cast(y, _.inferType(y));
+            var rc = {};
 
             if(self.state.get('computeXLabels')){
-              self.chartMap.set(index, self.x(record, self.state.get('xfield')));
-              return {y: y, x: index, label: self.x(record, self.state.get('xfield'))};
+              self.chartMap.set(index, record[self.xfield]);
+              rc.label = rc[self.xfield];
+              rc[self.xfield] = index;
             } else {
-              return {
-                y: y,
-                x: _.cast(self.x(record, self.state.get('xfield')), xDataType)
-              };
+              rc[self.xfield] = _.cast(record[self.xfield], self.xDataType);
             }
+            rc.y = _.cast(record[serie], _.inferType(record[serie]));
+            return _.defaults(rc, record);
           });
           return data;
         });
@@ -191,7 +202,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       },
       needForceX: function(records, graphType){
        var self = this;
-       var xfield = self.state.get('xfield');
+       var xfield = self.xfield;
        records = records.toJSON();
        return _.some(records, function(record){
          return _.inferType(record[xfield]) === 'String';
@@ -209,45 +220,68 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
         return formatter[type];
       },
-      setOptions: function (chart, options) {
-        var self = this;
-        for(var optionName in options){
-          var optionValue = options[optionName];
-          if(optionName === 'margin'){
-            chart.margin(optionValue);
-          }
-          if(chart && _.isObject(optionValue) && !_.isArray(optionValue)){
-            self.setOptions(chart[optionName], optionValue);
-          // if value is a valid function in the chart then we call it.
-          } else if(chart && _.isFunction(chart[optionName])){
-            chart[optionName](optionValue);
-          }
-        }
-      },
       createGraph: function(graphType){
         var self = this;
         var chart = nv.models[graphType]();
+
         // Set each graph option recursively.
-        self.setOptions(chart, self.state.get('options'));
+        self.configure(self.state, chart);
         return chart;
-      },
-      getDefaults: function(){
-        return {};
-      },
-      getState: function(){
-        var self = this;
-        return self.state.attributes;
       },
       getSeries: function(){
         var self = this;
         return self.state.get('seriesFields');
       },
-      x: function(record, xfield){
-        return record[xfield];
+      /// NEW SET OPTIONS
+      wrapValue: function(key, value, keyWrapMap) {
+
+        // it's already a function then return.
+        if(_.isFunction(value)) return value;
+
+        // it's not a function but needs to be.
+        if(key in keyWrapMap) return keyWrapMap[key](value);
+
+        // it's not a function but does not needs to be.
+        return value;
       },
-      y: function(record, serie){
-        return record[serie];
+      prepareOptions: function(options){
+        var self = this;
+        return _.reduce(options, function(result, value, key){
+          result[key] = self.wrapValue(key, value, keyWrapMap);
+          return result;
+        }, {});
+      },
+      configure: function(state, chart){
+        var self = this;
+        var options = state.get('options');
+        var axesNames = _.filter(_.keys(options), function(value){
+          return _.endsWith(value, 'Axis');
+        });
+        var axesOpts = _.pick(options, axesNames);
+        var margins = _.first(_.values(_.pick(options, 'margin')));
+        var chartOpts = _.omit(options,_.union(axesNames, ['margin']));
+
+        // Configure charts.
+        self.configureChart(chart, self.prepareOptions(chartOpts));
+
+        // Configure axes.
+        _.each(_.keys(axesOpts), function(axisName){
+          self.configureAxis(chart, self.prepareOptions(axesOpts[axisName], axisName), axisName);
+        });
+
+        // Configure margins
+        self.configureMargins(chart, margins);
+      },
+      configureChart: function(chart, chartOpts){
+        chart.options(chartOpts);
+      },
+      configureAxis: function(chart, axisOpt, axisName){
+        chart[axisName].options(axisOpt);
+      },
+      configureMargins: function(chart, margins){
+        if(margins) chart.margin(margins);
       }
+      /// END NEW SET OPTIONS
   });
 
 })(jQuery, recline.View.nvd3);

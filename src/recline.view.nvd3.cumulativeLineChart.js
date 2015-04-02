@@ -18,8 +18,10 @@ this.recline.View = this.recline.View || {};
     },
     getDefaults: function(){
       return {
-        useInteractiveGuideline: true,
-        tooltips: true
+        options:{
+          useInteractiveGuideline: true,
+          tooltips: true
+        }
       };
     }
   });

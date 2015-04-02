@@ -16,15 +16,6 @@ this.recline.View = this.recline.View || {};
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
 
-    },
-    getDefaults: function(){
-      return {
-        computeXLabels: false,
-        options:{
-          reduceXTicks: true,
-          tooltips: true
-        }
-      };
     }
   });
 

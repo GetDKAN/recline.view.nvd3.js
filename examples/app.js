@@ -6,32 +6,43 @@
     var datasetWithValues = demoValuesAsSeries();
 
     var oneDimensionWithLabels = new recline.Model.ObjectState({
-      xfield: 'state',
       seriesFields: ['total'],
-      group: true
+      group: true,
+      options: {
+        tooltips: true,
+        x: 'state'
+      }
     });
 
     var twoDimensionWithLabels = new recline.Model.ObjectState({
-      xfield: 'state',
       seriesFields: ['total', 'ratio'],
-      group: true
+      group: true,
+      options: {
+        x: 'state',
+        tooltips: true
+      }
     });
 
     var twoDimensionWithValues = new recline.Model.ObjectState({
-      xfield: 'date',
       seriesFields: ['y', 'z'],
+      options: {
+        x: 'date',
+        tooltips: true,
+        xAxis: {
+          tickFormat: 'Date::%x'
+        }
+      }
     });
-
 
     /**
      * Discrete Bar Chart
      */
-    var discreteBar = new recline.View.nvd3.discreteBarChart({
+    var discreteBarChart = new recline.View.nvd3.discreteBarChart({
         model: datasetWithLabels,
         state: oneDimensionWithLabels,
         el: $('#discreteBar'),
     });
-    discreteBar.render();
+    discreteBarChart.render();
 
     /**
      * Multi Bar Chart
@@ -68,15 +79,24 @@
     /**
      * Pie Chart
      */
+    var pieChartState = new recline.Model.ObjectState({
+      seriesFields: ['total'],
+      group: true,
+      options: {
+        x: 'state',
+        tooltips: true
+      }
+    });
+
     var pieChart = new recline.View.nvd3.pieChart({
         model: datasetWithLabels,
-        state: oneDimensionWithLabels,
+        state: pieChartState,
         el: $('#pieChart'),
     });
     pieChart.render();
 
     /**
-     * Stacked Area Chart
+     * Stacked Area
      */
     var stackedAreaChart = new recline.View.nvd3.stackedAreaChart({
         model: datasetWithValues,
@@ -88,9 +108,19 @@
     /**
      * Cumulative Line Chart
      */
+    var cumulativeLineState = new recline.Model.ObjectState({
+      seriesFields: ['y', 'z'],
+      options: {
+        x: 'date',
+        tooltips: true,
+        useInteractiveGuideline: true,
+        color: d3.scale.category10().range(),
+
+      }
+    });
     var cumulativeLineChart = new recline.View.nvd3.cumulativeLineChart({
         model: datasetWithValues,
-        state: twoDimensionWithValues,
+        state: cumulativeLineState,
         el: $('#cumulativeLineChart'),
     });
     cumulativeLineChart.render();
@@ -98,9 +128,19 @@
     /**
      * Scatter Chart
      */
+
+    var scatterChartState = new recline.Model.ObjectState({
+      seriesFields: ['y', 'x'],
+      options: {
+        x: 'date',
+        tooltips: true,
+        pointSize: 'z',
+        tooltipContent: '<h3 style="background-color: <%= e.color %>"><%= key %></h3><p><%= y %></p>',
+      }
+    });
     var scatterChart = new recline.View.nvd3.scatterChart({
         model: datasetWithValues,
-        state: twoDimensionWithValues,
+        state: scatterChartState,
         el: $('#scatterChart'),
     });
     scatterChart.render();
@@ -114,6 +154,20 @@
         el: $('#lineWithFocusChart'),
     });
     lineWithFocusChart.render();
+
+    // DEV ONLY
+    var dev = true;
+    if(dev) {
+      window.lineChart = lineChart;
+      window.lineWithFocusChart = lineWithFocusChart;
+      window.pieChart = pieChart;
+      window.discreteBarChart = discreteBarChart;
+      window.multiBarHorizontalChart = multiBarHorizontalChart;
+      window.multiBarChart = multiBarChart;
+      window.scatterChart = scatterChart;
+      window.stackedAreaChart = stackedAreaChart;
+      window.cumulativeLineChart = cumulativeLineChart;
+    }
   });
 
 })(window);

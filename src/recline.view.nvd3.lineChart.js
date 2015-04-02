@@ -11,26 +11,12 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'lineChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
-      self.state.set('computeXLabels', true);
+      self.state.set('computeXLabels', true, {silent:true});
     },
     render: function(){
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
-    getDefaults: function(){
-      var self = this;
-      return {
-        options: {
-          useInteractiveGuideline: true,
-          tooltips: true,
-          xAxis:{
-            tickFormat: function(id) {
-              return (self.chartMap) ? self.chartMap.get(id) : id;
-            }
-          }
-        }
-      };
-    }
   });
 
 })(jQuery, recline.View.nvd3);

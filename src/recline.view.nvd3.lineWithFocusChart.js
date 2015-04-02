@@ -11,24 +11,15 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'lineWithFocusChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
-      self.state.set('computeXLabels', true);
+      self.state.set('computeXLabels', true, {silent:true});
     },
     render: function(){
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
-    getDefaults: function(){
-      var self = this;
-      return {
-        options: {
-          tooltips: true,
-          xAxis:{
-            tickFormat: function(id) {
-              return (self.chartMap) ? self.chartMap.get(id) : id;
-            }
-          }
-        }
-      };
+    alterChart: function(chart){
+      // Focus axis should have the same formater as x
+      chart.x2Axis.tickFormat(chart.xAxis.tickFormat());
     }
   });
 

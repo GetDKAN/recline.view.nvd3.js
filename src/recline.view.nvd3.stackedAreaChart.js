@@ -11,24 +11,11 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'stackedAreaChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
-      self.state.set('computeXLabels', true);
+      self.state.set('computeXLabels', true, {silent: true});
     },
     render: function(){
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
-    },
-    getDefaults: function(){
-      return {
-        options:{
-          useInteractiveGuideline: true,
-          tooltips: true,
-          xAxis:{
-            tickFormat: function(d) {
-              return d3.time.format('%Y')(new Date(d));
-            }
-          }
-        }
-      };
     }
   });
 
