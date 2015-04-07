@@ -11,6 +11,7 @@ this.recline.View = this.recline.View || {};
       var self = this;
       self.graphType = 'discreteBarChart';
       recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      self.state.set('computeXLabels', false, {silent: true});
     },
     render: function(){
       var self = this;

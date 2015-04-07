@@ -65,7 +65,6 @@
     });
     lineChart.render();
 
-
     /**
      * Multi Horizontal Bar Chart
      */

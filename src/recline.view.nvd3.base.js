@@ -66,7 +66,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = options.state;
-        self.state.set(stateData, {silent: true});
         self.xfield = self.state.get('options').x;
         self.series = self.getSeries();
         self.xDataType = self.state.get('xDataType');
@@ -106,9 +105,16 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         // If number of rows is too big then try to group by x.
         self.state.set('group', self.model.records.length > MAX_ROW_NUM || self.state.get('group', {silent:true}));
 
+
         self.series = self.createSeries(self.model.records);
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
+
+          /**
+           * Configure all not configured formats with
+           * taking care of the axis data type.
+           */
+          self.configureDefaultFormats(self.chart, self.state.get('options'));
 
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
@@ -149,24 +155,11 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       createSeries: function(records){
         var self = this;
         var series;
-        var fieldType;
 
         // Return no data when x or y are no set.
         if(!self.xfield || !self.getSeries()) return [];
 
         records = records.toJSON();
-
-        fieldType = _.compose(_.inferType,_.iteratee(self.xfield));
-
-        if(!self.xDataType || self.xDataType === 'Auto'){
-          self.xDataType =  fieldType(_.last(records));
-        }
-
-        var xAxis = self.state.get('options').xAxis;
-        if(xAxis && !xAxis.tickFormat){
-          self.xFormatter = self.getFormatter(self.xDataType, self.state.get('xFormat'));
-          self.chart
-        }
 
         series = _.map(self.getSeries(), function(serie){
           var data = {};
@@ -206,19 +199,10 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
        records = records.toJSON();
        return _.some(records, function(record){
          return _.inferType(record[xfield]) === 'String';
-       }) && graphType !== 'discreteBarChart' && graphType !== 'multiBarChart';
-      },
-      getFormatter: function(type, format){
-        var self = this;
-        if(self.state.get('computeXLabels')) return self.chartMap.get.bind(self.chartMap);
-
-        var formatter = {
-          'String': _.identity,
-          'Date': _.compose(d3.time.format(format || '%x'),_.instantiate(Date)),
-          'Number': d3.format(format || '.02f')
-        };
-
-        return formatter[type];
+       }) &&
+       graphType !== 'discreteBarChart' &&
+       graphType !== 'multiBarChart' &&
+       graphType !== 'multiBarHorizontalChart';
       },
       createGraph: function(graphType){
         var self = this;
@@ -232,7 +216,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var self = this;
         return self.state.get('seriesFields');
       },
-      /// NEW SET OPTIONS
       wrapValue: function(key, value, keyWrapMap) {
 
         // it's already a function then return.
@@ -254,9 +237,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       configure: function(state, chart){
         var self = this;
         var options = state.get('options');
-        var axesNames = _.filter(_.keys(options), function(value){
-          return _.endsWith(value, 'Axis');
-        });
+        var axesNames = self.getAxesNames(options);
         var axesOpts = _.pick(options, axesNames);
         var margins = _.first(_.values(_.pick(options, 'margin')));
         var chartOpts = _.omit(options,_.union(axesNames, ['margin']));
@@ -272,16 +253,78 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         // Configure margins
         self.configureMargins(chart, margins);
       },
+      getAxesNames: function(chartOrOptions){
+        var axisNames = ['xAxis', 'x2Axis', 'y1Axis', 'y2Axis',
+          'y3Axis', 'y4Axis', 'yAxis', 'yAxis1', 'yAxis2'
+        ];
+        return _.filter(_.keys(chartOrOptions), function(value){
+          return _.contains(axisNames, value);
+        });
+      },
+      getNotFormattedAxes: function(chart, options){
+        var self = this;
+        var chartAxes = self.getAxesNames(chart);
+        return _.filter(chartAxes,
+          _.negate(_.partial(self.hasFormat, options))
+        );
+      },
+      hasFormat: function(options, axisName){
+        return !!options[axisName] && !!options[axisName].tickFormat;
+      },
+      configureDefaultFormats: function(chart, options){
+        var self = this;
+
+        // Loop over all not set tickFormats
+        _.each(self.getNotFormattedAxes(chart, options), function(axisName){
+
+          var axis = chart[axisName];
+          var accesor = axisName.charAt(0);
+          var records = self.model.records.toJSON();
+          var xAsLabels = self.state.get('computeXLabels');
+
+          // Set default accesors
+          if(accesor === 'y'){
+            accesor = _.iteratee(_.first(self.state.get('seriesFields')));
+          } else if(accesor === 'x') {
+            accesor = _.iteratee(self.xfield);
+          }
+
+          // Override accesors with options
+          if(_.isFunction(options[accesor])){
+            accesor = options[accesor];
+          } else if(_.isString(options[accesor])){
+            accesor = _.iteratee(options[accesor]);
+          }
+
+          var sampleValue = accesor(_.first(records));
+          var type = _.inferType(sampleValue);
+
+          axis.tickFormat(self.getFormatByType(type, xAsLabels));
+        });
+      },
+      getFormatByType: function(type, xAsLabels){
+        var self = this;
+
+        if(xAsLabels) return self.chartMap.get.bind(self.chartMap);
+
+        var format = {
+          'String': _.identity,
+          'Date': _.compose(d3.time.format('%x'), _.instantiate(Date)),
+          'Number': d3.format('.02f')
+        };
+        return format[type];
+      },
       configureChart: function(chart, chartOpts){
         chart.options(chartOpts);
       },
       configureAxis: function(chart, axisOpt, axisName){
-        chart[axisName].options(axisOpt);
+        if(_.has(chart, axisName)){
+          chart[axisName].options(axisOpt);
+        }
       },
       configureMargins: function(chart, margins){
         if(margins) chart.margin(margins);
       }
-      /// END NEW SET OPTIONS
   });
 
 })(jQuery, recline.View.nvd3);

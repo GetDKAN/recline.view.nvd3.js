@@ -9,7 +9,7 @@ my.BaseControl = Backbone.View.extend({
   template: '<div id="control-chart-container">' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
-                '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" placeholder="e.g: %Y"/>' +
+                '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" placeholder="e.g: Date::%Y, Number::04d"/>' +
               '</div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-label-x-rotation">Label X Rotation</label>' +
@@ -121,12 +121,11 @@ my.BaseControl = Backbone.View.extend({
 
     var computedState = {
       group: self.$('#control-chart-group').is(':checked'),
-      transitionTime: self.$('#control-chart-transition-time').val(),
-      xFormat: self.$('#control-chart-x-format').val(),
       sort: self.$('#control-chart-sort').val()
     };
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
+    computedState.options.xAxis.tickFormat = self.$('#control-chart-x-format').val();
     computedState.options.yAxis = computedState.options.yAxis || {};
     computedState.options.tooltips = self.$('#control-chart-show-tooltips').is(':checked');
     computedState.options.reduceXTicks = self.$('#control-chart-reduce-ticks').is(':checked');
@@ -149,6 +148,7 @@ my.BaseControl = Backbone.View.extend({
       left: parseInt(self.$('#control-chart-margin-left').val()),
     };
     computedState.options.margin = margin;
+    computedState.options.transitionTime = self.$('#control-chart-transition-time').val();
     return computedState;
   }
 });

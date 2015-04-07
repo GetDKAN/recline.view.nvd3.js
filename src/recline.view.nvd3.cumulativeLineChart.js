@@ -15,14 +15,6 @@ this.recline.View = this.recline.View || {};
     render: function(){
       var self = this;
       recline.View.nvd3.Base.prototype.render.call(self, {});
-    },
-    getDefaults: function(){
-      return {
-        options:{
-          useInteractiveGuideline: true,
-          tooltips: true
-        }
-      };
     }
   });
 
