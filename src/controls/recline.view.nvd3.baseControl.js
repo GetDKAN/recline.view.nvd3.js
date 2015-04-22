@@ -65,6 +65,21 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
               '</div>' +
               '<div class="form-group checkbox">' +
+                '<label for="control-chart-show-title">' +
+                  '<input type="checkbox" id="control-chart-show-title" value="{{showTitle}}" {{#showTitle}}checked{{/showTitle}}/> Show title' +
+                '</label>' +
+              '</div>' +
+              '<div class="form-group checkbox">' +
+                '<label for="control-chart-show-controls">' +
+                  '<input type="checkbox" id="control-chart-show-controls" value="{{options.showControls}}" {{#options.showControls}}checked{{/options.showControls}}/> Show controls' +
+                '</label>' +
+              '</div>' +
+              '<div class="form-group checkbox">' +
+                '<label for="control-chart-show-legend">' +
+                  '<input type="checkbox" id="control-chart-show-legend" value="{{options.showLegend}}" {{#options.showLegend}}checked{{/options.showLegend}}/> Show legend' +
+                '</label>' +
+              '</div>' +
+              '<div class="form-group checkbox">' +
                 '<label for="control-chart-group">' +
                   '<input type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by X-Field' +
                 '</label>' +
@@ -123,12 +138,15 @@ my.BaseControl = Backbone.View.extend({
       group: self.$('#control-chart-group').is(':checked'),
       transitionTime: self.$('#control-chart-transition-time').val(),
       xFormat: self.$('#control-chart-x-format').val(),
-      sort: self.$('#control-chart-sort').val()
+      sort: self.$('#control-chart-sort').val(),
+      showTitle: self.$('#control-chart-show-title').is(':checked')
     };
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
     computedState.options.yAxis = computedState.options.yAxis || {};
     computedState.options.tooltips = self.$('#control-chart-show-tooltips').is(':checked');
+    computedState.options.showControls = self.$('#control-chart-show-controls').is(':checked');
+    computedState.options.showLegend = self.$('#control-chart-show-legend').is(':checked');
     computedState.options.reduceXTicks = self.$('#control-chart-reduce-ticks').is(':checked');
     computedState.options.xAxis.rotateLabels = self.$('#control-chart-label-x-rotation').val();
     color = _.invoke(self.$('#control-chart-color').val().split(','), 'trim');
