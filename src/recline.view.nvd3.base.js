@@ -40,10 +40,11 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           self.getDefaults(),
           self.options.state.toJSON()
         );
-
+        console.log(options);
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = self.options.state;
+        self.model = self.options.model;
         self.state.set(stateData);
         self.chartMap = d3.map();
         self.render();
@@ -154,7 +155,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         fieldType = _.compose(_.inferType,_.iteratee(self.state.get('xfield')));
 
         if(!self.state.get('xDataType') || self.state.get('xDataType') === 'Auto'){
-          xDataType =  fieldType(_.last(records));
+          xDataType =  fieldType(_.last(records) || []);
         } else {
           xDataType = self.state.get('xDataType');
         }
