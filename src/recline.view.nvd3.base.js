@@ -28,8 +28,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
                 '</div> ',
       initialize: function(options) {
         var self = this;
-        self.$el = $(self.el);
 
+        self.$el = $(self.el);
         self.options = _.defaults(options || {}, self.options);
 
         var stateData = _.merge({
@@ -46,7 +46,9 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.state = self.options.state;
         self.state.set(stateData);
         self.chartMap = d3.map();
-        self.state.listenTo(self.state, 'change', self.render.bind(self));
+        self.render();
+        self.listenTo(self.state, 'change', self.render.bind(self));
+        self.listenTo(self.model.records, 'add remove reset change', self.lightUpdate.bind(self));
       },
       getLayoutParams: function(){
         var self = this;
@@ -111,11 +113,15 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       lightUpdate: function(){
         var self = this;
         self.series = self.createSeries(self.model.records);
-        d3.select('#' + self.uuid + ' svg')
-          .datum(self.series)
-          .transition()
-          .duration(500)
-          .call(self.chart);
+        self.setOptions(self.chart, self.state.get('options'));
+        setTimeout(function(){
+          d3.select('#' + self.uuid + ' svg')
+            .datum(self.series)
+            .transition()
+            .duration(500)
+            .call(self.chart);
+        }, 0);
+
       },
       updateChart: function(){
         var self = this;
