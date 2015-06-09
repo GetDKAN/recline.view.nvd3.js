@@ -3,7 +3,7 @@
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
-;(function ($, my) {
+;(function ($, my, recline) {
   'use strict';
 
   my.pieChart = recline.View.nvd3.Base.extend({
@@ -47,4 +47,4 @@ this.recline.View = this.recline.View || {};
     }
   });
 
-})(jQuery, recline.View.nvd3);
+})(jQuery, recline.View.nvd3, this.recline);
