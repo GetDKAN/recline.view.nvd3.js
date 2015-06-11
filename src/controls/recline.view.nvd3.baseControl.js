@@ -171,4 +171,4 @@ my.BaseControl = Backbone.View.extend({
   }
 });
 
-})(jQuery, recline.View.nvd3);
+})(jQuery, this.recline.View.nvd3);
