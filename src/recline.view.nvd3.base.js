@@ -327,4 +327,4 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       }
   });
 
-})(jQuery, recline.View.nvd3);
+})(jQuery, this.recline.View.nvd3);
