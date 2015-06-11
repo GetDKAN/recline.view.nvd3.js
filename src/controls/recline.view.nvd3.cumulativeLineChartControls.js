@@ -8,4 +8,4 @@ this.recline.View = this.recline.View || {};
 
   my.cumulativeLineChartControls = recline.View.nvd3.BaseControl.extend({});
 
-})(jQuery, recline.View.nvd3, this.recline);
+})(jQuery, this.recline.View.nvd3, this.recline);
