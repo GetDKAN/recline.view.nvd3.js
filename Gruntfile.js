@@ -9,11 +9,11 @@ module.exports = function(grunt) {
       },
       core: {
         src: ['src/*.js'],
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: 'dist/<%= pkg.name %>.js'
       },
       controls: {
         src: ['src/controls/*.js'],
-        dest: 'dist/<%= pkg.name %>.controls.min.js'
+        dest: 'dist/<%= pkg.name %>.controls.js'
       }
     },
     uglify: {
