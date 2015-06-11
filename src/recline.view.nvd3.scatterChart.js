@@ -34,4 +34,4 @@ this.recline.View = this.recline.View || {};
     }
   });
 
-})(jQuery, recline.View.nvd3, this.recline);
+})(jQuery, this.recline.View.nvd3, this.recline);
