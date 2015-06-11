@@ -10,4 +10,4 @@ this.recline.View = this.recline.View || {};
     template: ''
   });
 
-})(jQuery, recline.View.nvd3, this.recline);
+})(jQuery, this.recline.View.nvd3, this.recline);
