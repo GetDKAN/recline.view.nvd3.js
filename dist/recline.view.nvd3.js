@@ -328,3 +328,338 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
   });
 
 })(jQuery, this.recline.View.nvd3);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+'use strict';
+
+  my.cumulativeLineChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'cumulativeLineChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    getDefaults: function(){
+      return {
+        useInteractiveGuideline: true,
+        tooltips: true
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+'use strict';
+
+  my.discreteBarChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'discreteBarChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    getDefaults: function(){
+      return {
+        computeXLabels: false,
+        options:{
+          tooltips: true
+        }
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+  'use strict';
+
+  my.lineChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'lineChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      self.state.set('computeXLabels', true);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    getDefaults: function(){
+      var self = this;
+      return {
+        options: {
+          useInteractiveGuideline: true,
+          tooltips: true,
+          xAxis:{
+            tickFormat: function(id) {
+              return (self.chartMap) ? self.chartMap.get(id) : id;
+            }
+          }
+        }
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+  'use strict';
+
+  my.lineWithFocusChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'lineWithFocusChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      self.state.set('computeXLabels', true);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    getDefaults: function(){
+      var self = this;
+      return {
+        options: {
+          tooltips: true,
+          xAxis:{
+            tickFormat: function(id) {
+              return (self.chartMap) ? self.chartMap.get(id) : id;
+            }
+          }
+        }
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+  'use strict';
+
+  my.multiBarChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'multiBarChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+
+    },
+    getDefaults: function(){
+      return {
+        computeXLabels: false,
+        options:{
+          reduceXTicks: true,
+          tooltips: true
+        }
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+  'use strict';
+
+  my.multiBarHorizontalChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'multiBarHorizontalChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      self.state.set('computeXLabels', false);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    getDefaults: function(){
+      return {
+        options: {
+          tooltips: true,
+          reduceXTicks: false,
+        }
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+  'use strict';
+
+  my.pieChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'pieChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    alterChart: function(chart){
+      var self = this;
+
+      // we don't want labels to fill all the canvas.
+      if(self.series.length > 10){
+        chart.showLegend(false);
+      }
+    },
+    createSeries: function(records){
+      var self = this;
+      records = records.toJSON();
+      var serie = _.first(self.state.get('seriesFields'));
+      // Group by xfield and acum all the series fields.
+      records = (self.state.get('group'))?
+        _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
+        : records;
+      return  _.map(records, function(record){
+        return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
+      });
+    },
+    getDefaults: function(){
+      return {
+        options: {
+          showLabels: true,
+          labelType: 'percent',
+          tooltips:true
+        }
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+  'use strict';
+
+  my.scatterChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'scatterChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      self.state.set('computeXLabels', true);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    getDefaults: function(){
+      var self = this;
+      return {
+        options: {
+          showDistX: true,
+          showDistY: true,
+          onlyCircles: false,
+          xAxis:{
+            tickFormat: function(id) {
+              return (self.chartMap) ? self.chartMap.get(id) : id;
+            }
+          }
+        }
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;/*jshint multistr:true */
+
+this.recline = this.recline || {};
+this.recline.View = this.recline.View || {};
+
+;(function ($, my, recline) {
+  'use strict';
+
+  my.stackedAreaChart = recline.View.nvd3.Base.extend({
+    initialize: function(options) {
+      var self = this;
+      self.graphType = 'stackedAreaChart';
+      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      self.state.set('computeXLabels', true);
+    },
+    render: function(){
+      var self = this;
+      recline.View.nvd3.Base.prototype.render.call(self, {});
+    },
+    getDefaults: function(){
+      return {
+        options:{
+          useInteractiveGuideline: true,
+          tooltips: true,
+          xAxis:{
+            tickFormat: function(d) {
+              return d3.time.format('%Y')(new Date(d));
+            }
+          }
+        }
+      };
+    }
+  });
+
+})(jQuery, this.recline.View.nvd3, this.recline);
+;jQuery(function(){
+	'use strict';
+	_.mixin({
+	  getFields: function(model){
+	    var fields = [];
+	    try{
+	      fields = _.pluck(model.fields.toJSON(), 'id');
+	    } catch(err) {
+	      console.error('Error retrieving dataset fields');
+	    }
+	    return fields;
+	  },
+		applyOption:function(options, selected){
+			return _.map(options, function(option){
+				option.selected = (_.inArray(selected, option.value))? true : false;
+				return option;
+			});
+		},
+		arrayToOptions: function(options){
+			return _.map(options, function(option){
+				return {name:option, value:option, selected: false};
+			});
+		},
+	});
+});
