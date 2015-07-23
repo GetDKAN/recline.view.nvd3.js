@@ -10,6 +10,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
   var DEFAULT_CHART_WIDTH = 640;
   var DEFAULT_CHART_HEIGHT = 480;
   var MAX_ROW_NUM = 1000;
+  var CLEANUP_CHARS = '%$¥€';
   function makeId(prefix) {
       prefix = prefix || '';
       return prefix + (Math.random() * 1e16).toFixed(0);
@@ -176,6 +177,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
           data.values = _.map(records, function(record, index){
             var y = self.y(record, serie);
+            var cleanupChars = new RegExp('[' + CLEANUP_CHARS + ']');
+            y = y.replace(cleanupChars, '');
             y = _.cast(y, _.inferType(y));
 
             if(self.state.get('computeXLabels')){
