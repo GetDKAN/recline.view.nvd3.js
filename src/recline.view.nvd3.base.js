@@ -10,7 +10,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
   var DEFAULT_CHART_WIDTH = 640;
   var DEFAULT_CHART_HEIGHT = 480;
   var MAX_ROW_NUM = 1000;
-  var CLEANUP_CHARS = '%$¥€';
+
   function makeId(prefix) {
       prefix = prefix || '';
       return prefix + (Math.random() * 1e16).toFixed(0);
@@ -27,6 +27,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
                     '</div>' +
                   '</div>' +
                 '</div> ',
+
+      CLEANUP_CHARS: '%$¥€',
       initialize: function(options) {
         var self = this;
 
@@ -174,13 +176,8 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
           // Sorting
           records = _.sortBy(records, self.getSort(self.state.get('sort')));
-
           data.values = _.map(records, function(record, index){
-            var y = self.y(record, serie);
-            if (typeof y === 'string') {
-              var cleanupChars = new RegExp('[' + CLEANUP_CHARS + ']');
-              y = y.replace(cleanupChars, '');
-            }
+            var y = self.cleanupY(self.y(record, serie));
             y = _.cast(y, _.inferType(y));
 
             if(self.state.get('computeXLabels')){
@@ -196,6 +193,13 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           return data;
         });
         return series;
+      },
+      cleanupY: function(y){
+        var self = this;
+        if (typeof y === 'string') {
+          return y.replace(new RegExp('[' + self.CLEANUP_CHARS + ']'), '');
+        }
+        return y;
       },
       getSort: function(sort){
         if(!sort || sort === 'default') return _.identity;

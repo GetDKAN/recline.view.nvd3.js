@@ -33,7 +33,7 @@ this.recline.View = this.recline.View || {};
         _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
         : records;
       return  _.map(records, function(record){
-        return {y: self.y(record, serie), x: self.x(record, self.state.get('xfield'))};
+        return {y: self.cleanupY(self.y(record, serie)), x: self.x(record, self.state.get('xfield'))};
       });
     },
     getDefaults: function(){
