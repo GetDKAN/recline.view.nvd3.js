@@ -51,16 +51,16 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
                 '<div class="row">' +
                   '<div class="col-md-3 col-sm-3">' +
-                    '<input id="control-chart-margin-top" type="text" class="form-control" aria-label="" placeholder="Top" value="15">' +
+                    '<input id="control-chart-margin-top" type="text" class="form-control" aria-label="" placeholder="Top" value="{{options.margin.top}}">' +
                   '</div>' +
                   '<div class="col-md-3 col-sm-3">' +
-                    '<input id="control-chart-margin-right" type="text" class="form-control" aria-label="" placeholder="Right" value="10">' +
+                    '<input id="control-chart-margin-right" type="text" class="form-control" aria-label="" placeholder="Right" value="{{options.margin.right}}">' +
                   '</div>' +
                   '<div class="col-md-3 col-sm-3">' +
-                    '<input id="control-chart-margin-bottom" type="text" class="form-control" aria-label="" placeholder="Bottom" value="50">' +
+                    '<input id="control-chart-margin-bottom" type="text" class="form-control" aria-label="" placeholder="Bottom" value="{{options.margin.bottom}}">' +
                   '</div>' +
                   '<div class="col-md-3 col-sm-3">' +
-                    '<input id="control-chart-margin-left" type="text" class="form-control" aria-label="" placeholder="Left" value="60">' +
+                    '<input id="control-chart-margin-left" type="text" class="form-control" aria-label="" placeholder="Left" value="{{options.margin.left}}">' +
                   '</div>' +
                 '</div>' +
               '</div>' +
@@ -114,6 +114,10 @@ my.BaseControl = Backbone.View.extend({
     var sortFields = _.arrayToOptions(_.getFields(self.state.get('model')));
     sortFields.unshift({name:'default', label:'Default', selected: false});
     self.state.set('sortFields', _.applyOption(sortFields, [self.state.get('sort')]));
+
+    var options = self.state.get('options');
+    options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
+    self.state.set('options', options);
 
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
