@@ -4,6 +4,7 @@ this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
+var GLOBAL_CHART;
 ;(function ($, my) {
   'use strict';
 
@@ -38,12 +39,11 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var stateData = _.merge({
             width: 640,
             height: 480,
-            group: false,
+            group: false
           },
           self.getDefaults(),
           self.options.state.toJSON()
         );
-        console.log(options);
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = self.options.state;
@@ -90,12 +90,33 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.series = self.createSeries(self.model.records);
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
+
+          GLOBAL_CHART = self.chart;
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
 
-          if(self.chart.xAxis && self.chart.xAxis.tickFormat)
+          if(self.chart.xAxis){
+            self.calcTickValues(
+              'x',
+              self.chart.xAxis,
+              self.state.get('xValues'),
+              self.state.get('xValuesStep')
+            );
+          }
+          if(self.chart.yAxis){
+            self.calcTickValues(
+              'y',
+              self.chart.yAxis,
+              self.state.get('yValues'),
+              self.state.get('yValuesStep')
+            );
+          }
+
+          if(self.xFormatter && self.chart.xAxis && self.chart.xAxis.tickFormat)
             self.chart.xAxis.tickFormat(self.xFormatter);
-          if(self.chart.x2Axis)
+          if(self.yFormatter && self.chart.yAxis && self.chart.yAxis.tickFormat)
+            self.chart.yAxis.tickFormat(self.yFormatter);
+          if(self.xFormatter && self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
 
           d3.select('#' + self.uuid + ' svg')
@@ -113,6 +134,36 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           return self.chart;
         });
         return self;
+      },
+      calcTickValues: function(axisName, axis, range, step){
+        var self = this;
+        var step = step || 1;
+        var ordinalScaled = ['multiBarChart', 'discreteBarChart'];
+        var xvalues = _.pluck(
+          _.flatten(
+            _.pluck(self.series, 'values')
+          ), axisName
+        );
+        var max = d3.max(xvalues);
+        var min = d3.min(xvalues);
+
+        if(range && range.indexOf('-') !== -1) {
+
+          range = range.split('-');
+
+          var tickValues = d3.range(range[0], range[1], step);
+
+          if(tickValues.indexOf(max) === -1) {
+            tickValues.push(max);
+          }
+
+          if(!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
+            self.chart[axisName + 'Domain']([range[0], range[1]]);
+          } else {
+            self.chart[axisName + 'Domain'](d3.range(range[0], range[1]));
+          }
+          axis.tickValues(tickValues);
+        }
       },
       lightUpdate: function(){
         var self = this;
@@ -149,12 +200,13 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         var series;
         var fieldType;
         var xDataType;
+        var xFormat;
+        var yFormat;
 
         // Return no data when x and y are no set.
         if(!self.state.get('xfield') || !self.getSeries()) return [];
 
         records = records.toJSON();
-
         fieldType = _.compose(_.inferType,_.iteratee(self.state.get('xfield')));
 
         if(!self.state.get('xDataType') || self.state.get('xDataType') === 'Auto'){
@@ -163,20 +215,32 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           xDataType = self.state.get('xDataType');
         }
 
-        self.xFormatter = self.getFormatter(xDataType, self.state.get('xFormat'));
+        // Format axis
+        xFormat = self.state.get('xFormat') || {type: 'Number', format: 'd'};
+        yFormat = self.state.get('yFormat') || {type: 'Number', format: 'd'};
+        self.xFormatter = self.getFormatter(xFormat.type, xFormat.format);
+        self.yFormatter = self.getFormatter(yFormat.type, yFormat.format);
 
         series = _.map(self.getSeries(), function(serie){
           var data = {};
           data.key = serie;
 
           // Group by xfield and acum all the series fields.
-          records = (self.state.get('group'))?
+          var rc = (self.state.get('group'))?
             _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
             : records;
 
           // Sorting
-          records = _.sortBy(records, self.getSort(self.state.get('sort')));
-          data.values = _.map(records, function(record, index){
+          rc = _.sortBy(rc, self.getSort(self.state.get('sort')));
+
+          rc = _.filter(rc, function(record){
+            var y = self.cleanupY(self.y(record, serie));
+            if(y) {
+              return true;
+            }
+          });
+
+          data.values = _.map(rc, function(record, index){
             var y = self.cleanupY(self.y(record, serie));
             y = _.cast(y, _.inferType(y));
 
@@ -213,17 +277,25 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
          return _.inferType(record[xfield]) === 'String';
        }) && graphType !== 'discreteBarChart' && graphType !== 'multiBarChart';
       },
-      getFormatter: function(type, format){
+      getFormatter: function(type, format, axisName){
         var self = this;
-        if(self.state.get('computeXLabels')) return self.chartMap.get.bind(self.chartMap);
+        axisName = axisName || 'x';
+
+        if(self.state.get('computeXLabels') && axisName === 'x')
+          return self.chartMap.get.bind(self.chartMap);
 
         var formatter = {
           'String': _.identity,
           'Date': _.compose(d3.time.format(format || '%x'),_.instantiate(Date)),
-          'Number': d3.format(format || '.02f')
+          'Number': d3.format(format || '.02f'),
+          'Percentage': self.formatPercentage(format || '.02f'),
         };
-
         return formatter[type];
+      },
+      formatPercentage: function(format) {
+        return function(d){
+          return d3.format(format)(d) + '%';
+        }
       },
       setOptions: function (chart, options) {
         var self = this;
@@ -239,6 +311,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             chart[optionName](optionValue);
           }
         }
+
       },
       createGraph: function(graphType){
         var self = this;
