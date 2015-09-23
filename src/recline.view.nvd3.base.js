@@ -4,7 +4,6 @@ this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
-var GLOBAL_CHART;
 ;(function ($, my) {
   'use strict';
 
@@ -68,6 +67,8 @@ var GLOBAL_CHART;
         var tmplData;
         var htmls;
         var layout;
+        var xFormat;
+        var yFormat;
 
         layout = self.getLayoutParams();
         tmplData = self.model.toTemplateJSON();
@@ -92,7 +93,6 @@ var GLOBAL_CHART;
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
 
-          GLOBAL_CHART = self.chart;
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
 
@@ -112,6 +112,13 @@ var GLOBAL_CHART;
               self.state.get('yValuesStep')
             );
           }
+
+          // Format axis
+          xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
+          yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
+
+          self.xFormatter = self.getFormatter(xFormat.type, xFormat.format, 'x');
+          self.yFormatter = self.getFormatter(yFormat.type, yFormat.format, 'y');
 
           if(self.xFormatter && self.chart.xAxis && self.chart.xAxis.tickFormat)
             self.chart.xAxis.tickFormat(self.xFormatter);
@@ -201,8 +208,6 @@ var GLOBAL_CHART;
         var series;
         var fieldType;
         var xDataType;
-        var xFormat;
-        var yFormat;
 
         // Return no data when x and y are no set.
         if(!self.state.get('xfield') || !self.getSeries()) return [];
@@ -216,12 +221,7 @@ var GLOBAL_CHART;
           xDataType = self.state.get('xDataType');
         }
 
-        // Format axis
-        xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
-        yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
 
-        self.xFormatter = self.getFormatter(xFormat.type, xFormat.format);
-        self.yFormatter = self.getFormatter(yFormat.type, yFormat.format);
 
         series = _.map(self.getSeries(), function(serie){
           var data = {};

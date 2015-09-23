@@ -20,7 +20,6 @@ this.recline.View = this.recline.View || {};
                   '</label>' +
                 '</div>' +
               '</fieldset>',
-              ,
     events: {
       'change input[type="checkbox"]': 'update',
     },
