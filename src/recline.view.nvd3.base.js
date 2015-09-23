@@ -88,6 +88,7 @@ var GLOBAL_CHART;
         self.state.set('group', self.model.records.length > MAX_ROW_NUM || self.state.get('group', {silent:true}));
 
         self.series = self.createSeries(self.model.records);
+
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
 
@@ -216,8 +217,9 @@ var GLOBAL_CHART;
         }
 
         // Format axis
-        xFormat = self.state.get('xFormat') || {type: 'Number', format: 'd'};
-        yFormat = self.state.get('yFormat') || {type: 'Number', format: 'd'};
+        xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
+        yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
+
         self.xFormatter = self.getFormatter(xFormat.type, xFormat.format);
         self.yFormatter = self.getFormatter(yFormat.type, yFormat.format);
 
@@ -243,7 +245,6 @@ var GLOBAL_CHART;
           data.values = _.map(rc, function(record, index){
             var y = self.cleanupY(self.y(record, serie));
             y = _.cast(y, _.inferType(y));
-
             if(self.state.get('computeXLabels')){
               self.chartMap.set(index, self.x(record, self.state.get('xfield')));
               return {y: y, x: index, label: self.x(record, self.state.get('xfield'))};

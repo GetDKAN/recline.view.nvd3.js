@@ -57,7 +57,8 @@
   r: 4;
 }
 
-#control-chart-container fieldset {
+#base-controls fieldset ,
+#extended-controls fieldset {
   display: block;
   border: 1px solid #ddd;
   padding: 10px;
@@ -65,7 +66,8 @@
   border-radius: 5px;
   padding-top: 30px;
 }
-#control-chart-container fieldset > legend {
+#base-controls fieldset > legend,
+#extended-controls fieldset > legend {
   border-bottom: none;
   margin-top: -44px;
   background-color: white;
