@@ -221,8 +221,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           xDataType = self.state.get('xDataType');
         }
 
-
-
         series = _.map(self.getSeries(), function(serie){
           var data = {};
           data.key = serie;
@@ -237,7 +235,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
           rc = _.reduce(rc, function(memo, record){
             var y = self.cleanupY(self.y(record, serie));
-            if(y) {
+            if(y || self.graphType === 'stackedAreaChart') {
               memo.push(record);
             } else if(self.state.get('options').stacked) {
               record[serie] = 0;
