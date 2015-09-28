@@ -235,12 +235,16 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           // Sorting
           rc = _.sortBy(rc, self.getSort(self.state.get('sort')));
 
-          rc = _.filter(rc, function(record){
+          rc = _.reduce(rc, function(memo, record){
             var y = self.cleanupY(self.y(record, serie));
             if(y) {
-              return true;
+              memo.push(record);
+            } else if(self.state.get('options').stacked) {
+              record[serie] = 0;
+              memo.push(record);
             }
-          });
+            return memo;
+          }, []);
 
           data.values = _.map(rc, function(record, index){
             var y = self.cleanupY(self.y(record, serie));
