@@ -75,3 +75,8 @@
   padding-left: 7px;
   padding-right: 7px;
 }
+
+#chart-with-controls .checkbox-without-margin {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}

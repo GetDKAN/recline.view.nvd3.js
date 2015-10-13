@@ -133,6 +133,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             .duration(self.state.get('transitionTime') || 500)
             .call(self.chart);
 
+          self.renderGoals();
           // Hack to reduce ticks even if the chart has not that option.
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
@@ -184,7 +185,49 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             .duration(500)
             .call(self.chart);
         }, 0);
+      },
+      renderGoals: function(){
+        var self = this;
+        var goal = self.state.get('goal');
+        if(!d3.select('svg').empty() && d3.select('svg .goal').empty() && goal && !isNaN(goal.value)){
+          nv.dispatch.on('render_end', function(){
+            var yScale = self.chart.yAxis.scale();
+            var margin = self.chart.margin();
+            var y = yScale(goal.value) + margin.top;
+            var x = margin.left;
+            var xWidth = parseInt(d3.select('svg').style('width')) - 10;
+            var g = d3.select('svg').append('g');
+            var labelX, labelY;
 
+            if(goal.label) {
+              if (goal.outside) {
+                labelX =  x - 50;
+                labelY = y + 3;
+              } else {
+                labelX =  x + 5;
+                labelY = y - 6;
+              }
+              g.append('text')
+                .text('TARGET')
+                .attr('x', labelX)
+                .attr('y', labelY)
+                .attr('fill', goal.color || 'red' )
+                .style('font-size','10px')
+                .style('font-weight','bold')
+                .style('font-style','italic');
+            }
+
+            g.append('line')
+              .attr('class', 'goal')
+              .attr('x1', x)
+              .attr('y1', y)
+              .attr('x2', xWidth)
+              .attr('y2', y)
+              .attr('stroke-width', 1)
+              .attr('stroke', goal.color || 'red')
+              .style('stroke-dasharray', ('3, 3'));
+          });
+        }
       },
       updateChart: function(){
         var self = this;

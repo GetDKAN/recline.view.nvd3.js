@@ -160,6 +160,35 @@ my.BaseControl = Backbone.View.extend({
                   '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
                 '</div>' +
 
+                /// Goal
+                '<div class="form-group">' +
+                  '<div class="row">' +
+                    '<div class="col-md-12 col-sm-12">' +
+                      '<label>Goal</label>' +
+                    '</div>' +
+                  '</div>' +
+                  '<div class="row">' +
+                    '<div class="col-md-3 col-sm-3">' +
+                      '<input id="control-chart-goal-value" type="text" class="form-control" aria-label="" placeholder="e.g.: 50" value="{{goal.value}}">' +
+                    '</div>' +
+                    '<div class="col-md-3 col-sm-3">' +
+                      '<input id="control-chart-goal-color" type="text" class="form-control" aria-label="" placeholder="e.g.: red" value="{{goal.color}}">' +
+                    '</div>' +
+                    '<div class="col-md-6 col-sm-3">' +
+                      '<div class="form-group checkbox checkbox-without-margin">' +
+                        '<label for="control-chart-goal-outside">' +
+                          '<input type="checkbox" id="control-chart-goal-outside" value="{{goal.outside}}" {{#goal.outside}}checked{{/goal.outside}}/> Label outside' +
+                        '</label>' +
+                      '</div>' +
+                      '<div class="form-group checkbox checkbox-without-margin">' +
+                        '<label for="control-chart-goal-label">' +
+                          '<input type="checkbox" id="control-chart-goal-label" value="{{goal.label}}" {{#goal.label}}checked{{/goal.label}}/> Show label' +
+                        '</label>' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+
                 /// Data sort
                 '<div class="form-group">' +
                   '<label for="control-chart-sort">Sort</label>' +
@@ -323,6 +352,13 @@ my.BaseControl = Backbone.View.extend({
       bottom: parseInt(self.$('#control-chart-margin-bottom').val()),
       left: parseInt(self.$('#control-chart-margin-left').val()),
     };
+    var goal = {
+      value: parseInt(self.$('#control-chart-goal-value').val()),
+      color: self.$('#control-chart-goal-color').val(),
+      outside: self.$('#control-chart-goal-outside').is(':checked'),
+      label: self.$('#control-chart-goal-label').is(':checked'),
+    };
+    computedState.goal = goal;
     computedState.options.margin = margin;
     return computedState;
   }
