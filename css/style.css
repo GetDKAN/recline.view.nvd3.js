@@ -56,3 +56,27 @@
   stroke-opacity: 1;
   r: 4;
 }
+
+#base-controls fieldset ,
+#extended-controls fieldset {
+  display: block;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-top: 25px;
+  border-radius: 5px;
+  padding-top: 30px;
+}
+#base-controls fieldset > legend,
+#extended-controls fieldset > legend {
+  border-bottom: none;
+  margin-top: -44px;
+  background-color: white;
+  width: auto;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+#chart-with-controls .checkbox-without-margin {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
