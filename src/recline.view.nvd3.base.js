@@ -189,7 +189,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       renderGoals: function(){
         var self = this;
         var goal = self.state.get('goal');
-        if(!d3.select('svg').empty() && d3.select('svg .goal').empty() && goal && !isNaN(goal.value)){
+        if(!d3.select('svg').empty() && d3.select('svg .goal').empty() && goal && goal.value && !isNaN(goal.value)){
           nv.dispatch.on('render_end', function(){
             var yScale = self.chart.yAxis.scale();
             var margin = self.chart.margin();
