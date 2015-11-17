@@ -162,9 +162,10 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
           var tickValues = d3.range(range[0], range[1], step);
 
-          if(tickValues.indexOf(max) === -1) {
-            tickValues.push(max);
-          }
+          // Remove display of max value callout
+          // if(tickValues.indexOf(max) === -1) {
+          //   tickValues.push(max);
+          // }
 
           if(!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
             self.chart[axisName + 'Domain']([range[0], range[1]]);
