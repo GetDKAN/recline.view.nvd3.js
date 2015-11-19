@@ -3,7 +3,7 @@
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
-
+var globalchart;
 ;(function ($, my) {
   'use strict';
 
@@ -49,9 +49,9 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         self.model = self.options.model;
         self.state.set(stateData);
         self.chartMap = d3.map();
-        self.render();
         self.listenTo(self.state, 'change', self.render.bind(self));
         self.listenTo(self.model.records, 'add remove reset change', self.lightUpdate.bind(self));
+        globalchart = self;
       },
       getLayoutParams: function(){
         var self = this;
@@ -63,6 +63,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         return layout;
       },
       render: function(){
+        console.log('Render chart');
         var self = this;
         var tmplData;
         var htmls;
@@ -87,7 +88,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
         // If number of rows is too big then try to group by x.
         self.state.set('group', self.model.records.length > MAX_ROW_NUM || self.state.get('group', {silent:true}));
-
         self.series = self.createSeries(self.model.records);
 
         nv.addGraph(function() {
@@ -127,12 +127,12 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           if(self.xFormatter && self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
 
+
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
             .duration(self.state.get('transitionTime') || 500)
             .call(self.chart);
-
           self.renderGoals();
           // Hack to reduce ticks even if the chart has not that option.
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
@@ -146,34 +146,22 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       },
       calcTickValues: function(axisName, axis, range, step){
         var self = this;
-        var step = step || 1;
         var ordinalScaled = ['multiBarChart', 'discreteBarChart'];
-        var xvalues = _.pluck(
-          _.flatten(
-            _.pluck(self.series, 'values')
-          ), axisName
-        );
-        var max = d3.max(xvalues);
-        var min = d3.min(xvalues);
+        var tickValues;
+
+        step = step || 1;
 
         if(range && range.indexOf('-') !== -1) {
-
           range = range.split('-');
-
-          var tickValues = d3.range(range[0], range[1], step);
-
-          // Remove display of max value callout
-          // if(tickValues.indexOf(max) === -1) {
-          //   tickValues.push(max);
-          // }
+          tickValues = d3.range(range[0], range[1], step);
 
           if(!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
             self.chart[axisName + 'Domain']([range[0], range[1]]);
           } else {
-            self.chart[axisName + 'Domain'](d3.range(range[0], range[1]));
+            self.chart[axisName + 'Domain'](d3.range(range[0], range[1], step));
           }
-          axis.tickValues(tickValues);
         }
+        axis.tickValues(tickValues);
       },
       lightUpdate: function(){
         var self = this;
@@ -187,16 +175,22 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
             .call(self.chart);
         }, 0);
       },
+      canRenderGoal: function(goal){
+        return !d3.select('svg').empty() &&
+          d3.select('svg .goal').empty() && goal &&
+          goal.value && !isNaN(goal.value) && this.chart.yAxis;
+      },
       renderGoals: function(){
         var self = this;
         var goal = self.state.get('goal');
-        if(!d3.select('svg').empty() && d3.select('svg .goal').empty() && goal && goal.value && !isNaN(goal.value)){
+        nv.dispatch.on('render_end', null);
+        if(this.canRenderGoal(goal)){
           nv.dispatch.on('render_end', function(){
             var yScale = self.chart.yAxis.scale();
             var margin = self.chart.margin();
             var y = yScale(goal.value) + margin.top;
             var x = margin.left;
-            var xWidth = parseInt(d3.select('svg').style('width')) - 10;
+            var xWidth = (d3.select('svg').size())? parseInt(d3.select('svg').style('width')) - 10 : 0;
             var g = d3.select('svg').append('g');
             var labelX, labelY;
 
@@ -342,7 +336,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       formatPercentage: function(format) {
         return function(d){
           return d3.format(format)(d) + '%';
-        }
+        };
       },
       setOptions: function (chart, options) {
         var self = this;

@@ -352,9 +352,8 @@ my.BaseControl = Backbone.View.extend({
       bottom: parseInt(self.$('#control-chart-margin-bottom').val()),
       left: parseInt(self.$('#control-chart-margin-left').val()),
     };
-    console.log(parseFloat(self.$('#control-chart-goal-value').val()));
     var goal = {
-      value: parseFloat(self.$('#control-chart-goal-value').val()),
+      value: parseFloat(self.$('#control-chart-goal-value').val()) || '',
       color: self.$('#control-chart-goal-color').val(),
       outside: self.$('#control-chart-goal-outside').is(':checked'),
       label: self.$('#control-chart-goal-label').is(':checked'),
