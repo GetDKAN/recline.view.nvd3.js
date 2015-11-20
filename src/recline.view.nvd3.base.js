@@ -377,6 +377,9 @@ var globalchart;
       },
       y: function(record, serie){
         return record[serie];
+      },
+      destroy: function(){
+        this.stopListening();
       }
   });
 

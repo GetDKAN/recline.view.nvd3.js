@@ -18,7 +18,7 @@ var CSVT = _.clone(recline.Backend.CSV);
         dfd.resolve(out);
       };
       reader.onerror = function (e) {
-        console.log('Failed to load file. Code: ' + e.target.error.code);
+        dfd.reject({error: {message: 'Failed to load file', code: e.target.error.code}});
       };
       reader.readAsText(dataset.file, encoding);
     } else if (dataset.data) {
@@ -30,6 +30,8 @@ var CSVT = _.clone(recline.Backend.CSV);
         var out = my.extractFields(my.parse(data, dataset), dataset);
         out.useMemoryStore = true;
         dfd.resolve(out);
+      }).fail(function(req, status){
+        dfd.reject({error: {message: status, request: req}});
       });
     }
     return dfd.promise();
@@ -40,7 +42,7 @@ var CSVT = _.clone(recline.Backend.CSV);
       out = my.transpose(out);
       out[0] = out[0] || [];
       out[0][0] = dialect.missingHeader;
-    }    
+    }
     return out;
   };
   my.transpose = function(transposee) {
