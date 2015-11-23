@@ -26,9 +26,9 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="s">100K</option>' +
                     '</optgroup>' +
                     '<optgroup label="Date">' +
-                      '<option data-type="Date" value="">mm/dd/yyyy </option>' +
-                      '<option data-type="Date" value="">mm-dd-yyyy</option>' +
-                      '<option data-type="Date" value="">Year</option>' +
+                      '<option data-type="Date" value="%m/%d/%Y">mm/dd/yyyy</option>' +
+                      '<option data-type="Date" value=""%m-%d-%Y">mm-dd-yyyy</option>' +
+                      '<option data-type="Date" value="%Y">Year</option>' +
                     '</optgroup>' +
                     '<optgroup label="Currency">' +
                       '<option data-type="Number" value="$,.2f">$100,000.00</option>' +
@@ -36,9 +36,9 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Number" value="%d">%100,000</option>' +
-                      '<option data-type="Number" value="%,.1f">%100,000.0</option>' +
-                      '<option data-type="Number" value="%,.2f">%100,000.00</option>' +
+                      '<option data-type="Number" value="%d">100,000%</option>' +
+                      '<option data-type="Number" value="%,.1f">100,000.0%</option>' +
+                      '<option data-type="Number" value="%,.2f">100,000.00%</option>' +
                     '</optgroup>' +
                   '</select>' +
                 '</div>' +
@@ -92,9 +92,9 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="s">100K</option>' +
                     '</optgroup>' +
                     '<optgroup label="Date">' +
-                      '<option data-type="Date" value="">mm/dd/yyyy </option>' +
-                      '<option data-type="Date" value="">mm-dd-yyyy</option>' +
-                      '<option data-type="Date" value="">Year</option>' +
+                      '<option data-type="Date" value="%m/%d/%Y">mm/dd/yyyy</option>' +
+                      '<option data-type="Date" value=""%m-%d-%Y">mm-dd-yyyy</option>' +
+                      '<option data-type="Date" value="%Y">Year</option>' +
                     '</optgroup>' +
                     '<optgroup label="Currency">' +
                       '<option data-type="Number" value="$,.2f">$100,000.00</option>' +
@@ -292,6 +292,13 @@ my.BaseControl = Backbone.View.extend({
     self.state.set('options', options);
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
+
+    if(self.state.get('xFormat') && self.state.get('xFormat').format) {
+      self.$('#control-chart-x-format option[value="' + self.state.get('xFormat').format + '"]').attr('selected', 'selected');
+    }
+    if(self.state.get('yFormat') && self.state.get('yFormat').format) {
+      self.$('#control-chart-y-format option[value="' + self.state.get('yFormat').format + '"]').attr('selected', 'selected');
+    }
   },
   update: function(e){
     var self = this;
