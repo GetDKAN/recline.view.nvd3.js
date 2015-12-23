@@ -30,11 +30,19 @@ this.recline.View = this.recline.View || {};
       var serie = _.first(self.state.get('seriesFields'));
       // Group by xfield and acum all the series fields.
       records = (self.state.get('group'))?
-        _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
+			  self.getGroupedRecords(records, self.state.get('xfield'), self.state.get('seriesFields'))
         : records;
       return  _.map(records, function(record){
         return {y: self.cleanupY(self.y(record, serie)), x: self.x(record, self.state.get('xfield'))};
       });
+    },
+		// we need to explicitly cast negative numbers to avoid string concatenation
+    getGroupedRecords: function (records, xfield, serie) {
+      var self = this;
+      _.each(records, function (r) {
+        if (!isNaN(r[serie])) r[serie] = parseFloat(r[serie]);
+      });
+      return _.reportBy(records, self.state.get('xfield'), serie);
     },
     getDefaults: function(){
       return {
