@@ -1,24 +1,21 @@
-/*jshint multistr:true */
-
-this.recline = this.recline || {};
-this.recline.View = this.recline.View || {};
-
-;(function ($, my) {
-  'use strict';
-
-  my.pieChart = recline.View.nvd3.Base.extend({
+'use strict';
+define(['rv3', 'lodash'], function (Base, _) {
+ console.log("LODASsH", _.map); 
+  var pieChart = Base.extend({
     initialize: function(options) {
+			console.log('pc1');
       var self = this;
       self.graphType = 'pieChart';
-      recline.View.nvd3.Base.prototype.initialize.call(self, options);
+      Base.prototype.initialize.call(self, options);
     },
     render: function(){
+      console.log('pc2');
       var self = this;
-      recline.View.nvd3.Base.prototype.render.call(self, {});
+      Base.prototype.render.call(self, {});
     },
     alterChart: function(chart){
       var self = this;
-
+      console.log('pc3');
       // we don't want labels to fill all the canvas.
       if(self.series.length > 10){
         chart.showLegend(false);
@@ -26,25 +23,19 @@ this.recline.View = this.recline.View || {};
     },
     createSeries: function(records){
       var self = this;
+      console.log('pc4');
       records = records.toJSON();
       var serie = _.first(self.state.get('seriesFields'));
       // Group by xfield and acum all the series fields.
       records = (self.state.get('group'))?
-			  self.getGroupedRecords(records, self.state.get('xfield'), self.state.get('seriesFields'))
+        _.reportBy(records, self.state.get('xfield'), self.state.get('seriesFields'))
         : records;
       return  _.map(records, function(record){
         return {y: self.cleanupY(self.y(record, serie)), x: self.x(record, self.state.get('xfield'))};
       });
     },
-		// we need to explicitly cast negative numbers to avoid string concatenation
-    getGroupedRecords: function (records, xfield, serie) {
-      var self = this;
-      _.each(records, function (r) {
-        if (!isNaN(r[serie])) r[serie] = parseFloat(r[serie]);
-      });
-      return _.reportBy(records, self.state.get('xfield'), serie);
-    },
     getDefaults: function(){
+      console.log('pc5');
       return {
         options: {
           showLabels: true,
@@ -54,5 +45,5 @@ this.recline.View = this.recline.View || {};
       };
     }
   });
-
-})(jQuery, recline.View.nvd3);
+	return pieChart;
+});

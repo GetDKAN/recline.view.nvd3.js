@@ -1,12 +1,5 @@
-/*jshint multistr:true */
- /*jshint -W030 */
-this.recline = this.recline || {};
-this.recline.View = this.recline.View || {};
-this.recline.View.nvd3 = this.recline.View.nvd3 || {};
-
-;(function ($, my) {
-  'use strict';
-
+'use strict';
+define(['recline', 'backbone', 'lodash', 'd3', 'mustache', 'nvd3'], function (recline, Backbone, _, d3, Mustache, nv) {
   var DEFAULT_CHART_WIDTH = 640;
   var DEFAULT_CHART_HEIGHT = 480;
   var MAX_ROW_NUM = 1000;
@@ -16,7 +9,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       return prefix + (Math.random() * 1e16).toFixed(0);
   }
 
-  my.Base = Backbone.View.extend({
+	var Base = Backbone.View.extend({
       template:'<div class="recline-graph recline-nvd3 row">' +
                   '{{data}}' +
                   '<div class="{{columnClass}} {{viewId}} recline-nvd3"style="display: block;">' +
@@ -31,7 +24,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       CLEANUP_CHARS: '%$¥€',
       initialize: function(options) {
         var self = this;
-
+				console.log('b1');
         self.$el = $(self.el);
         self.options = _.defaults(options || {}, self.options);
 
@@ -43,7 +36,6 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           self.getDefaults(),
           self.options.state.toJSON()
         );
-        console.log(options);
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = self.options.state;
@@ -56,6 +48,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
       },
       getLayoutParams: function(){
         var self = this;
+      console.log('b2');
         var layout = {
           columnClass: 'col-md-12',
           width: self.state.get('width') || self.$el.innerWidth() || DEFAULT_CHART_WIDTH,
@@ -64,6 +57,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         return layout;
       },
       render: function(){
+      console.log('b3');
         var self = this;
         var tmplData;
         var htmls;
@@ -115,6 +109,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         return self;
       },
       lightUpdate: function(){
+      console.log('b4');
         var self = this;
         self.series = self.createSeries(self.model.records);
         self.setOptions(self.chart, self.state.get('options'));
@@ -128,6 +123,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 
       },
       updateChart: function(){
+      console.log('b5');
         var self = this;
         d3.select('#' + self.uuid + ' svg')
           .transition()
@@ -135,6 +131,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           .call(self.chart);
       },
       reduceXTicks: function(){
+      console.log('b6');
         var self = this;
         var layout = self.getLayoutParams(self.state.get('mode'));
         d3.select('.nv-x.nv-axis > g').selectAll('g')
@@ -145,6 +142,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
           .style('opacity', 0);
       },
       createSeries: function(records){
+      console.log('b7');
         var self = this;
         var series;
         var fieldType;
@@ -195,6 +193,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         return series;
       },
       cleanupY: function(y){
+      console.log('b8');
         var self = this;
         if (typeof y === 'string') {
           return y.replace(new RegExp('[' + self.CLEANUP_CHARS + ']'), '');
@@ -202,10 +201,12 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         return y;
       },
       getSort: function(sort){
+      console.log('b9');
         if(!sort || sort === 'default') return _.identity;
         return sort;
       },
       needForceX: function(records, graphType){
+      console.log('b10');
        var self = this;
        var xfield = self.state.get('xfield');
        records = records.toJSON();
@@ -214,6 +215,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
        }) && graphType !== 'discreteBarChart' && graphType !== 'multiBarChart';
       },
       getFormatter: function(type, format){
+      console.log('b11');
         var self = this;
         if(self.state.get('computeXLabels')) return self.chartMap.get.bind(self.chartMap);
 
@@ -226,6 +228,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         return formatter[type];
       },
       setOptions: function (chart, options) {
+      console.log('b12');
         var self = this;
         for(var optionName in options){
           var optionValue = options[optionName];
@@ -241,6 +244,7 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         }
       },
       createGraph: function(graphType){
+      console.log('b13');
         var self = this;
         var chart = nv.models[graphType]();
         // Set each graph option recursively.
@@ -248,22 +252,27 @@ this.recline.View.nvd3 = this.recline.View.nvd3 || {};
         return chart;
       },
       getDefaults: function(){
+      console.log('b14');
         return {};
       },
       getState: function(){
+      console.log('b15');
         var self = this;
         return self.state.attributes;
       },
       getSeries: function(){
+      console.log('b16');
         var self = this;
         return self.state.get('seriesFields');
       },
       x: function(record, xfield){
+      console.log('b17');
         return record[xfield];
       },
       y: function(record, serie){
+      console.log('b18');
         return record[serie];
       }
   });
-
-})(jQuery, recline.View.nvd3);
+  return Base;
+});
