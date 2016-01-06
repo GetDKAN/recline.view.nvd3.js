@@ -152,7 +152,20 @@ var globalchart;
         step = step || 1;
 
         if(range && range.indexOf('-') !== -1) {
-          range = range.split('-');
+          var temp = range.replace(' ', '').split('-');
+          for (var i = 0; i < range.length; i++) {
+            if (temp[i] === '' && i < temp.length) {
+              temp[i + 1] = '-' + temp[i + 1];
+            }
+          }
+          range = [];
+          for (i = 0; i < temp.length; i++) {
+            if (temp[i] != '') {
+              range.push(parseFloat(temp[i]));
+            }
+          }
+          range = range.sort(function(a, b){return a-b;});
+
           tickValues = d3.range(range[0], range[1], step);
 
           if(!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
