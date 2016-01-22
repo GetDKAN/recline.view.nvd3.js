@@ -20,7 +20,8 @@ my.BaseControl = Backbone.View.extend({
                 '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
               '</div>' +
               '<div class="form-group">' +
-                  '<label for="control-chart-color">Color</label>' +
+                  '<label for="control-chart-color-picker">Color</label>' +
+                  '<input class="form-control" type="text" id="control-chart-color-picker"/>' +
                   '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
               '</div>' +
               '<div class="form-group">' +
@@ -121,6 +122,16 @@ my.BaseControl = Backbone.View.extend({
 
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
+
+    // Initialize 'spectrum' colorpicker
+    self.$('#control-chart-color-picker').spectrum({
+      change : function (color) {
+        console.log('Spectrum change event: ',color, color.toHexString());
+        self.$('#control-chart-color').val(function (i, val) {
+          return val + ', ' + color.toHexString();
+        });
+      }
+    });
   },
   update: function(e){
     var self = this;
