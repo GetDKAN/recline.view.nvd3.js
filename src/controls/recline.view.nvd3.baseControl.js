@@ -1,4 +1,5 @@
 /*jshint multistr:true */
+console.log('baseControls -> recline.view.nvd3');
 
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
@@ -20,7 +21,9 @@ my.BaseControl = Backbone.View.extend({
                 '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
               '</div>' +
               '<div class="form-group">' +
-                  '<label for="control-chart-color">Color</label>' +
+                  
+                  '<label for="control-chart-color-picker">Color</label>' +
+                  '<input type="text" class="form-control" id="control-chart-color-picker"/>' +
                   '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
               '</div>' +
               '<div class="form-group">' +
@@ -110,6 +113,7 @@ my.BaseControl = Backbone.View.extend({
     'submit #control-chart': 'update'
   },
   render: function(){
+    console.log("rvnvd3 1 ");
     var self = this;
     var sortFields = _.arrayToOptions(_.getFields(self.state.get('model')));
     sortFields.unshift({name:'default', label:'Default', selected: false});
@@ -121,12 +125,30 @@ my.BaseControl = Backbone.View.extend({
 
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
+    $('#control-chart-color-picker').spectrum({
+      change : function (color) {
+        console.log(color.toHexString());
+        $('#control-chart-color').val(function (i, val) {
+          var newVal;
+          if (val) { newVal = val + ', ' + color.toHexString(); }
+          else { newVal = color.toHexString(); }
+          return newVal;
+        });
+        setTimeout(function () {
+          self.updateState();
+        }, 500);
+      }
+    });
   },
   update: function(e){
     var self = this;
     if(self.$(e.target).closest('.chosen-container').length) return;
-    var newState = {};
     if(e.type === 'keydown' && e.keyCode !== 13) return;
+    self.updateState();
+  },
+  updateState : function () {
+    var self = this;
+    var newState = {};
     newState = _.merge({}, self.state.toJSON(), self.getUIState(), function(a, b) {
       if (_.isArray(a)) {
         return b;
