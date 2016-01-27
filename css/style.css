@@ -56,3 +56,6 @@
   stroke-opacity: 1;
   r: 4;
 }
+
+/* Colorpicker */
+label[for=control-chart-color-picker] {margin-right:10px; margin-bottom:20px;}
