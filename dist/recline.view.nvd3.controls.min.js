@@ -125,6 +125,10 @@ my.BaseControl = Backbone.View.extend({
 
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
+    $('#control-chart-color').on('blur', function (e) {
+      console.log('blur color', e);
+      self.update(e);
+    });
     $('#control-chart-color-picker').spectrum({
       change : function (color) {
         console.log(color.toHexString());
@@ -133,30 +137,25 @@ my.BaseControl = Backbone.View.extend({
           if (val) { newVal = val + ', ' + color.toHexString(); }
           else { newVal = color.toHexString(); }
           return newVal;
-        });
-        setTimeout(function () {
-          self.updateState();
-        }, 500);
+        })
+        $('input#control-chart-color').trigger('blur');
       }
     });
   },
   update: function(e){
-    var self = this;
-    if(self.$(e.target).closest('.chosen-container').length) return;
-    if(e.type === 'keydown' && e.keyCode !== 13) return;
-    self.updateState();
-  },
-  updateState : function () {
+    console.log('update 0');
     var self = this;
     var newState = {};
-    newState = _.merge({}, self.state.toJSON(), self.getUIState(), function(a, b) {
-      if (_.isArray(a)) {
-        return b;
-      }
-    });
+    if (e) {
+      if(self.$(e.target).closest('.chosen-container').length) { console.log('r1');return;}
+      if(e.type === 'keydown' && e.keyCode !== 13) { console.log('r2');return;}
+    }
+    console.log('u2', self.getUIState());
+    newState = _.merge({}, self.state.toJSON(), self.getUIState());
     self.state.set(newState);
   },
   getUIState: function(){
+    console.log('Getui state');
     var self = this;
     var color;
 
@@ -167,6 +166,8 @@ my.BaseControl = Backbone.View.extend({
       sort: self.$('#control-chart-sort').val(),
       showTitle: self.$('#control-chart-show-title').is(':checked')
     };
+
+    console.log('2', computedState);
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
     computedState.options.yAxis = computedState.options.yAxis || {};
@@ -176,6 +177,7 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.reduceXTicks = self.$('#control-chart-reduce-ticks').is(':checked');
     computedState.options.xAxis.rotateLabels = self.$('#control-chart-label-x-rotation').val();
     color = _.invoke(self.$('#control-chart-color').val().split(','), 'trim');
+    console.log('3', $('#control-chart-color'), color);
     computedState.options.xAxis.axisLabel = self.$('#control-chart-x-axis-label').val();
     computedState.options.yAxis.axisLabel = self.$('#control-chart-y-axis-label').val();
     computedState.options.yAxis.axisLabelDistance = parseInt(self.$('#control-chart-y-axis-label-distance').val()) || 0;
@@ -186,6 +188,7 @@ my.BaseControl = Backbone.View.extend({
         delete computedState.options.color;
       }
     }
+    console.log('4',color);
     var margin = {
       top: parseInt(self.$('#control-chart-margin-top').val()),
       right: parseInt(self.$('#control-chart-margin-right').val()),
