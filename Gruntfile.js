@@ -14,6 +14,10 @@ module.exports = function(grunt) {
       controls: {
         src: ['src/controls/*.js'],
         dest: 'dist/<%= pkg.name %>.controls.min.js'
+      },
+      backends: {
+        src: ['src/backends/*.js'],
+        dest: 'dist/recline.backends.min.js'
       }
     },
     uglify: {
@@ -27,6 +31,10 @@ module.exports = function(grunt) {
       controls: {
         src: ['src/controls/*.js'],
         dest: 'dist/<%= pkg.name %>.controls.min.js'
+      },
+      backends: {
+        src: ['src/backends/*.js'],
+        dest: 'dist/recline.backends.min.js'
       }
     },
     express: {
@@ -69,7 +77,6 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('default', [
     'express',
-    'open',
     'watch',
   ]);
 
