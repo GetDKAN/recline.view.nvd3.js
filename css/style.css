@@ -80,3 +80,5 @@
   margin-top: 0px;
   margin-bottom: 0px;
 }
+/* Colorpicker */
+label[for=control-chart-color-picker] {margin-right:10px; margin-bottom:20px;}

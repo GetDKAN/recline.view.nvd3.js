@@ -1,5 +1,4 @@
 /*jshint multistr:true */
-
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
@@ -7,6 +6,7 @@ this.recline.View = this.recline.View || {};
 'use strict';
 my.BaseControl = Backbone.View.extend({
   template: '<div id="control-chart-container">' +
+<<<<<<< HEAD
 
               //////// X AXIS
               '<fieldset>' +
@@ -56,6 +56,50 @@ my.BaseControl = Backbone.View.extend({
                       '<label for="control-chart-x-axis-label">Axis Label</label>' +
                       '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
                     '</div>' +
+=======
+              '<div class="form-group">' +
+                '<label for="control-chart-x-format">X-Format</label>' +
+                '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" placeholder="e.g: %Y"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                '<label for="control-chart-label-x-rotation">Label X Rotation</label>' +
+                '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
+                '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                  
+                  '<label for="control-chart-color-picker">Color</label>' +
+                  '<input type="text" class="form-control" id="control-chart-color-picker"/>' +
+                  '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                  '<label for="control-chart-x-axis-label">X Axis Label</label>' +
+                  '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                  '<label for="control-chart-x-axis-label">Y Axis Label</label>' +
+                  '<input class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                  '<label for="control-chart-y-axis-label-distance">Y Axis Label Distance</label>' +
+                  '<input class="form-control" type="text" id="control-chart-y-axis-label-distance" value="{{options.yAxis.axisLabelDistance}}"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                '<label for="control-chart-sort">Sort</label>' +
+                '<select id="control-chart-sort" class="form-control chosen-select">' +
+                  '{{#sortFields}}' +
+                    '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
+                  '{{/sortFields}}' +
+                '</select>' +
+              '</div>' +
+              '<div class="form-group">' +
+                '<div class="row">' +
+                  '<div class="col-md-12 col-sm-12">' +
+                    '<label for="exampleInputPassword1">Margin</label>' +
+>>>>>>> add-colorpicker-1
                   '</div>' +
                 '</div>' +
 
@@ -292,6 +336,7 @@ my.BaseControl = Backbone.View.extend({
     self.state.set('options', options);
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
+<<<<<<< HEAD
 
     if(self.state.get('xFormat') && self.state.get('xFormat').format) {
       self.$('#control-chart-x-format option[value="' + self.state.get('xFormat').format + '"]').attr('selected', 'selected');
@@ -299,17 +344,31 @@ my.BaseControl = Backbone.View.extend({
     if(self.state.get('yFormat') && self.state.get('yFormat').format) {
       self.$('#control-chart-y-format option[value="' + self.state.get('yFormat').format + '"]').attr('selected', 'selected');
     }
+=======
+    $('#control-chart-color').on('blur', function (e) {
+      self.update(e);
+    });
+    $('#control-chart-color-picker').spectrum({
+      change : function (color) {
+        $('#control-chart-color').val(function (i, val) {
+          var newVal;
+          if (val) { newVal = val + ', ' + color.toHexString(); }
+          else { newVal = color.toHexString(); }
+          return newVal;
+        });
+        $('input#control-chart-color').trigger('blur');
+      }
+    });
+>>>>>>> add-colorpicker-1
   },
   update: function(e){
     var self = this;
-    if(self.$(e.target).closest('.chosen-container').length) return;
     var newState = {};
-    if(e.type === 'keydown' && e.keyCode !== 13) return;
-    newState = _.merge({}, self.state.toJSON(), self.getUIState(), function(a, b) {
-      if (_.isArray(a)) {
-        return b;
-      }
-    });
+    if (e) {
+      if(self.$(e.target).closest('.chosen-container').length) return;
+      if(e.type === 'keydown' && e.keyCode !== 13) return;
+    }
+    newState = _.merge({}, self.state.toJSON(), self.getUIState());
     self.state.set(newState);
   },
   getUIState: function(){
@@ -334,6 +393,7 @@ my.BaseControl = Backbone.View.extend({
       xValuesStep: parseInt(self.$('#control-chart-x-values-step').val() || 1),
       yValuesStep: parseInt(self.$('#control-chart-y-values-step').val() || 1),
     };
+
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
     computedState.options.yAxis = computedState.options.yAxis || {};
