@@ -1,6 +1,6 @@
 {
   "name": "recline.views.nvd3.js",
-  "version": "0.0.1",
+  "version": "0.2.0,
   "keywords": [
     "recline",
     "nvd3"
@@ -29,6 +29,7 @@
     "chosen-bootstrap": "*",
     "lodash": "*",
     "recline.backend.gdocs": "https://github.com/okfn/recline.backend.gdocs.git#e81bb237759353932834a38a0ec810441e0ada10",
-    "csv.js": "https://github.com/okfn/csv.js.git#976b61384a1808eb464aca5876e5ea46c98deaee"
+    "csv.js": "https://github.com/okfn/csv.js.git#976b61384a1808eb464aca5876e5ea46c98deaee",
+    "spectrum": "~1.8.0"
   }
 }
