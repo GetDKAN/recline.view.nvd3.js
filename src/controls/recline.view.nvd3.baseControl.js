@@ -104,6 +104,8 @@ my.BaseControl = Backbone.View.extend({
     var self = this;
     self.state = options.state;
     self.model = options.model;
+    self.renderQueryEditor = options.renderQueryEditor;
+    self.renderFilterEditor = options.renderFilterEditor;
     self.parent = options.parent;
   },
   events: {
@@ -121,7 +123,7 @@ my.BaseControl = Backbone.View.extend({
 
     var options = self.state.get('options');
     options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
-    self.state.set('options', options);
+    self.state.set('options', options, {silent : true});
 
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
@@ -139,23 +141,21 @@ my.BaseControl = Backbone.View.extend({
         $('input#control-chart-color').trigger('blur');
       }
     });
-    self.renderQueryEditor();
-    self.renderFilterEditor();
-  },
-  renderQueryEditor : function () {
-    this.queryEditor = new my.QueryEditor({
-      el : '.recline-nvd3-query-editor',
-      model: this.model.queryState,
-      state: this.state
-    });
-    this.queryEditor.render();
-  },
-  renderFilterEditor : function () {
-    this.filterEditor = new my.FilterEditor({
-      el : '.recline-nvd3-filter-editor',
-      model: this.model,
-      state: this.state
-    });
+    if (self.renderQueryEditor) {
+      this.queryEditor = new my.QueryEditor({
+        el : '.recline-nvd3-query-editor',
+        model: this.model.queryState,
+        state: this.state
+      });
+      this.queryEditor.render();
+    }
+    if (self.renderFilterEditor) {
+      this.filterEditor = new my.FilterEditor({
+        el : '.recline-nvd3-filter-editor',
+        model: this.model,
+        state: this.state
+      });
+    }
   },
   update: function(e){
     var self = this;
@@ -412,6 +412,5 @@ my.QueryEditor = Backbone.View.extend({
       self.model.queryState.trigger('change');
     }
   });
-
 
 })(jQuery, recline.View.nvd3);
