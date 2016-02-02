@@ -8,6 +8,7 @@ this.recline.View = this.recline.View || {};
 my.BaseControl = Backbone.View.extend({
   template: '<div id="control-chart-container">' +
               '<div class="recline-nvd3-query-editor"></div>' +
+              '<div class="recline-nvd3-filter-editor"></div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
                 '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" placeholder="e.g: %Y"/>' +
@@ -139,6 +140,7 @@ my.BaseControl = Backbone.View.extend({
       }
     });
     self.renderQueryEditor();
+    self.renderFilterEditor();
   },
   renderQueryEditor : function () {
     console.log('QE1', this);
@@ -148,6 +150,13 @@ my.BaseControl = Backbone.View.extend({
       state: this.state
     });
     this.queryEditor.render();
+  },
+  renderFilterEditor : function () {
+    this.filterEditor = new my.FilterEditor({
+      el : '.recline-nvd3-filter-editor',
+      model: this.model,
+      state: this.state
+    });
   },
   update: function(e){
     var self = this;
@@ -241,7 +250,6 @@ my.QueryEditor = Backbone.View.extend({
   });
 
   my.FilterEditor = Backbone.View.extend({
-    className: 'recline-filter-editor well',
     template: ' \
       <div class="filters"> \
         <div class="form-stacked js-add"> \
