@@ -141,15 +141,13 @@ my.BaseControl = Backbone.View.extend({
     self.renderQueryEditor();
   },
   renderQueryEditor : function () {
-    console.log('QE1');
-    var self = this;
-    self.queryEditor = new my.QueryEditor({
+    console.log('QE1', this);
+    this.queryEditor = new my.QueryEditor({
       el : '.recline-nvd3-query-editor',
-      model: self.state.get('model').queryState,
-      state: self.state
+      model: this.model.queryState,
+      state: this.state
     });
-    console.log('QE2', self.queryEditor);
-    self.queryEditor.render();
+    this.queryEditor.render();
   },
   update: function(e){
     var self = this;
