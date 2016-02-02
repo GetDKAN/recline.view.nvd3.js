@@ -143,7 +143,6 @@ my.BaseControl = Backbone.View.extend({
     self.renderFilterEditor();
   },
   renderQueryEditor : function () {
-    console.log('QE1', this);
     this.queryEditor = new my.QueryEditor({
       el : '.recline-nvd3-query-editor',
       model: this.model.queryState,
@@ -240,11 +239,8 @@ my.QueryEditor = Backbone.View.extend({
       this.model.set({q: query});
     },
     render: function() {
-      console.log('QE3', this.$el);
       var tmplData = this.model.toJSON();
-      console.log('QE4', tmplData);
       var templated = Mustache.render(this.template, tmplData);
-      console.log('QE5.', templated);
       this.$el.html(templated);
     }
   });
@@ -391,7 +387,6 @@ my.QueryEditor = Backbone.View.extend({
       _.each($form.find('input'), function(input) {
         var $input = $(input);
         var filterType  = $input.attr('data-filter-type');
-        var fieldId     = $input.attr('data-filter-field');
         var filterIndex = parseInt($input.attr('data-filter-id'), 10);
         var name        = $input.attr('name');
         var value       = $input.val();
