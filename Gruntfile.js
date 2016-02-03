@@ -22,7 +22,7 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> v0.1 */\n'
+        banner: '/*! <%= pkg.name %> v0.6.0 */\n'
       },
       core: {
         src: ['src/*.js'],
