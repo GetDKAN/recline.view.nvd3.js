@@ -4,59 +4,11 @@ this.recline.View = this.recline.View || {};
 
 ;(function ($, my) {
 'use strict';
+
 my.BaseControl = Backbone.View.extend({
   template: '<div id="control-chart-container">' +
-<<<<<<< HEAD
-
-              //////// X AXIS
-              '<fieldset>' +
-                '<legend>X Axis</legend>' +
-
-                /// Format
-                '<div class="form-group">' +
-                  '<label for="control-chart-x-format">Format</label>' +
-                  '<select class="form-control" id="control-chart-x-format">' +
-                    '<optgroup label="Text">' +
-                      '<option data-type="String" value="">Text</option>' +
-                    '</optgroup>' +
-                    '<optgroup label="Numbers">' +
-                      '<option data-type="Number" value="d">100,000</option>' +
-                      '<option data-type="Number" value=",.1f">100,000.0</option>' +
-                      '<option data-type="Number" value=",.2f">100,000.00</option>' +
-                      '<option data-type="Number" value="s">100K</option>' +
-                    '</optgroup>' +
-                    '<optgroup label="Date">' +
-                      '<option data-type="Date" value="%m/%d/%Y">mm/dd/yyyy</option>' +
-                      '<option data-type="Date" value=""%m-%d-%Y">mm-dd-yyyy</option>' +
-                      '<option data-type="Date" value="%Y">Year</option>' +
-                    '</optgroup>' +
-                    '<optgroup label="Currency">' +
-                      '<option data-type="Number" value="$,.2f">$100,000.00</option>' +
-                      '<option data-type="Number" value="$,.1f">$100,000.0</option>' +
-                      '<option data-type="Number" value="$,">$100,000</option>' +
-                    '</optgroup>' +
-                    '<optgroup label="Percentage">' +
-                      '<option data-type="Number" value="%d">100,000%</option>' +
-                      '<option data-type="Number" value="%,.1f">100,000.0%</option>' +
-                      '<option data-type="Number" value="%,.2f">100,000.00%</option>' +
-                    '</optgroup>' +
-                  '</select>' +
-                '</div>' +
-
-                /// Rotation
-                '<div class="form-group">' +
-                  '<label for="control-chart-label-x-rotation">Label Rotation</label>' +
-                  '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
-                '</div>' +
-
-                /// Axis label
-                '<div class="form-group">' +
-                  '<div class="row">' +
-                    '<div class="col-md-12 col-sm-12">' +
-                      '<label for="control-chart-x-axis-label">Axis Label</label>' +
-                      '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
-                    '</div>' +
-=======
+              '<div class="recline-nvd3-query-editor"></div>' +
+              '<div class="recline-nvd3-filter-editor"></div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
                 '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" placeholder="e.g: %Y"/>' +
@@ -99,7 +51,6 @@ my.BaseControl = Backbone.View.extend({
                 '<div class="row">' +
                   '<div class="col-md-12 col-sm-12">' +
                     '<label for="exampleInputPassword1">Margin</label>' +
->>>>>>> add-colorpicker-1
                   '</div>' +
                 '</div>' +
 
@@ -314,6 +265,8 @@ my.BaseControl = Backbone.View.extend({
     var self = this;
     self.state = options.state;
     self.model = options.model;
+    self.renderQueryEditor = options.renderQueryEditor;
+    self.renderFilterEditor = options.renderFilterEditor;
     self.parent = options.parent;
   },
   events: {
@@ -333,10 +286,10 @@ my.BaseControl = Backbone.View.extend({
 
     var options = self.state.get('options');
     options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
-    self.state.set('options', options);
+    self.state.set('options', options, {silent : true});
+
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
-<<<<<<< HEAD
 
     if(self.state.get('xFormat') && self.state.get('xFormat').format) {
       self.$('#control-chart-x-format option[value="' + self.state.get('xFormat').format + '"]').attr('selected', 'selected');
@@ -344,7 +297,6 @@ my.BaseControl = Backbone.View.extend({
     if(self.state.get('yFormat') && self.state.get('yFormat').format) {
       self.$('#control-chart-y-format option[value="' + self.state.get('yFormat').format + '"]').attr('selected', 'selected');
     }
-=======
     $('#control-chart-color').on('blur', function (e) {
       self.update(e);
     });
@@ -359,7 +311,21 @@ my.BaseControl = Backbone.View.extend({
         $('input#control-chart-color').trigger('blur');
       }
     });
->>>>>>> add-colorpicker-1
+    if (self.renderQueryEditor) {
+      this.queryEditor = new my.QueryEditor({
+        el : '.recline-nvd3-query-editor',
+        model: this.model.queryState,
+        state: this.state
+      });
+      this.queryEditor.render();
+    }
+    if (self.renderFilterEditor) {
+      this.filterEditor = new my.FilterEditor({
+        el : '.recline-nvd3-filter-editor',
+        model: this.model,
+        state: this.state
+      });
+    }
   },
   update: function(e){
     var self = this;
@@ -430,5 +396,209 @@ my.BaseControl = Backbone.View.extend({
     return computedState;
   }
 });
+
+my.QueryEditor = Backbone.View.extend({
+    template: ' \
+      <form action="" method="GET" class="form-inline" role="form"> \
+        <div class="form-group"> \
+          <div class="input-group text-query"> \
+            <div class="input-group-btn"> \
+              <button type="button" class="btn btn-default">Go &raquo;</button> \
+            </div> \
+            <input class="form-control search-query" type="text" name="q" value="{{q}}" placeholder="Search data ..."> \
+          </div> \
+        </div> \
+      </form> \
+    ',
+
+    events: {
+      'click button': 'onFormSubmit',
+      'change input': 'onFormSubmit'
+    },
+
+    initialize: function() {
+      _.bindAll(this, 'render');
+      this.listenTo(this.model, 'change', this.render);
+      this.render();
+    },
+    onFormSubmit: function(e) {
+      e.preventDefault();
+      var query = this.$el.find('.search-query').val();
+      this.model.set({q: query});
+    },
+    render: function() {
+      var tmplData = this.model.toJSON();
+      var templated = Mustache.render(this.template, tmplData);
+      this.$el.html(templated);
+    }
+  });
+
+  my.FilterEditor = Backbone.View.extend({
+    template: ' \
+      <div class="filters"> \
+        <div class="form-stacked js-add"> \
+          <div class="form-group"> \
+            <label>Field</label> \
+            <select class="fields form-control"> \
+              {{#fields}} \
+              <option value="{{id}}">{{label}}</option> \
+              {{/fields}} \
+            </select> \
+          </div> \
+          <div class="form-group"> \
+            <label>Filter type</label> \
+            <select class="filterType form-control"> \
+              <option value="term">Value</option> \
+              <option value="range">Range</option> \
+              <option value="geo_distance">Geo distance</option> \
+            </select> \
+          </div> \
+          <button id="add-filter-btn" type="button" class="btn btn-default">Add</button> \
+        </div> \
+        <div class="form-stacked js-edit"> \
+          {{#filters}} \
+            {{{filterRender}}} \
+          {{/filters}} \
+          {{#filters.length}} \
+          <button type="button" class="btn btn-default">Update</button> \
+          {{/filters.length}} \
+        </div> \
+      </div> \
+    ',
+    filterTemplates: {
+      term: ' \
+        <div class="filter-{{type}} filter"> \
+          <div class="form-group"> \
+            <label> \
+              {{field}} <small>{{type}}</small> \
+              <a class="js-remove-filter" href="#" title="Remove this filter" data-filter-id="{{id}}">&times;</a> \
+            </label> \
+            <input class="form-control" type="text" value="{{term}}" name="term" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+          </div> \
+        </div> \
+      ',
+      range: ' \
+        <div class="filter-{{type}} filter"> \
+          <fieldset> \
+            <div class="form-group"> \
+              <label> \
+                {{field}} <small>{{type}}</small> \
+                <a class="js-remove-filter" href="#" title="Remove this filter" data-filter-id="{{id}}">&times;</a> \
+              </label> \
+            </div> \
+            <div class="form-group"> \
+              <label for="">From</label> \
+              <input class="form-control" type="text" value="{{from}}" name="from" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+            <div class="form-group"> \
+              <label for="">To</label> \
+              <input class="form-control" type="text" value="{{to}}" name="to" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+          </fieldset> \
+        </div> \
+      ',
+      geo_distance: ' \
+        <div class="filter-{{type}} filter"> \
+          <fieldset> \
+            <legend> \
+              {{field}} <small>{{type}}</small> \
+              <a class="js-remove-filter" href="#" title="Remove this filter" data-filter-id="{{id}}">&times;</a> \
+            </legend> \
+            <div class="form-group"> \
+              <label class="control-label" for="">Longitude</label> \
+              <input class="input-sm" type="text" value="{{point.lon}}" name="lon" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+            <div class="form-group"> \
+              <label class="control-label" for="">Latitude</label> \
+              <input class="input-sm" type="text" value="{{point.lat}}" name="lat" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+            <div class="form-group"> \
+              <label class="control-label" for="">Distance (km)</label> \
+              <input class="input-sm" type="text" value="{{distance}}" name="distance" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+          </fieldset> \
+        </div> \
+      '
+    },
+    events: {
+      'click .js-remove-filter': 'onRemoveFilter',
+      'click .js-add-filter': 'onAddFilterShow',
+      'click .js-edit button': 'onTermFiltersUpdate',
+      'click #add-filter-btn': 'onAddFilter'
+    },
+    initialize: function() {
+      _.bindAll(this, 'render');
+      this.listenTo(this.model.fields, 'all', this.render);
+      this.listenTo(this.model.queryState, 'change change:filters:new-blank', this.render);
+      this.render();
+    },
+    render: function() {
+      var self = this;
+      var tmplData = $.extend(true, {}, this.model.queryState.toJSON());
+      // we will use idx in list as there id ...
+      tmplData.filters = _.map(tmplData.filters, function(filter, idx) {
+        filter.id = idx;
+        return filter;
+      });
+      tmplData.fields = this.model.fields.toJSON();
+      tmplData.filterRender = function() {
+        return Mustache.render(self.filterTemplates[this.type], this);
+      };
+      var out = Mustache.render(this.template, tmplData);
+      this.$el.html(out);
+    },
+    onAddFilterShow: function(e) {
+      e.preventDefault();
+      var $target = $(e.target);
+      $target.hide();
+      this.$el.find('.js-add').show();
+    },
+    onAddFilter: function(e) {
+      e.preventDefault();
+      var $target = $(e.target).closest('.form-stacked');
+      $target.hide();
+      var filterType = $target.find('select.filterType').val();
+      var field      = $target.find('select.fields').val();
+      this.model.queryState.addFilter({type: filterType, field: field});
+    },
+    onRemoveFilter: function(e) {
+      e.preventDefault();
+      var $target = $(e.target);
+      var filterId = $target.attr('data-filter-id');
+      this.model.queryState.removeFilter(filterId);
+    },
+    onTermFiltersUpdate: function(e) {
+     var self = this;
+      e.preventDefault();
+      var filters = self.model.queryState.get('filters');
+      var $form = $(e.target).closest('.form-stacked');
+      _.each($form.find('input'), function(input) {
+        var $input = $(input);
+        var filterType  = $input.attr('data-filter-type');
+        var filterIndex = parseInt($input.attr('data-filter-id'), 10);
+        var name        = $input.attr('name');
+        var value       = $input.val();
+
+        switch (filterType) {
+          case 'term':
+            filters[filterIndex].term = value;
+            break;
+          case 'range':
+            filters[filterIndex][name] = value;
+            break;
+          case 'geo_distance':
+            if(name === 'distance') {
+              filters[filterIndex].distance = parseFloat(value);
+            }
+            else {
+              filters[filterIndex].point[name] = parseFloat(value);
+            }
+            break;
+        }
+      });
+      self.model.queryState.set({filters: filters, from: 0});
+      self.model.queryState.trigger('change');
+    }
+  });
 
 })(jQuery, recline.View.nvd3);

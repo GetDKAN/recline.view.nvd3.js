@@ -160,7 +160,7 @@ var globalchart;
           }
           range = [];
           for (i = 0; i < temp.length; i++) {
-            if (temp[i] != '') {
+            if (temp[i] !== '') {
               range.push(parseFloat(temp[i]));
             }
           }
