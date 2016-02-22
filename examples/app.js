@@ -2,24 +2,23 @@
   'use strict';
   // cartodb backend usage example
   $(document).on('ready', function(){
-    console.log('ES2SQL', Es2sql);
     var datasetWithLabels = demoFieldAsSeries();
     var datasetWithValues = demoValuesAsSeries();
     var cartoData = demoCartoDB();
-    var query = {
-      from: 2,
-      size: 2,
-      filters: [{term : {'statename' : 'Texas'}}]
-    };
-
+    var query = new recline.Model.Query();
+    query.set('filters', 
+      [
+        {term : {'statename' : 'Texas'}}
+      ]
+    );
+    console.log('aa1', cartoData, query.toJSON());
     cartoData.fetch().done(function () {
-      console.log('carto fetch complete', cartoData);
-      cartoData.query(query, cartoData).done(function () {
-        console.log('queried dataset', cartoData);
+      console.log('carto fetch complete', cartoData, query);
+      cartoData.query(query, cartoData).done(function (data) {
+        console.log('queried dataset', cartoData, data);
       });
     });
     
-
     var oneDimensionWithLabels = new recline.Model.ObjectState({
       xfield: 'state',
       seriesFields: ['total'],
