@@ -1,0 +1,12 @@
+{
+  "name": "csv.js",
+  "homepage": "https://github.com/okfn/csv.js",
+  "_release": "976b61384a",
+  "_resolution": {
+    "type": "commit",
+    "commit": "976b61384a1808eb464aca5876e5ea46c98deaee"
+  },
+  "_source": "https://github.com/okfn/csv.js.git",
+  "_target": "976b61384a1808eb464aca5876e5ea46c98deaee",
+  "_originalSource": "https://github.com/okfn/csv.js.git"
+}

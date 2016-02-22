@@ -1,0 +1,23 @@
+{
+  "name": "json",
+  "description": "JSON component",
+  "keywords": [
+    "json",
+    "json2"
+  ],
+  "ignore": [
+    "package.json"
+  ],
+  "main": "json2.js",
+  "license": "JSON License",
+  "homepage": "https://github.com/sasidhar/bower-json",
+  "_release": "3803d83a66",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "3803d83a668c9dd775fcd073bae30c76e4b4b525"
+  },
+  "_source": "git://github.com/sasidhar/bower-json.git",
+  "_target": "*",
+  "_originalSource": "json"
+}

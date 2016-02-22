@@ -1,0 +1,12 @@
+{
+  "name": "recline.backend.gdocs",
+  "homepage": "https://github.com/okfn/recline.backend.gdocs",
+  "_release": "e81bb23775",
+  "_resolution": {
+    "type": "commit",
+    "commit": "e81bb237759353932834a38a0ec810441e0ada10"
+  },
+  "_source": "https://github.com/okfn/recline.backend.gdocs.git",
+  "_target": "e81bb237759353932834a38a0ec810441e0ada10",
+  "_originalSource": "https://github.com/okfn/recline.backend.gdocs.git"
+}
