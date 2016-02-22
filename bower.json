@@ -30,6 +30,8 @@
     "lodash": "*",
     "recline.backend.gdocs": "https://github.com/okfn/recline.backend.gdocs.git#e81bb237759353932834a38a0ec810441e0ada10",
     "csv.js": "https://github.com/okfn/csv.js.git#976b61384a1808eb464aca5876e5ea46c98deaee",
-    "spectrum": "~1.8.0"
+    "spectrum": "~1.8.0",
+    "recline.backend.cartodb": "https://raw.githubusercontent.com/starsinmypockets/recline-cartodb-backend-public/es6-1/bundle.js",
+    "es2sql": "~1.0.9"
   }
 }

@@ -1,9 +1,24 @@
 ;(function(){
   'use strict';
-
+  // cartodb backend usage example
   $(document).on('ready', function(){
+    console.log('ES2SQL', Es2sql);
     var datasetWithLabels = demoFieldAsSeries();
     var datasetWithValues = demoValuesAsSeries();
+    var cartoData = demoCartoDB();
+    var query = {
+      from: 2,
+      size: 2,
+      filters: [{term : {'statename' : 'Texas'}}]
+    };
+
+    cartoData.fetch().done(function () {
+      console.log('carto fetch complete', cartoData);
+      cartoData.query(query, cartoData).done(function () {
+        console.log('queried dataset', cartoData);
+      });
+    });
+    
 
     var oneDimensionWithLabels = new recline.Model.ObjectState({
       xfield: 'state',
