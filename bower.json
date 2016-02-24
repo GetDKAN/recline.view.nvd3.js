@@ -6,6 +6,7 @@
     "nvd3"
   ],
   "main": ["dist/recline.view.nvd3.min.js"],
+  "ignore": [],
   "license": "MIT",
   "ignore": [
     "**/.*",
