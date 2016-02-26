@@ -63,7 +63,6 @@ var globalchart;
         return layout;
       },
       render: function(){
-        console.log('Render chart');
         var self = this;
         var tmplData;
         var htmls;
@@ -145,18 +144,15 @@ var globalchart;
         return self;
       },
       calcTickValues: function(axisName, axis, range, step){
-        console.log('calcTicks', arguments);
         var self = this;
         var ordinalScaled = ['multiBarChart', 'discreteBarChart'];
         var tickValues;
 
         step = step || 1;
-        
         if (range && self.rangesValid(range)) {
           range[0] = parseInt(range[0]);
           range[1] = parseInt(range[1]);
           tickValues = d3.range(range[0], range[1], step);
-
           if(!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
             self.chart[axisName + 'Domain']([range[0], range[1]]);
           } else {
@@ -167,9 +163,15 @@ var globalchart;
       },
       rangesValid: function (range){
         var valid = true;
-        range.forEach(function (bound) {
-          if (!bound || !isNaN(parseInt(bound))) valid = false;
+        if (!range || range.length !== 2) valid = false;
+        _.each(range, function (bound) {
+          if (!bound || isNaN(parseInt(bound))) valid = false;
         });
+        if (valid) {
+          if (parseInt(range[0]) >= parseInt(range[1])) {
+            valid = false;
+          }
+        }
         return valid;
       },
       lightUpdate: function(){
