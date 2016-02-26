@@ -145,27 +145,16 @@ var globalchart;
         return self;
       },
       calcTickValues: function(axisName, axis, range, step){
+        console.log('calcTicks', arguments);
         var self = this;
         var ordinalScaled = ['multiBarChart', 'discreteBarChart'];
         var tickValues;
 
         step = step || 1;
-
-        if(range && range.indexOf('-') !== -1) {
-          var temp = range.replace(' ', '').split('-');
-          for (var i = 0; i < range.length; i++) {
-            if (temp[i] === '' && i < temp.length) {
-              temp[i + 1] = '-' + temp[i + 1];
-            }
-          }
-          range = [];
-          for (i = 0; i < temp.length; i++) {
-            if (temp[i] !== '') {
-              range.push(parseFloat(temp[i]));
-            }
-          }
-          range = range.sort(function(a, b){return a-b;});
-
+        
+        if (range && self.rangesValid(range)) {
+          range[0] = parseInt(range[0]);
+          range[1] = parseInt(range[1]);
           tickValues = d3.range(range[0], range[1], step);
 
           if(!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
@@ -175,6 +164,13 @@ var globalchart;
           }
         }
         axis.tickValues(tickValues);
+      },
+      rangesValid: function (range){
+        var valid = true;
+        range.forEach(function (bound) {
+          if (!bound || !isNaN(parseInt(bound))) valid = false;
+        });
+        return valid;
       },
       lightUpdate: function(){
         var self = this;

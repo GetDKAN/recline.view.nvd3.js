@@ -59,8 +59,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-x-values">Tick Values</label>' +
-                      '<input class="form-control" type="text" placeholder="From Value" id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
-                      '<input class="form-control" type="text" placeholder=" Value" id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
+                      '<input class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
+                      '<input class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-x-values-step">Step</label>' +
@@ -130,8 +130,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y-values">Tick Values</label>' +
-                      '<input class="form-control" placeholder="From Value" type="text" id="control-chart-y-values-from" value="{{yValuesFrom}}"/>' +
-                      '<input class="form-control" placeholder="To Value" type="text" id="control-chart-y-values-to" value="{{yValuesTo}}"/>' +
+                      '<input class="form-control" placeholder="From.." type="text" id="control-chart-y-values-from" value="{{yValuesFrom}}"/>' +
+                      '<input class="form-control" placeholder="To.." type="text" id="control-chart-y-values-to" value="{{yValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y-values-step">Step</label>' +
@@ -356,8 +356,8 @@ my.BaseControl = Backbone.View.extend({
       },
       sort: self.$('#control-chart-sort').val(),
       showTitle: self.$('#control-chart-show-title').is(':checked'),
-      xValues: self.$('#control-chart-x-values').val(),
-      yValues: self.$('#control-chart-y-values').val(),
+      xValues: [self.$('#control-chart-x-values-from').val(), self.$('#control-chart-x-values-to').val()],
+      yValues: [self.$('#control-chart-y-values-from').val(), self.$('#control-chart-y-values-to').val()],
       xValuesStep: parseInt(self.$('#control-chart-x-values-step').val() || 1),
       yValuesStep: parseInt(self.$('#control-chart-y-values-step').val() || 1),
     };
