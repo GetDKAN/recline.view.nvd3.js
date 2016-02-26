@@ -59,7 +59,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-x-values">Tick Values</label>' +
-                      '<input class="form-control" type="text" placeholder="e.g. 2006-2015" id="control-chart-x-values" value="{{xValues}}"/>' +
+                      '<input class="form-control" type="text" placeholder="From Value" id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
+                      '<input class="form-control" type="text" placeholder=" Value" id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-x-values-step">Step</label>' +
@@ -129,7 +130,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y-values">Tick Values</label>' +
-                      '<input class="form-control" placeholder="e.g. 0-50" type="text" id="control-chart-y-values" value="{{yValues}}"/>' +
+                      '<input class="form-control" placeholder="From Value" type="text" id="control-chart-y-values-from" value="{{yValuesFrom}}"/>' +
+                      '<input class="form-control" placeholder="To Value" type="text" id="control-chart-y-values-to" value="{{yValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y-values-step">Step</label>' +
