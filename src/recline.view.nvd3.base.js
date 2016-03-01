@@ -149,6 +149,12 @@ var globalchart;
         var tickValues;
 
         step = step || 1;
+        
+        // check for old formatted range values
+        if (this.isOldRangeType(range)) {
+          range = this.convertRange(range);
+        } 
+        
         if (range && self.rangesValid(range)) {
           range[0] = parseInt(range[0]);
           range[1] = parseInt(range[1]);
@@ -160,6 +166,27 @@ var globalchart;
           }
         }
         axis.tickValues(tickValues);
+      },
+      // check for old range format
+      isOldRangeType: function (range) {
+        return (range && range.indexOf('-') !== -1);
+      },
+      // convert old range format to new array type
+      convertRange: function (range) {
+       var temp = range.replace(' ', '').split('-');
+       for (var i = 0; i < range.length; i++) {
+         if (temp[i] === '' && i < temp.length) {
+           temp[i + 1] = '-' + temp[i + 1];
+         }
+       }
+       var newRange = [];
+       for (i = 0; i < temp.length; i++) {
+         if (temp[i] !== '') {
+           newRange.push(parseFloat(temp[i]));
+         }
+       }
+       newRange = newRange.sort(function(a, b){return a-b;});
+       return newRange;
       },
       rangesValid: function (range){
         var valid = true;
