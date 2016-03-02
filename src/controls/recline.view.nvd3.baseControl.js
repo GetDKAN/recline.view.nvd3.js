@@ -6,7 +6,7 @@ this.recline.View = this.recline.View || {};
 'use strict';
 
 my.BaseControl = Backbone.View.extend({
-  template: 'AAAAA<div id="control-chart-container">' +
+  template: '<div id="control-chart-container">' +
               '<div class="recline-nvd3-query-editor"></div>' +
               '<div class="recline-nvd3-filter-editor"></div>' +
               '<fieldset>' +
@@ -74,12 +74,6 @@ my.BaseControl = Backbone.View.extend({
                   '{{/sortFields}}' +
                 '</select>' +
               '</div>' +
-              '<div class="form-group">' +
-                '<div class="row">' +
-                  '<div class="col-md-12 col-sm-12">' +
-                    '<label for="exampleInputPassword1">Margin</label>' +
-                  '</div>' +
-                '</div>' +
 
                 /// Axis ticks
                 '<div class="form-group">' +
