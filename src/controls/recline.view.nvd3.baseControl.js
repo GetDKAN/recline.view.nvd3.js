@@ -9,9 +9,12 @@ my.BaseControl = Backbone.View.extend({
   template: 'AAAAA<div id="control-chart-container">' +
               '<div class="recline-nvd3-query-editor"></div>' +
               '<div class="recline-nvd3-filter-editor"></div>' +
+              '<fieldset>' +
+                '<legend>X Axis</legend>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
-                '<select class="form-control" id="control-chart-x-format">' +                    '<optgroup label="Text">' +
+                '<select class="form-control" id="control-chart-x-format">' +                    
+                    '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
                     '</optgroup>' +
                     '<optgroup label="Numbers">' +
@@ -34,9 +37,11 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="%d">100,000%</option>' +
                       '<option data-type="Number" value="%,.1f">100,000.0%</option>' +
                       '<option data-type="Number" value="%,.2f">100,000.00%</option>' +
-                    '</optgroup>' +'</div>' +
+                    '</optgroup>' +
+                '</select>' +
+              '</div>' +
               '<div class="form-group">' +
-                '<label for="control-chart-label-x-rotation">Label X Rotation</label>' +
+                '<label for="control-chart-label-x-rotation">Label Rotation</label>' +
                 '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
               '</div>' +
               '<div class="form-group">' +
