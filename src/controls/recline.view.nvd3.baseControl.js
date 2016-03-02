@@ -10,7 +10,7 @@ my.BaseControl = Backbone.View.extend({
               '<div class="recline-nvd3-query-editor"></div>' +
               '<div class="recline-nvd3-filter-editor"></div>' +
               '<fieldset>' +
-                '<legend>X Axis</legend>' +
+                '<legend>General</legend>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
                 '<select class="form-control" id="control-chart-x-format">' +                    
@@ -80,9 +80,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-x-values">Tick Values</label>' +
-                      '{{#xValues}}{{xVal}}{{/xValues}}'+
-                      '<input class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValues[0]}}"/>' +
-                      '<input class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValues[1]}}"/>' +
+                      '<input class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
+                      '<input class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-x-values-step">Step</label>' +
@@ -379,7 +378,11 @@ my.BaseControl = Backbone.View.extend({
       sort: self.$('#control-chart-sort').val(),
       showTitle: self.$('#control-chart-show-title').is(':checked'),
       xValues: [self.$('#control-chart-x-values-from').val(), self.$('#control-chart-x-values-to').val()],
+      xValuesFrom: self.$('#control-chart-x-values-from').val(),
+      xValuesTo: self.$('#control-chart-x-values-to').val(),
       yValues: [self.$('#control-chart-y-values-from').val(), self.$('#control-chart-y-values-to').val()],
+      yValuesFrom: self.$('#control-chart-y-values-from').val(),
+      yValuesTo: self.$('#control-chart-y-values-to').val(),
       xValuesStep: parseInt(self.$('#control-chart-x-values-step').val() || 1),
       yValuesStep: parseInt(self.$('#control-chart-y-values-step').val() || 1),
     };
