@@ -6,13 +6,35 @@ this.recline.View = this.recline.View || {};
 'use strict';
 
 my.BaseControl = Backbone.View.extend({
-  template: '<div id="control-chart-container">' +
+  template: 'AAAAA<div id="control-chart-container">' +
               '<div class="recline-nvd3-query-editor"></div>' +
               '<div class="recline-nvd3-filter-editor"></div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
-                '<input value="{{xFormat}}" type="text" id="control-chart-x-format" class="form-control" placeholder="e.g: %Y"/>' +
-              '</div>' +
+                '<select class="form-control" id="control-chart-x-format">' +                    '<optgroup label="Text">' +
+                      '<option data-type="String" value="">Text</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Numbers">' +
+                      '<option data-type="Number" value="d">100,000</option>' +
+                      '<option data-type="Number" value=",.1f">100,000.0</option>' +
+                      '<option data-type="Number" value=",.2f">100,000.00</option>' +
+                      '<option data-type="Number" value="s">100K</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Date">' +
+                      '<option data-type="Date" value="%m/%d/%Y">mm/dd/yyyy</option>' +
+                      '<option data-type="Date" value=""%m-%d-%Y">mm-dd-yyyy</option>' +
+                      '<option data-type="Date" value="%Y">Year</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Currency">' +
+                      '<option data-type="Number" value="$,.2f">$100,000.00</option>' +
+                      '<option data-type="Number" value="$,.1f">$100,000.0</option>' +
+                      '<option data-type="Number" value="$,">$100,000</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Percentage">' +
+                      '<option data-type="Number" value="%d">100,000%</option>' +
+                      '<option data-type="Number" value="%,.1f">100,000.0%</option>' +
+                      '<option data-type="Number" value="%,.2f">100,000.00%</option>' +
+                    '</optgroup>' +'</div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-label-x-rotation">Label X Rotation</label>' +
                 '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
@@ -59,8 +81,9 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-x-values">Tick Values</label>' +
-                      '<input class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
-                      '<input class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
+                      '{{#xValues}}{{xVal}}{{/xValues}}'+
+                      '<input class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValues[0]}}"/>' +
+                      '<input class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValues[1]}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-x-values-step">Step</label>' +
@@ -430,6 +453,7 @@ my.QueryEditor = Backbone.View.extend({
     },
     render: function() {
       var tmplData = this.model.toJSON();
+      console.log("tpl", tmplData);
       var templated = Mustache.render(this.template, tmplData);
       this.$el.html(templated);
     }
