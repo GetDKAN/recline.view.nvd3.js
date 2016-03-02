@@ -10,7 +10,7 @@ my.BaseControl = Backbone.View.extend({
               '<div class="recline-nvd3-query-editor"></div>' +
               '<div class="recline-nvd3-filter-editor"></div>' +
               '<fieldset>' +
-                '<legend>General</legend>' +
+                '<legend>X Axis</legend>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
                 '<select class="form-control" id="control-chart-x-format">' +                    
@@ -41,7 +41,7 @@ my.BaseControl = Backbone.View.extend({
                 '</select>' +
               '</div>' +
               '<div class="form-group">' +
-                '<label for="control-chart-label-x-rotation">Label Rotation</label>' +
+                '<label for="control-chart-label-x-rotation">X Label Rotation</label>' +
                 '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
               '</div>' +
               '<div class="form-group">' +
@@ -57,14 +57,6 @@ my.BaseControl = Backbone.View.extend({
               '<div class="form-group">' +
                   '<label for="control-chart-x-axis-label">X Axis Label</label>' +
                   '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
-              '</div>' +
-              '<div class="form-group">' +
-                  '<label for="control-chart-x-axis-label">Y Axis Label</label>' +
-                  '<input class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
-              '</div>' +
-              '<div class="form-group">' +
-                  '<label for="control-chart-y-axis-label-distance">Y Axis Label Distance</label>' +
-                  '<input class="form-control" type="text" id="control-chart-y-axis-label-distance" value="{{options.yAxis.axisLabelDistance}}"/>' +
               '</div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-sort">Sort</label>' +
@@ -126,17 +118,11 @@ my.BaseControl = Backbone.View.extend({
                   '</select>' +
                 '</div>' +
 
-                /// Rotation
-                '<div class="form-group">' +
-                  '<label for="control-chart-label-y-rotation">Label Rotation</label>' +
-                  '<input value="{{options.yAxis.rotateLabels}}" type="text" id="control-chart-label-y-rotation" class="form-control" placeholder="e.g: -45"/>' +
-                '</div>' +
-
                 /// Axis label
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
-                      '<label for="control-chart-y-axis-label">Axis Label</label>' +
+                      '<label for="control-chart-y-axis-label">Y Axis Label</label>' +
                       '<input class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
@@ -455,7 +441,6 @@ my.QueryEditor = Backbone.View.extend({
     },
     render: function() {
       var tmplData = this.model.toJSON();
-      console.log("tpl", tmplData);
       var templated = Mustache.render(this.template, tmplData);
       this.$el.html(templated);
     }
