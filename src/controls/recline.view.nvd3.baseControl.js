@@ -296,7 +296,7 @@ my.BaseControl = Backbone.View.extend({
     var options = self.state.get('options');
     options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
     self.state.set('options', options, {silent : true});
-
+    console.log('cr1',self.state.toJSON());
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
 
@@ -349,7 +349,7 @@ my.BaseControl = Backbone.View.extend({
   getUIState: function(){
     var self = this;
     var color;
-
+    var rotationVal = parseInt(self.$('#control-chart-label-x-rotation').val());
     var computedState = {
       group: self.$('#control-chart-group').is(':checked'),
       transitionTime: self.$('#control-chart-transition-time').val(),
@@ -380,7 +380,7 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.showControls = self.$('#control-chart-show-controls').is(':checked');
     computedState.options.showLegend = self.$('#control-chart-show-legend').is(':checked');
     computedState.options.reduceXTicks = self.$('#control-chart-reduce-ticks').is(':checked');
-    computedState.options.xAxis.rotateLabels = self.$('#control-chart-label-x-rotation').val();
+    computedState.options.xAxis.rotateLabels = (isNaN(rotationVal)) ? 0 : rotationVal;
     color = _.invoke(self.$('#control-chart-color').val().split(','), 'trim');
     computedState.options.xAxis.axisLabel = self.$('#control-chart-x-axis-label').val();
     computedState.options.yAxis.axisLabel = self.$('#control-chart-y-axis-label').val();
@@ -404,6 +404,13 @@ my.BaseControl = Backbone.View.extend({
       outside: self.$('#control-chart-goal-outside').is(':checked'),
       label: self.$('#control-chart-goal-label').is(':checked'),
     };
+    
+    console.log('>',margin);
+    // replace NaN Vals with 0
+    _.each(_.keys(margin), function (key) {
+      margin[key] = (isNaN(margin[key])) ? 0 : margin[key];
+    });
+    console.log('>>', margin);
     computedState.goal = goal;
     computedState.options.margin = margin;
     return computedState;
