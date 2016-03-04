@@ -63,7 +63,6 @@ var globalchart;
         return layout;
       },
       render: function(){
-        console.log('Render chart');
         var self = this;
         var tmplData;
         var htmls;
@@ -150,24 +149,16 @@ var globalchart;
         var tickValues;
 
         step = step || 1;
-
-        if(range && range.indexOf('-') !== -1) {
-          var temp = range.replace(' ', '').split('-');
-          for (var i = 0; i < range.length; i++) {
-            if (temp[i] === '' && i < temp.length) {
-              temp[i + 1] = '-' + temp[i + 1];
-            }
-          }
-          range = [];
-          for (i = 0; i < temp.length; i++) {
-            if (temp[i] != '') {
-              range.push(parseFloat(temp[i]));
-            }
-          }
-          range = range.sort(function(a, b){return a-b;});
-
+        
+        // check for old formatted range values
+        if (this.isOldRangeType(range)) {
+          range = this.convertRange(range);
+        } 
+        
+        if (range && self.rangesValid(range)) {
+          range[0] = parseInt(range[0]);
+          range[1] = parseInt(range[1]);
           tickValues = d3.range(range[0], range[1], step);
-
           if(!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
             self.chart[axisName + 'Domain']([range[0], range[1]]);
           } else {
@@ -175,6 +166,40 @@ var globalchart;
           }
         }
         axis.tickValues(tickValues);
+      },
+      // check for old range format
+      isOldRangeType: function (range) {
+        return (range && range.indexOf('-') !== -1);
+      },
+      // convert old range format to new array type
+      convertRange: function (range) {
+       var temp = range.replace(' ', '').split('-');
+       for (var i = 0; i < range.length; i++) {
+         if (temp[i] === '' && i < temp.length) {
+           temp[i + 1] = '-' + temp[i + 1];
+         }
+       }
+       var newRange = [];
+       for (i = 0; i < temp.length; i++) {
+         if (temp[i] !== '') {
+           newRange.push(parseFloat(temp[i]));
+         }
+       }
+       newRange = newRange.sort(function(a, b){return a-b;});
+       return newRange;
+      },
+      rangesValid: function (range){
+        var valid = true;
+        if (!range || range.length !== 2) valid = false;
+        _.each(range, function (bound) {
+          if (!bound || isNaN(parseInt(bound))) valid = false;
+        });
+        if (valid) {
+          if (parseInt(range[0]) >= parseInt(range[1])) {
+            valid = false;
+          }
+        }
+        return valid;
       },
       lightUpdate: function(){
         var self = this;

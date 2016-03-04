@@ -1,21 +1,19 @@
 /*jshint multistr:true */
-
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 
 ;(function ($, my) {
 'use strict';
+
 my.BaseControl = Backbone.View.extend({
   template: '<div id="control-chart-container">' +
-
-              //////// X AXIS
+              '<div class="recline-nvd3-query-editor"></div>' +
+              '<div class="recline-nvd3-filter-editor"></div>' +
               '<fieldset>' +
                 '<legend>X Axis</legend>' +
-
-                /// Format
-                '<div class="form-group">' +
-                  '<label for="control-chart-x-format">Format</label>' +
-                  '<select class="form-control" id="control-chart-x-format">' +
+              '<div class="form-group">' +
+                '<label for="control-chart-x-format">X-Format</label>' +
+                '<select class="form-control" id="control-chart-x-format">' +                    
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
                     '</optgroup>' +
@@ -40,31 +38,42 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="%,.1f">100,000.0%</option>' +
                       '<option data-type="Number" value="%,.2f">100,000.00%</option>' +
                     '</optgroup>' +
-                  '</select>' +
-                '</div>' +
-
-                /// Rotation
-                '<div class="form-group">' +
-                  '<label for="control-chart-label-x-rotation">Label Rotation</label>' +
-                  '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
-                '</div>' +
-
-                /// Axis label
-                '<div class="form-group">' +
-                  '<div class="row">' +
-                    '<div class="col-md-12 col-sm-12">' +
-                      '<label for="control-chart-x-axis-label">Axis Label</label>' +
-                      '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
-                    '</div>' +
-                  '</div>' +
-                '</div>' +
+                '</select>' +
+              '</div>' +
+              '<div class="form-group">' +
+                '<label for="control-chart-label-x-rotation">X Label Rotation</label>' +
+                '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
+                '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                  
+                  '<label for="control-chart-color-picker">Color</label>' +
+                  '<input type="text" class="form-control" id="control-chart-color-picker"/>' +
+                  '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                  '<label for="control-chart-x-axis-label">X Axis Label</label>' +
+                  '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
+              '</div>' +
+              '<div class="form-group">' +
+                '<label for="control-chart-sort">Sort</label>' +
+                '<select id="control-chart-sort" class="form-control chosen-select">' +
+                  '{{#sortFields}}' +
+                    '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
+                  '{{/sortFields}}' +
+                '</select>' +
+              '</div>' +
 
                 /// Axis ticks
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-x-values">Tick Values</label>' +
-                      '<input class="form-control" type="text" placeholder="e.g. 2006-2015" id="control-chart-x-values" value="{{xValues}}"/>' +
+                      '<input class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
+                      '<input class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-x-values-step">Step</label>' +
@@ -109,17 +118,11 @@ my.BaseControl = Backbone.View.extend({
                   '</select>' +
                 '</div>' +
 
-                /// Rotation
-                '<div class="form-group">' +
-                  '<label for="control-chart-label-y-rotation">Label Rotation</label>' +
-                  '<input value="{{options.yAxis.rotateLabels}}" type="text" id="control-chart-label-y-rotation" class="form-control" placeholder="e.g: -45"/>' +
-                '</div>' +
-
                 /// Axis label
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
-                      '<label for="control-chart-y-axis-label">Axis Label</label>' +
+                      '<label for="control-chart-y-axis-label">Y Axis Label</label>' +
                       '<input class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
@@ -134,7 +137,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y-values">Tick Values</label>' +
-                      '<input class="form-control" placeholder="e.g. 0-50" type="text" id="control-chart-y-values" value="{{yValues}}"/>' +
+                      '<input class="form-control" placeholder="From.." type="text" id="control-chart-y-values-from" value="{{yValuesFrom}}"/>' +
+                      '<input class="form-control" placeholder="To.." type="text" id="control-chart-y-values-to" value="{{yValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y-values-step">Step</label>' +
@@ -270,6 +274,8 @@ my.BaseControl = Backbone.View.extend({
     var self = this;
     self.state = options.state;
     self.model = options.model;
+    self.renderQueryEditor = options.renderQueryEditor;
+    self.renderFilterEditor = options.renderFilterEditor;
     self.parent = options.parent;
   },
   events: {
@@ -289,7 +295,7 @@ my.BaseControl = Backbone.View.extend({
 
     var options = self.state.get('options');
     options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
-    self.state.set('options', options);
+    self.state.set('options', options, {silent : true});
     self.$el.html(Mustache.render(self.template, self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
 
@@ -299,23 +305,50 @@ my.BaseControl = Backbone.View.extend({
     if(self.state.get('yFormat') && self.state.get('yFormat').format) {
       self.$('#control-chart-y-format option[value="' + self.state.get('yFormat').format + '"]').attr('selected', 'selected');
     }
+    $('#control-chart-color').on('blur', function (e) {
+      self.update(e);
+    });
+    $('#control-chart-color-picker').spectrum({
+      change : function (color) {
+        $('#control-chart-color').val(function (i, val) {
+          var newVal;
+          if (val) { newVal = val + ', ' + color.toHexString(); }
+          else { newVal = color.toHexString(); }
+          return newVal;
+        });
+        $('input#control-chart-color').trigger('blur');
+      }
+    });
+    if (self.renderQueryEditor) {
+      this.queryEditor = new my.QueryEditor({
+        el : '.recline-nvd3-query-editor',
+        model: this.model.queryState,
+        state: this.state
+      });
+      this.queryEditor.render();
+    }
+    if (self.renderFilterEditor) {
+      this.filterEditor = new my.FilterEditor({
+        el : '.recline-nvd3-filter-editor',
+        model: this.model,
+        state: this.state
+      });
+    }
   },
   update: function(e){
     var self = this;
-    if(self.$(e.target).closest('.chosen-container').length) return;
     var newState = {};
-    if(e.type === 'keydown' && e.keyCode !== 13) return;
-    newState = _.merge({}, self.state.toJSON(), self.getUIState(), function(a, b) {
-      if (_.isArray(a)) {
-        return b;
-      }
-    });
+    if (e) {
+      if(self.$(e.target).closest('.chosen-container').length) return;
+      if(e.type === 'keydown' && e.keyCode !== 13) return;
+    }
+    newState = _.merge({}, self.state.toJSON(), self.getUIState());
     self.state.set(newState);
   },
   getUIState: function(){
     var self = this;
     var color;
-
+    var rotationVal = parseInt(self.$('#control-chart-label-x-rotation').val());
     var computedState = {
       group: self.$('#control-chart-group').is(':checked'),
       transitionTime: self.$('#control-chart-transition-time').val(),
@@ -329,11 +362,16 @@ my.BaseControl = Backbone.View.extend({
       },
       sort: self.$('#control-chart-sort').val(),
       showTitle: self.$('#control-chart-show-title').is(':checked'),
-      xValues: self.$('#control-chart-x-values').val(),
-      yValues: self.$('#control-chart-y-values').val(),
+      xValues: [self.$('#control-chart-x-values-from').val(), self.$('#control-chart-x-values-to').val()],
+      xValuesFrom: self.$('#control-chart-x-values-from').val(),
+      xValuesTo: self.$('#control-chart-x-values-to').val(),
+      yValues: [self.$('#control-chart-y-values-from').val(), self.$('#control-chart-y-values-to').val()],
+      yValuesFrom: self.$('#control-chart-y-values-from').val(),
+      yValuesTo: self.$('#control-chart-y-values-to').val(),
       xValuesStep: parseInt(self.$('#control-chart-x-values-step').val() || 1),
       yValuesStep: parseInt(self.$('#control-chart-y-values-step').val() || 1),
     };
+
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
     computedState.options.yAxis = computedState.options.yAxis || {};
@@ -341,7 +379,7 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.showControls = self.$('#control-chart-show-controls').is(':checked');
     computedState.options.showLegend = self.$('#control-chart-show-legend').is(':checked');
     computedState.options.reduceXTicks = self.$('#control-chart-reduce-ticks').is(':checked');
-    computedState.options.xAxis.rotateLabels = self.$('#control-chart-label-x-rotation').val();
+    computedState.options.xAxis.rotateLabels = (isNaN(rotationVal)) ? 0 : rotationVal;
     color = _.invoke(self.$('#control-chart-color').val().split(','), 'trim');
     computedState.options.xAxis.axisLabel = self.$('#control-chart-x-axis-label').val();
     computedState.options.yAxis.axisLabel = self.$('#control-chart-y-axis-label').val();
@@ -365,10 +403,219 @@ my.BaseControl = Backbone.View.extend({
       outside: self.$('#control-chart-goal-outside').is(':checked'),
       label: self.$('#control-chart-goal-label').is(':checked'),
     };
+    
+    // replace NaN Vals with 0
+    _.each(_.keys(margin), function (key) {
+      margin[key] = (isNaN(margin[key])) ? 0 : margin[key];
+    });
     computedState.goal = goal;
     computedState.options.margin = margin;
     return computedState;
   }
 });
+
+my.QueryEditor = Backbone.View.extend({
+    template: ' \
+      <form action="" method="GET" class="form-inline" role="form"> \
+        <div class="form-group"> \
+          <div class="input-group text-query"> \
+            <div class="input-group-btn"> \
+              <button type="button" class="btn btn-default">Go &raquo;</button> \
+            </div> \
+            <input class="form-control search-query" type="text" name="q" value="{{q}}" placeholder="Search data ..."> \
+          </div> \
+        </div> \
+      </form> \
+    ',
+
+    events: {
+      'click button': 'onFormSubmit',
+      'change input': 'onFormSubmit'
+    },
+
+    initialize: function() {
+      _.bindAll(this, 'render');
+      this.listenTo(this.model, 'change', this.render);
+      this.render();
+    },
+    onFormSubmit: function(e) {
+      e.preventDefault();
+      var query = this.$el.find('.search-query').val();
+      this.model.set({q: query});
+    },
+    render: function() {
+      var tmplData = this.model.toJSON();
+      var templated = Mustache.render(this.template, tmplData);
+      this.$el.html(templated);
+    }
+  });
+
+  my.FilterEditor = Backbone.View.extend({
+    template: ' \
+      <div class="filters"> \
+        <div class="form-stacked js-add"> \
+          <div class="form-group"> \
+            <label>Field</label> \
+            <select class="fields form-control"> \
+              {{#fields}} \
+              <option value="{{id}}">{{label}}</option> \
+              {{/fields}} \
+            </select> \
+          </div> \
+          <div class="form-group"> \
+            <label>Filter type</label> \
+            <select class="filterType form-control"> \
+              <option value="term">Value</option> \
+              <option value="range">Range</option> \
+              <option value="geo_distance">Geo distance</option> \
+            </select> \
+          </div> \
+          <button id="add-filter-btn" type="button" class="btn btn-default">Add</button> \
+        </div> \
+        <div class="form-stacked js-edit"> \
+          {{#filters}} \
+            {{{filterRender}}} \
+          {{/filters}} \
+          {{#filters.length}} \
+          <button type="button" class="btn btn-default">Update</button> \
+          {{/filters.length}} \
+        </div> \
+      </div> \
+    ',
+    filterTemplates: {
+      term: ' \
+        <div class="filter-{{type}} filter"> \
+          <div class="form-group"> \
+            <label> \
+              {{field}} <small>{{type}}</small> \
+              <a class="js-remove-filter" href="#" title="Remove this filter" data-filter-id="{{id}}">&times;</a> \
+            </label> \
+            <input class="form-control" type="text" value="{{term}}" name="term" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+          </div> \
+        </div> \
+      ',
+      range: ' \
+        <div class="filter-{{type}} filter"> \
+          <fieldset> \
+            <div class="form-group"> \
+              <label> \
+                {{field}} <small>{{type}}</small> \
+                <a class="js-remove-filter" href="#" title="Remove this filter" data-filter-id="{{id}}">&times;</a> \
+              </label> \
+            </div> \
+            <div class="form-group"> \
+              <label for="">From</label> \
+              <input class="form-control" type="text" value="{{from}}" name="from" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+            <div class="form-group"> \
+              <label for="">To</label> \
+              <input class="form-control" type="text" value="{{to}}" name="to" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+          </fieldset> \
+        </div> \
+      ',
+      geo_distance: ' \
+        <div class="filter-{{type}} filter"> \
+          <fieldset> \
+            <legend> \
+              {{field}} <small>{{type}}</small> \
+              <a class="js-remove-filter" href="#" title="Remove this filter" data-filter-id="{{id}}">&times;</a> \
+            </legend> \
+            <div class="form-group"> \
+              <label class="control-label" for="">Longitude</label> \
+              <input class="input-sm" type="text" value="{{point.lon}}" name="lon" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+            <div class="form-group"> \
+              <label class="control-label" for="">Latitude</label> \
+              <input class="input-sm" type="text" value="{{point.lat}}" name="lat" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+            <div class="form-group"> \
+              <label class="control-label" for="">Distance (km)</label> \
+              <input class="input-sm" type="text" value="{{distance}}" name="distance" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            </div> \
+          </fieldset> \
+        </div> \
+      '
+    },
+    events: {
+      'click .js-remove-filter': 'onRemoveFilter',
+      'click .js-add-filter': 'onAddFilterShow',
+      'click .js-edit button': 'onTermFiltersUpdate',
+      'click #add-filter-btn': 'onAddFilter'
+    },
+    initialize: function() {
+      _.bindAll(this, 'render');
+      this.listenTo(this.model.fields, 'all', this.render);
+      this.listenTo(this.model.queryState, 'change change:filters:new-blank', this.render);
+      this.render();
+    },
+    render: function() {
+      var self = this;
+      var tmplData = $.extend(true, {}, this.model.queryState.toJSON());
+      // we will use idx in list as there id ...
+      tmplData.filters = _.map(tmplData.filters, function(filter, idx) {
+        filter.id = idx;
+        return filter;
+      });
+      tmplData.fields = this.model.fields.toJSON();
+      tmplData.filterRender = function() {
+        return Mustache.render(self.filterTemplates[this.type], this);
+      };
+      var out = Mustache.render(this.template, tmplData);
+      this.$el.html(out);
+    },
+    onAddFilterShow: function(e) {
+      e.preventDefault();
+      var $target = $(e.target);
+      $target.hide();
+      this.$el.find('.js-add').show();
+    },
+    onAddFilter: function(e) {
+      e.preventDefault();
+      var $target = $(e.target).closest('.form-stacked');
+      $target.hide();
+      var filterType = $target.find('select.filterType').val();
+      var field      = $target.find('select.fields').val();
+      this.model.queryState.addFilter({type: filterType, field: field});
+    },
+    onRemoveFilter: function(e) {
+      e.preventDefault();
+      var $target = $(e.target);
+      var filterId = $target.attr('data-filter-id');
+      this.model.queryState.removeFilter(filterId);
+    },
+    onTermFiltersUpdate: function(e) {
+     var self = this;
+      e.preventDefault();
+      var filters = self.model.queryState.get('filters');
+      var $form = $(e.target).closest('.form-stacked');
+      _.each($form.find('input'), function(input) {
+        var $input = $(input);
+        var filterType  = $input.attr('data-filter-type');
+        var filterIndex = parseInt($input.attr('data-filter-id'), 10);
+        var name        = $input.attr('name');
+        var value       = $input.val();
+
+        switch (filterType) {
+          case 'term':
+            filters[filterIndex].term = value;
+            break;
+          case 'range':
+            filters[filterIndex][name] = value;
+            break;
+          case 'geo_distance':
+            if(name === 'distance') {
+              filters[filterIndex].distance = parseFloat(value);
+            }
+            else {
+              filters[filterIndex].point[name] = parseFloat(value);
+            }
+            break;
+        }
+      });
+      self.model.queryState.set({filters: filters, from: 0});
+      self.model.queryState.trigger('change');
+    }
+  });
 
 })(jQuery, recline.View.nvd3);

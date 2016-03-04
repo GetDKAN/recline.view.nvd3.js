@@ -22,7 +22,7 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> v0.1 */\n'
+        banner: '/*! <%= pkg.name %> v0.3.0 */\n'
       },
       core: {
         src: ['src/*.js'],
@@ -82,8 +82,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', [
     'jshint',
-    'concat',
-    'uglify'
+    'concat'
   ]);
 
   grunt.registerTask('lint', ['jshint']);
