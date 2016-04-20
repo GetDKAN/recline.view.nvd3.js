@@ -4,6 +4,7 @@ this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 var globalchart;
+console.log('D');
 ;(function ($, my) {
   'use strict';
 
