@@ -4,7 +4,6 @@ this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 var globalchart;
-console.log('D');
 ;(function ($, my) {
   'use strict';
 
@@ -92,10 +91,9 @@ console.log('D');
 
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
-
+          console.log(0, self);
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
-
           if(self.chart.xAxis){
             self.calcTickValues(
               'x',
@@ -105,6 +103,7 @@ console.log('D');
             );
           }
           if(self.chart.yAxis){
+            console.log('hasY')
             self.calcTickValues(
               'y',
               self.chart.yAxis,
@@ -113,10 +112,30 @@ console.log('D');
             );
           }
 
+          if(self.chart.y1Axis){
+            console.log('hasy1');
+            self.calcTickValues(
+              'y1',
+              self.chart.y1Axis,
+              self.state.get('y1Values'),
+              self.state.get('y1ValuesStep')
+            );
+          }
+
+          if(self.chart.y2Axis){
+            console.log('hasy21111', self.state.get('yValues'), self.state.get('y2Values'));
+            self.calcTickValues(
+              'y2',
+              self.chart.y2Axis,
+              self.state.get('y2Values'),
+              self.state.get('y2ValuesStep')
+            );
+          }
+          
           // Format axis
           xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
           yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
-
+          console.log('state', self.state.get(), self.state);          
           self.xFormatter = self.getFormatter(xFormat.type, xFormat.format, 'x');
           self.yFormatter = self.getFormatter(yFormat.type, yFormat.format, 'y');
 
@@ -127,7 +146,6 @@ console.log('D');
           if(self.xFormatter && self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
 
-
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
@@ -137,6 +155,12 @@ console.log('D');
           // Hack to reduce ticks even if the chart has not that option.
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
+          }
+          if(self.graphType === 'linePlusBarChart') {
+            console.log('is lpb', self);
+            self.chart.y1Axis.tickFormat(d3.format(',f'));
+            self.chart.y2Axis.tickFormat(d3.format(',f'));
+            self.chart.bars.forceY([0]);
           }
 
           nv.utils.windowResize(self.updateChart.bind(self));
@@ -334,6 +358,7 @@ console.log('D');
               };
             }
           });
+          console.log("DATA", data)
           return data;
         });
         return series;
