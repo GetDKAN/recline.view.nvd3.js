@@ -83,6 +83,7 @@
     });
     multiBarHorizontalChart.render();
 
+
     /**
      * Pie Chart
      */
@@ -92,6 +93,7 @@
         el: $('#pieChart'),
     });
     pieChart.render();
+
 
     /**
      * Stacked Area Chart
@@ -103,6 +105,7 @@
     });
     stackedAreaChart.render();
 
+
     /**
      * Cumulative Line Chart
      */
@@ -112,6 +115,7 @@
         el: $('#cumulativeLineChart'),
     });
     cumulativeLineChart.render();
+
 
     /**
      * Scatter Chart
@@ -123,6 +127,7 @@
     });
     scatterChart.render();
 
+
     /**
      * Line With Focus Chart
      */
@@ -132,6 +137,16 @@
         el: $('#lineWithFocusChart'),
     });
     lineWithFocusChart.render();
-  });
 
+    /**
+     * Line Plus Bar Chart
+     **/
+     var linePlusBarChart = new recline.View.nvd3.linePlusBarChart({
+        model: datasetWithValues,
+        state: twoDimensionWithValues,
+        el: $('#linePlusBarChart')
+     });
+  });
+  
+   linePlusBarChart.render();
 })(window);
