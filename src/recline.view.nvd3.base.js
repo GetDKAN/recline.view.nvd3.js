@@ -145,7 +145,15 @@ var globalchart;
             self.chart.yAxis.tickFormat(self.yFormatter);
           if(self.xFormatter && self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
-
+          
+          self.series[0]['z'] = true;
+          
+          if (self.graphType === 'linePlusBarChart') {
+            // @@TODO get barchart seriesField from UI
+            self.series[0].bar = true;
+          }
+					
+          console.log('Feed the chart', self.graphType, self);
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()

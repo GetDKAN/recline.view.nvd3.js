@@ -4,6 +4,7 @@ this.recline.View = this.recline.View || {};
 
 ;(function ($, my) {
 'use strict';
+global.ChartOptionsView.template = 'FOO';
 
 my.BaseControl = Backbone.View.extend({
   template: '<div id="control-chart-container">' +
