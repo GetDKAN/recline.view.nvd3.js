@@ -31,7 +31,6 @@ this.recline.View = this.recline.View || {};
       chart.y2Axis
           .tickFormat(function (d) {return 'y2';});//d3.format(',f'));
 			chart.options({focusEnable: false});
-      console.log("BB", chart.bars);
       chart.bars.forceY([0]);
       chart.lines.forceY([0]);
     }

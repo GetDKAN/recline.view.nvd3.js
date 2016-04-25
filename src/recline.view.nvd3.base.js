@@ -91,7 +91,6 @@ var globalchart;
 
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
-          console.log(0, self);
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
           if(self.chart.xAxis){
@@ -103,7 +102,6 @@ var globalchart;
             );
           }
           if(self.chart.yAxis){
-            console.log('hasY')
             self.calcTickValues(
               'y',
               self.chart.yAxis,
@@ -113,7 +111,6 @@ var globalchart;
           }
 
           if(self.chart.y1Axis){
-            console.log('hasy1');
             self.calcTickValues(
               'y1',
               self.chart.y1Axis,
@@ -123,7 +120,6 @@ var globalchart;
           }
 
           if(self.chart.y2Axis){
-            console.log('hasy21111', self.state.get('yValues'), self.state.get('y2Values'));
             self.calcTickValues(
               'y2',
               self.chart.y2Axis,
@@ -135,7 +131,6 @@ var globalchart;
           // Format axis
           xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
           yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
-          console.log('state', self.state.get(), self.state);          
           self.xFormatter = self.getFormatter(xFormat.type, xFormat.format, 'x');
           self.yFormatter = self.getFormatter(yFormat.type, yFormat.format, 'y');
 
@@ -153,7 +148,6 @@ var globalchart;
             self.series[0].bar = true;
           }
 					
-          console.log('Feed the chart', self.graphType, self);
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
@@ -165,7 +159,6 @@ var globalchart;
             self.reduceXTicks();
           }
           if(self.graphType === 'linePlusBarChart') {
-            console.log('is lpb', self);
             self.chart.y1Axis.tickFormat(d3.format(',f'));
             self.chart.y2Axis.tickFormat(d3.format(',f'));
             self.chart.bars.forceY([0]);
@@ -366,7 +359,6 @@ var globalchart;
               };
             }
           });
-          console.log("DATA", data)
           return data;
         });
         return series;
