@@ -149,8 +149,136 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
               '</fieldset>',
-  templateY1Format: 'YYY111',
-  templateY2Format: 'YYY222',
+  templateY1Format:
+              //////// Y1 AXIS
+              '<fieldset>' +
+                '<legend>Y-1 Axis</legend>' +
+
+                /// Format
+                '<div class="form-group">' +
+                  '<label for="control-chart-y1-format">Format</label>' +
+                  '<select class="form-control" id="control-chart-y1-format">' +
+                    '<optgroup label="Text">' +
+                      '<option data-type="String" value="">Text</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Numbers">' +
+                      '<option data-type="Number" value="d">100,000</option>' +
+                      '<option data-type="Number" value=",.1f">100,000.0</option>' +
+                      '<option data-type="Number" value=",.2f">100,000.00</option>' +
+                      '<option data-type="Number" value="s">100K</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Date">' +
+                      '<option data-type="Date" value="%m/%d/%Y">mm/dd/yyyy</option>' +
+                      '<option data-type="Date" value=""%m-%d-%Y">mm-dd-yyyy</option>' +
+                      '<option data-type="Date" value="%Y">Year</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Currency">' +
+                      '<option data-type="Number" value="$,.2f">$100,000.00</option>' +
+                      '<option data-type="Number" value="$,.1f">$100,000.0</option>' +
+                      '<option data-type="Number" value="$,">$100,000</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Percentage">' +
+                      '<option data-type="Percentage" value="d">100,000%</option>' +
+                      '<option data-type="Percentage" value=",.1f">100,000.0%</option>' +
+                      '<option data-type="Percentage" value=",.2f">100,000.00%</option>' +
+                    '</optgroup>' +
+                  '</select>' +
+                '</div>' +
+
+                /// Axis label
+                '<div class="form-group">' +
+                  '<div class="row">' +
+                    '<div class="col-md-9 col-sm-9">' +
+                      '<label for="control-chart-y1-axis-label">Y Axis Label</label>' +
+                      '<input class="form-control" type="text" id="control-chart-y1-axis-label" value="{{options.y1Axis.axisLabel}}"/>' +
+                    '</div>' +
+                    '<div class="col-md-3 col-sm-3">' +
+                      '<label for="control-chart-y-axis-label-distance">Distance</label>' +
+                      '<input class="form-control" type="number" id="control-chart-y-axis-label-distance" value="{{options.y1Axis.axisLabelDistance}}"/>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+
+                /// Axis ticks
+                '<div class="form-group">' +
+                  '<div class="row">' +
+                    '<div class="col-md-9 col-sm-9">' +
+                      '<label for="control-chart-y1-values">Tick Values</label>' +
+                      '<input class="form-control" placeholder="From.." type="text" id="control-chart-y1-values-from" value="{{y1ValuesFrom}}"/>' +
+                      '<input class="form-control" placeholder="To.." type="text" id="control-chart-y1-values-to" value="{{y1ValuesTo}}"/>' +
+                    '</div>' +
+                    '<div class="col-md-3 col-sm-3">' +
+                      '<label for="control-chart-y1-values-step">Step</label>' +
+                      '<input class="form-control" type="number" id="control-chart-y1-values-step" value="{{y1ValuesStep}}"/>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</fieldset>',
+  templateY2Format: 
+              //////// Y2 AXIS
+              '<fieldset>' +
+                '<legend>Y-2 Axis</legend>' +
+
+                /// Format
+                '<div class="form-group">' +
+                  '<label for="control-chart-y2-format">Format</label>' +
+                  '<select class="form-control" id="control-chart-y2-format">' +
+                    '<optgroup label="Text">' +
+                      '<option data-type="String" value="">Text</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Numbers">' +
+                      '<option data-type="Number" value="d">100,000</option>' +
+                      '<option data-type="Number" value=",.1f">100,000.0</option>' +
+                      '<option data-type="Number" value=",.2f">100,000.00</option>' +
+                      '<option data-type="Number" value="s">100K</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Date">' +
+                      '<option data-type="Date" value="%m/%d/%Y">mm/dd/yyyy</option>' +
+                      '<option data-type="Date" value=""%m-%d-%Y">mm-dd-yyyy</option>' +
+                      '<option data-type="Date" value="%Y">Year</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Currency">' +
+                      '<option data-type="Number" value="$,.2f">$100,000.00</option>' +
+                      '<option data-type="Number" value="$,.1f">$100,000.0</option>' +
+                      '<option data-type="Number" value="$,">$100,000</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Percentage">' +
+                      '<option data-type="Percentage" value="d">100,000%</option>' +
+                      '<option data-type="Percentage" value=",.1f">100,000.0%</option>' +
+                      '<option data-type="Percentage" value=",.2f">100,000.00%</option>' +
+                    '</optgroup>' +
+                  '</select>' +
+                '</div>' +
+
+                /// Axis label
+                '<div class="form-group">' +
+                  '<div class="row">' +
+                    '<div class="col-md-9 col-sm-9">' +
+                      '<label for="control-chart-y2-axis-label">Y Axis Label</label>' +
+                      '<input class="form-control" type="text" id="control-chart-y2-axis-label" value="{{options.y2Axis.axisLabel}}"/>' +
+                    '</div>' +
+                    '<div class="col-md-3 col-sm-3">' +
+                      '<label for="control-chart-y-axis-label-distance">Distance</label>' +
+                      '<input class="form-control" type="number" id="control-chart-y-axis-label-distance" value="{{options.y2Axis.axisLabelDistance}}"/>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+
+                /// Axis ticks
+                '<div class="form-group">' +
+                  '<div class="row">' +
+                    '<div class="col-md-9 col-sm-9">' +
+                      '<label for="control-chart-y2-values">Tick Values</label>' +
+                      '<input class="form-control" placeholder="From.." type="text" id="control-chart-y2-values-from" value="{{y2ValuesFrom}}"/>' +
+                      '<input class="form-control" placeholder="To.." type="text" id="control-chart-y2-values-to" value="{{y2ValuesTo}}"/>' +
+                    '</div>' +
+                    '<div class="col-md-3 col-sm-3">' +
+                      '<label for="control-chart-y2-values-step">Step</label>' +
+                      '<input class="form-control" type="number" id="control-chart-y2-values-step" value="{{y2ValuesStep}}"/>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</fieldset>',
   templateGeneral: 
               //////// GENERAL
               '<fieldset>' +
