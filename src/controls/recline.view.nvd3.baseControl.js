@@ -193,8 +193,8 @@ my.BaseControl = Backbone.View.extend({
                       '<input class="form-control" type="text" id="control-chart-y1-axis-label" value="{{options.y1Axis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<label for="control-chart-y-axis-label-distance">Distance</label>' +
-                      '<input class="form-control" type="number" id="control-chart-y-axis-label-distance" value="{{options.y1Axis.axisLabelDistance}}"/>' +
+                      '<label for="control-chart-y1-axis-label-distance">Distance</label>' +
+                      '<input class="form-control" type="number" id="control-chart-y1-axis-label-distance" value="{{options.y1Axis.axisLabelDistance}}"/>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -258,8 +258,8 @@ my.BaseControl = Backbone.View.extend({
                       '<input class="form-control" type="text" id="control-chart-y2-axis-label" value="{{options.y2Axis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<label for="control-chart-y-axis-label-distance">Distance</label>' +
-                      '<input class="form-control" type="number" id="control-chart-y-axis-label-distance" value="{{options.y2Axis.axisLabelDistance}}"/>' +
+                      '<label for="control-chart-y2-axis-label-distance">Distance</label>' +
+                      '<input class="form-control" type="number" id="control-chart-y2-axis-label-distance" value="{{options.y2Axis.axisLabelDistance}}"/>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -446,7 +446,7 @@ my.BaseControl = Backbone.View.extend({
     var options = self.state.get('options');
     options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
     self.state.set('options', options, {silent : true});
-    self.$el.html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
+    if (this.el.id === "base-controls") self.$el.html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
     self.$('.chosen-select').chosen({width: '95%'});
 
     if(self.state.get('xFormat') && self.state.get('xFormat').format) {
@@ -510,21 +510,39 @@ my.BaseControl = Backbone.View.extend({
         type: self.$('#control-chart-y-format option:selected').data('type'),
         format: self.$('#control-chart-y-format option:selected').val()
       },
+      y1Format:{
+        type: self.$('#control-chart-y1-format option:selected').data('type'),
+        format: self.$('#control-chart-y1-format option:selected').val()
+      },
+      y2Format:{
+        type: self.$('#control-chart-y2-format option:selected').data('type'),
+        format: self.$('#control-chart-y2-format option:selected').val()
+      },
       sort: self.$('#control-chart-sort').val(),
       showTitle: self.$('#control-chart-show-title').is(':checked'),
       xValues: [self.$('#control-chart-x-values-from').val(), self.$('#control-chart-x-values-to').val()],
       xValuesFrom: self.$('#control-chart-x-values-from').val(),
       xValuesTo: self.$('#control-chart-x-values-to').val(),
+      xValuesStep: parseInt(self.$('#control-chart-x-values-step').val() || 1),
       yValues: [self.$('#control-chart-y-values-from').val(), self.$('#control-chart-y-values-to').val()],
       yValuesFrom: self.$('#control-chart-y-values-from').val(),
       yValuesTo: self.$('#control-chart-y-values-to').val(),
-      xValuesStep: parseInt(self.$('#control-chart-x-values-step').val() || 1),
       yValuesStep: parseInt(self.$('#control-chart-y-values-step').val() || 1),
+      y1Values: [self.$('#control-chart-y1-values-from').val(), self.$('#control-chart-y1-values-to').val()],
+      y1ValuesFrom: self.$('#control-chart-y1-values-from').val(),
+      y1ValuesTo: self.$('#control-chart-y1-values-to').val(),
+      y1ValuesStep: parseInt(self.$('#control-chart-y1-values-step').val() || 1),
+      y2Values: [self.$('#control-chart-y2-values-from').val(), self.$('#control-chart-y2-values-to').val()],
+      y2ValuesFrom: self.$('#control-chart-y2-values-from').val(),
+      y2ValuesTo: self.$('#control-chart-y2-values-to').val(),
+      y2ValuesStep: parseInt(self.$('#control-chart-y2-values-step').val() || 1),
     };
 
     computedState.options = computedState.options || {};
     computedState.options.xAxis = computedState.options.xAxis || {};
     computedState.options.yAxis = computedState.options.yAxis || {};
+    computedState.options.y1Axis = computedState.options.y1Axis || {};
+    computedState.options.y2Axis = computedState.options.y2Axis || {};
     computedState.options.tooltips = self.$('#control-chart-show-tooltips').is(':checked');
     computedState.options.showControls = self.$('#control-chart-show-controls').is(':checked');
     computedState.options.showLegend = self.$('#control-chart-show-legend').is(':checked');
@@ -534,6 +552,10 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.xAxis.axisLabel = self.$('#control-chart-x-axis-label').val();
     computedState.options.yAxis.axisLabel = self.$('#control-chart-y-axis-label').val();
     computedState.options.yAxis.axisLabelDistance = parseInt(self.$('#control-chart-y-axis-label-distance').val()) || 0;
+    computedState.options.y1Axis.axisLabel = self.$('#control-chart-y1-axis-label').val();
+    computedState.options.y1Axis.axisLabelDistance = parseInt(self.$('#control-chart-y1-axis-label-distance').val()) || 0;
+    computedState.options.y2Axis.axisLabel = self.$('#control-chart-y2-axis-label').val();
+    computedState.options.y2Axis.axisLabelDistance = parseInt(self.$('#control-chart-y2-axis-label-distance').val()) || 0;
     if(self.$('#control-chart-color').val()){
       computedState.options.color = color;
     } else {

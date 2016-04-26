@@ -26,13 +26,12 @@ this.recline.View = this.recline.View || {};
         .y(function(d,i) {
           return d.y; 
         });
-      chart.y1Axis
+/*      chart.y1Axis
           .tickFormat(function (d) {return 'y1'})//d3.format(',f')(d)});
       chart.y2Axis
           .tickFormat(function (d) {return 'y2';});//d3.format(',f'));
-			chart.options({focusEnable: false});
-      chart.bars.forceY([0]);
-      chart.lines.forceY([0]);
+*/
+      chart.options({focusEnable: false});
     }
   });
 

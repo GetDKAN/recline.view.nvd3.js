@@ -140,8 +140,10 @@ var globalchart;
             self.chart.yAxis.tickFormat(self.yFormatter);
           if(self.xFormatter && self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
-          
-          self.series[0]['z'] = true;
+          if(self.y1Formatter && self.chart.y1Axis && self.chart.y1Axis.tickFormat)
+            self.chart.y1Axis.tickFormat(self.y1Formatter);
+          if(self.y2Formatter && self.chart.y2Axis && self.chart.y2Axis.tickFormat)
+            self.chart.y2Axis.tickFormat(self.y2Formatter);
           
           if (self.graphType === 'linePlusBarChart') {
             // @@TODO get barchart seriesField from UI
@@ -171,9 +173,9 @@ var globalchart;
       },
       calcTickValues: function(axisName, axis, range, step){
         var self = this;
-        var ordinalScaled = ['multiBarChart', 'discreteBarChart'];
+        var ordinalScaled = ['multiBarChart', 'discreteBarChart', 'linePlusBarChart'];
         var tickValues;
-
+        
         step = step || 1;
         
         // check for old formatted range values
