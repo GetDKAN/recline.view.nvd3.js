@@ -139,7 +139,6 @@ var globalchart;
           self.y1Formatter = self.getFormatter(y1Format.type, y1Format.format, 'y1');
           self.y2Formatter = self.getFormatter(y2Format.type, y2Format.format, 'y2');
 
-          console.log('uuh format soon', self);
 
           if(self.xFormatter && self.chart.xAxis && self.chart.xAxis.tickFormat)
             self.chart.xAxis.tickFormat(self.xFormatter);
@@ -148,11 +147,9 @@ var globalchart;
           if(self.xFormatter && self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
           if(self.y1Formatter && self.chart.bars) {
-            console.log('f1', self.y1Formatter, y1Format); 
             self.chart.y1Axis.tickFormat(self.y1Formatter); 
           }
           if(self.y2Formatter && self.chart.lines) {
-            console.log('f2', self.y2Formatter, y2Format);
             self.chart.y2Axis.tickFormat(self.y2Formatter);
           }
 
@@ -201,10 +198,8 @@ var globalchart;
           tickValues = d3.range(range[0], range[1], step);
 
           if (self.graphType === 'linePlusBarChart' && axisName === 'y1') {
-            console.log('calcT', 0, arguments, range);
             self.chart.bars.yDomain([range[0], range[1]], step);
           } else if (self.graphType === 'linePlusBarChart' && axisName === 'y2') {
-            console.log('calcT', 1, arguments, range);
             self.chart.lines.yDomain([range[0], range[1]], step);
           } else if (!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
             self.chart[axisName + 'Domain']([range[0], range[1]]);
