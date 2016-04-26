@@ -129,7 +129,6 @@ var globalchart;
           }
           
           // Format axis
-          // @@TODO - most of this formatter code could be factored out
           xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
           yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
           y1Format = self.state.get('y1Format') || {type: 'String', format: ''};
@@ -167,11 +166,6 @@ var globalchart;
           // Hack to reduce ticks even if the chart has not that option.
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
-          }
-          if(self.graphType === 'linePlusBarChart') {
-            self.chart.y1Axis.tickFormat(d3.format(',f'));
-            self.chart.y2Axis.tickFormat(d3.format(',f'));
-            self.chart.bars.forceY([0]);
           }
 
           nv.utils.windowResize(self.updateChart.bind(self));
