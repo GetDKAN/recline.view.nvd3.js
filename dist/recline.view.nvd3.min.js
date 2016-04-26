@@ -68,7 +68,7 @@ var globalchart;
         var htmls;
         var layout;
         var xFormat;
-        var yFormat;
+        var yFormat, y1Format, y2Format;
 
         layout = self.getLayoutParams();
         tmplData = self.model.toTemplateJSON();
@@ -129,10 +129,17 @@ var globalchart;
           }
           
           // Format axis
+          // @@TODO - most of this formatter code could be factored out
           xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
           yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
+          y1Format = self.state.get('y1Format') || {type: 'String', format: ''};
+          y2Format = self.state.get('y2Format') || {type: 'String', format: ''};
           self.xFormatter = self.getFormatter(xFormat.type, xFormat.format, 'x');
           self.yFormatter = self.getFormatter(yFormat.type, yFormat.format, 'y');
+          self.y1Formatter = self.getFormatter(y1Format.type, y1Format.format, 'y1');
+          self.y2Formatter = self.getFormatter(y2Format.type, y2Format.format, 'y2');
+
+          console.log('uuh format soon', self);
 
           if(self.xFormatter && self.chart.xAxis && self.chart.xAxis.tickFormat)
             self.chart.xAxis.tickFormat(self.xFormatter);
@@ -140,11 +147,15 @@ var globalchart;
             self.chart.yAxis.tickFormat(self.yFormatter);
           if(self.xFormatter && self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
-          if(self.y1Formatter && self.chart.y1Axis && self.chart.y1Axis.tickFormat)
-            self.chart.y1Axis.tickFormat(self.y1Formatter);
-          if(self.y2Formatter && self.chart.y2Axis && self.chart.y2Axis.tickFormat)
+          if(self.y1Formatter && self.chart.bars) {
+            console.log('f1', self.y1Formatter, y1Format); 
+            self.chart.y1Axis.tickFormat(self.y1Formatter); 
+          }
+          if(self.y2Formatter && self.chart.lines) {
+            console.log('f2', self.y2Formatter, y2Format);
             self.chart.y2Axis.tickFormat(self.y2Formatter);
-          
+          }
+
           if (self.graphType === 'linePlusBarChart') {
             // @@TODO get barchart seriesField from UI
             self.series[0].bar = true;
