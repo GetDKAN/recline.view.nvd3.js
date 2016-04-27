@@ -408,7 +408,7 @@ my.BaseControl = Backbone.View.extend({
     console.log('lpbX', this);
     var markup = '<legend>Bar Chart Series</legend>' +
                  '<p>Select which series should be represented as a bard chart</p>' +
-                 '<select>';
+                 '<select id="control-lpb-barchart-field">';
     this.state.get('seriesFields').forEach(function (field) {
                   markup += '<option value="' + field + '">' + field + '</option>';
     });
@@ -513,6 +513,7 @@ my.BaseControl = Backbone.View.extend({
       if(e.type === 'keydown' && e.keyCode !== 13) return;
     }
     newState = _.merge({}, self.state.toJSON(), self.getUIState());
+    console.log('UPDATED', newState);
     self.state.set(newState);
   },
   getUIState: function(){
@@ -556,6 +557,7 @@ my.BaseControl = Backbone.View.extend({
       y2ValuesFrom: self.$('#control-chart-y2-values-from').val(),
       y2ValuesTo: self.$('#control-chart-y2-values-to').val(),
       y2ValuesStep: parseInt(self.$('#control-chart-y2-values-step').val() || 1),
+      lpbBarChartField: self.$('#control-lpb-barchart-field').val(),
     };
 
     computedState.options = computedState.options || {};

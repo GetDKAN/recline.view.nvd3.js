@@ -153,8 +153,15 @@ var globalchart;
           }
 
           if (self.graphType === 'linePlusBarChart') {
-            // @@TODO get barchart seriesField from UI
-            self.series[0].bar = true;
+            // get index of the selected series field
+            console.log('lpbSeries field', self);
+             var x = 0;
+             var field = self.state.get('lpbBarChartField'); 
+             self.series.forEach(function (row, i) {
+              if (row.key === field || row.originalKey === field) x = i; 
+             });
+            console.log("INDEX",x);
+            self.series[x].bar = true;
           }
 					
           d3.select('#' + self.uuid + ' svg')
