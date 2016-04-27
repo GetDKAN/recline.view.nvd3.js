@@ -130,10 +130,8 @@ var globalchart;
           
           if (self.graphType === 'linePlusBarChart') {
             // get index of the selected series field
-            console.log('lpbSeries field', self);
              var x = 0;
              var field = self.state.get('lpbBarChartField'); 
-             console.log(field);
              self.series.forEach(function (row, i) {
               // this was causing trouble
               if (row.originalKey) {
@@ -144,7 +142,6 @@ var globalchart;
               if (row.key === field || row.originalKey === field) x = i; 
              });
             self.series[x].bar = true;
-            console.log("INDEX",self.series,x);
           }
           // Format axis
           xFormat = self.state.get('xFormat') || {type: 'String', format: ''};

@@ -405,7 +405,6 @@ my.BaseControl = Backbone.View.extend({
   // @@TODO figure out how to get this into the lpb controls
   // @@TODO Also isn't this what templates were invented to do?
   linePlusBarXSelect: function () {
-    console.log('lpbX', this);
     var markup = '<legend>Bar Chart Series</legend>' +
                  '<p>Select which series should be represented as a bard chart</p>' +
                  '<select id="control-lpb-barchart-field">';
@@ -417,7 +416,6 @@ my.BaseControl = Backbone.View.extend({
   },
 
   composeTemplate: function() {
-    console.log('graphType', this.state.get('graphType'), this);
     var template = '';
     
     template += this.templateTop;
@@ -436,9 +434,7 @@ my.BaseControl = Backbone.View.extend({
     return template;
   },
   initialize: function(options){
-    console.log(0, this, options);
     _.extend(this, options);
-    console.log('init',options, this);
   },
   events: {
     'change input[type="checkbox"]': 'update',
@@ -513,7 +509,6 @@ my.BaseControl = Backbone.View.extend({
       if(e.type === 'keydown' && e.keyCode !== 13) return;
     }
     newState = _.merge({}, self.state.toJSON(), self.getUIState());
-    console.log('UPDATED', newState);
     self.state.set(newState);
   },
   getUIState: function(){
@@ -757,7 +752,6 @@ my.QueryEditor = Backbone.View.extend({
         return Mustache.render(self.filterTemplates[this.type], this);
       };
       var out = Mustache.render(this.template, tmplData);
-      console.log('yodawg', self, typeof self.preRender);
       this.$el.html(out);
     },
     onAddFilterShow: function(e) {
