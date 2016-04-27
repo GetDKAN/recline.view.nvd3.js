@@ -157,6 +157,7 @@ var globalchart;
             console.log('lpbSeries field', self);
              var x = 0;
              var field = self.state.get('lpbBarChartField'); 
+             console.log(field);
              self.series.forEach(function (row, i) {
               if (row.key === field || row.originalKey === field) x = i; 
              });
