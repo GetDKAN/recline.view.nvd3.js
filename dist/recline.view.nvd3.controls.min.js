@@ -451,7 +451,7 @@ my.BaseControl = Backbone.View.extend({
     sortFields.unshift({name:'default', label:'Default', selected: false});
     self.state.set('sortFields', _.applyOption(sortFields, [self.state.get('sort')]));
 
-    var options = self.state.get('options');
+    var options = self.state.get('options') || {};
     options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
     self.state.set('options', options, {silent : true});
     
