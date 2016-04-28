@@ -43,6 +43,7 @@ var globalchart;
           self.getDefaults(),
           self.options.state.toJSON()
         );
+        console.log("base init", options, self, stateData);
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = self.options.state;
@@ -160,10 +161,10 @@ var globalchart;
             self.chart.yAxis.tickFormat(self.yFormatter);
           if(self.xFormatter && self.chart.x2Axis)
             self.chart.x2Axis.tickFormat(self.xFormatter);
-          if(self.y1Formatter && self.chart.bars) {
+          if(self.graphType === "linePlusBarChart" && self.y1Formatter && self.chart.bars) {
             self.chart.y1Axis.tickFormat(self.y1Formatter); 
           }
-          if(self.y2Formatter && self.chart.lines) {
+          if(self.graphType === "linePlusBarChart" && self.y2Formatter && self.chart.lines) {
             self.chart.y2Axis.tickFormat(self.y2Formatter);
           }
 
