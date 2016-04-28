@@ -43,7 +43,6 @@ var globalchart;
           self.getDefaults(),
           self.options.state.toJSON()
         );
-        console.log("base init", options, self, stateData);
         self.graphType = self.graphType || 'multiBarChart';
         self.uuid = makeId('nvd3chart_');
         self.state = self.options.state;
@@ -132,15 +131,16 @@ var globalchart;
           if (self.graphType === 'linePlusBarChart') {
             // get index of the selected series field
              var x = 0;
-             var field = self.state.get('lpbBarChartField'); 
+             var field = self.state.get('lpbBarChartField') || $('#control-lpb-barchart-field').val();
              self.series.forEach(function (row, i) {
-              // this was causing trouble
               if (row.originalKey) {
                 row.key = row.originalKey;
                 delete row.originalKey;
               }
               delete row.bar; // reset bar value for initialization bug
-              if (row.key === field || row.originalKey === field) x = i; 
+              if (row.key === field || row.originalKey === field) {
+                x = i;
+              }
              });
             self.series[x].bar = true;
           }

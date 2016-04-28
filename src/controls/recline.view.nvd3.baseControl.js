@@ -402,9 +402,8 @@ my.BaseControl = Backbone.View.extend({
               '</div>' +
             '</fieldset>',
   
-  // @@TODO figure out how to get this into the lpb controls
-  // @@TODO Also isn't this what templates were invented to do?
   linePlusBarXSelect: function () {
+    var self = this;
     var markup = '<legend>Bar Chart Series</legend>' +
                  '<p>Select which series should be represented as a bard chart</p>' +
                  '<select id="control-lpb-barchart-field">';

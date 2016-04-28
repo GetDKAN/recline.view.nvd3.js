@@ -18,7 +18,6 @@ this.recline.View = this.recline.View || {};
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
     alterChart: function(chart) {
-       
       chart
         .x(function(d,i) { 
 					return i;//d.x; 
@@ -26,13 +25,19 @@ this.recline.View = this.recline.View || {};
         .y(function(d,i) {
           return d.y; 
         });
-/*      chart.y1Axis
-          .tickFormat(function (d) {return 'y1'})//d3.format(',f')(d)});
-      chart.y2Axis
-          .tickFormat(function (d) {return 'y2';});//d3.format(',f'));
-*/
       chart.options({focusEnable: false});
+
+    },
+    
+		getDefaults: function () {
+      return {
+        options: {
+          tooltips: true,
+          showLegend: true,
+        }
+      }
     }
+
   });
 
 })(jQuery, recline.View.nvd3);
