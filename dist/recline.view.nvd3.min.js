@@ -4,6 +4,7 @@ this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 var globalchart;
+var chartAxes = ['x','y','y1','y2'];
 ;(function ($, my) {
   'use strict';
 
@@ -93,41 +94,8 @@ var globalchart;
           self.chart = self.createGraph(self.graphType);
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
-          if(self.chart.xAxis){
-            self.calcTickValues(
-              'x',
-              self.chart.xAxis,
-              self.state.get('xValues'),
-              self.state.get('xValuesStep')
-            );
-          }
-          if(self.chart.yAxis){
-            self.calcTickValues(
-              'y',
-              self.chart.yAxis,
-              self.state.get('yValues'),
-              self.state.get('yValuesStep')
-            );
-          }
 
-          if(self.chart.y1Axis){
-            self.calcTickValues(
-              'y1',
-              self.chart.y1Axis,
-              self.state.get('y1Values'),
-              self.state.get('y1ValuesStep')
-            );
-          }
-
-          if(self.chart.y2Axis){
-            self.calcTickValues(
-              'y2',
-              self.chart.y2Axis,
-              self.state.get('y2Values'),
-              self.state.get('y2ValuesStep')
-            );
-          }
-          
+          // @@ Move to lpb control 
           if (self.graphType === 'linePlusBarChart') {
             // get index of the selected series field
              var x = 0;
@@ -144,30 +112,24 @@ var globalchart;
              });
             self.series[x].bar = true;
           }
-          // Format axis
-          xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
-          yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
-          y1Format = self.state.get('y1Format') || {type: 'String', format: ''};
-          y2Format = self.state.get('y2Format') || {type: 'String', format: ''};
-          self.xFormatter = self.getFormatter(xFormat.type, xFormat.format, 'x');
-          self.yFormatter = self.getFormatter(yFormat.type, yFormat.format, 'y');
-          self.y1Formatter = self.getFormatter(y1Format.type, y1Format.format, 'y1');
-          self.y2Formatter = self.getFormatter(y2Format.type, y2Format.format, 'y2');
 
+          // Format axes
+          chartAxes.forEach(function (axis) {
+            if (self.chart[axis+'Axis']) {
+              var format = self.state.get(axis+'Format') || {type: 'String', format: ''};
+              var formatter = self.getFormatter(format.type, format.format, axis);
+              self.calcTickValues(axis, self.chart[axis+'Axis'], self.state.get(axis+'Values'), self.state.get(axis, self.state.get(axis+'ValuesStep')));
+              self.chart[axis+'Axis'].tickFormat(formatter);
+            }
+          })
 
-          if(self.xFormatter && self.chart.xAxis && self.chart.xAxis.tickFormat)
-            self.chart.xAxis.tickFormat(self.xFormatter);
-          if(self.yFormatter && self.chart.yAxis && self.chart.yAxis.tickFormat)
-            self.chart.yAxis.tickFormat(self.yFormatter);
-          if(self.xFormatter && self.chart.x2Axis)
-            self.chart.x2Axis.tickFormat(self.xFormatter);
+          // @@ Move to lpb chart component
           if(self.graphType === "linePlusBarChart" && self.y1Formatter && self.chart.bars) {
             self.chart.y1Axis.tickFormat(self.y1Formatter); 
           }
           if(self.graphType === "linePlusBarChart" && self.y2Formatter && self.chart.lines) {
             self.chart.y2Axis.tickFormat(self.y2Formatter);
           }
-
 					
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
@@ -184,6 +146,12 @@ var globalchart;
           return self.chart;
         });
         return self;
+      },
+      // return format for all available axes
+      formatAxes: function () {
+        chartAxes.forEach(function (axis) {
+          
+        });
       },
       calcTickValues: function(axisName, axis, range, step){
         var self = this;
@@ -420,6 +388,7 @@ var globalchart;
         return formatter[type];
       },
       formatPercentage: function(format) {
+        if (format === 'd') format = 'r.0';
         return function(d){
           return d3.format(format)(d) + '%';
         };
