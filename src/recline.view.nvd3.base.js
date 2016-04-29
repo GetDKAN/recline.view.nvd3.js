@@ -94,24 +94,7 @@ var chartAxes = ['x','y','y1','y2'];
           self.chart = self.createGraph(self.graphType);
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
-
-          // @@ Move to lpb control 
-          if (self.graphType === 'linePlusBarChart') {
-            // get index of the selected series field
-             var x = 0;
-             var field = self.state.get('lpbBarChartField') || $('#control-lpb-barchart-field').val();
-             self.series.forEach(function (row, i) {
-              if (row.originalKey) {
-                row.key = row.originalKey;
-                delete row.originalKey;
-              }
-              delete row.bar; // reset bar value for initialization bug
-              if (row.key === field || row.originalKey === field) {
-                x = i;
-              }
-             });
-            self.series[x].bar = true;
-          }
+          console.log('post-alter', self);
 
           // Format axes
           chartAxes.forEach(function (axis) {
@@ -122,14 +105,6 @@ var chartAxes = ['x','y','y1','y2'];
               self.chart[axis+'Axis'].tickFormat(formatter);
             }
           })
-
-          // @@ Move to lpb chart component
-          if(self.graphType === "linePlusBarChart" && self.y1Formatter && self.chart.bars) {
-            self.chart.y1Axis.tickFormat(self.y1Formatter); 
-          }
-          if(self.graphType === "linePlusBarChart" && self.y2Formatter && self.chart.lines) {
-            self.chart.y2Axis.tickFormat(self.y2Formatter);
-          }
 					
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
@@ -435,6 +410,9 @@ var chartAxes = ['x','y','y1','y2'];
       },
       destroy: function(){
         this.stopListening();
+      },
+      alterChart: function () {
+        // implement
       }
   });
 

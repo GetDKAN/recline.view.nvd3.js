@@ -18,6 +18,7 @@ this.recline.View = this.recline.View || {};
       recline.View.nvd3.Base.prototype.render.call(self, {});
     },
     alterChart: function(chart) {
+			var self = this;
       chart
         .x(function(d,i) { 
 					return i;//d.x; 
@@ -27,8 +28,21 @@ this.recline.View = this.recline.View || {};
         });
       chart.options({focusEnable: false});
 
+			// Determine which field should be rendered as bar
+      var barIndex = 0;
+      var field = self.state.get('lpbBarChartField') || $('#control-lpb-barchart-field').val();
+      self.series.forEach(function (row, i) {
+       if (row.originalKey) {
+         row.key = row.originalKey;
+         delete row.originalKey;
+       }
+       delete row.bar; // reset bar value for initialization bug
+       if (row.key === field || row.originalKey === field) {
+         barIndex = i;
+       }
+      });
+      self.series[barIndex].bar = true;
     },
-    
 		getDefaults: function () {
       return {
         options: {
