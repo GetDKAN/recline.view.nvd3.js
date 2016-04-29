@@ -94,7 +94,6 @@ var chartAxes = ['x','y','y1','y2'];
           self.chart = self.createGraph(self.graphType);
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
-          console.log('post-alter', self);
 
           // Format axes
           chartAxes.forEach(function (axis) {
