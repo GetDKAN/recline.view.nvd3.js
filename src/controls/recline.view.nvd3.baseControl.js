@@ -1,7 +1,6 @@
 /*jshint multistr:true */
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
-
 ;(function ($, my) {
 'use strict';
 
@@ -36,9 +35,10 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Number" value="%d">100,000%</option>' +
-                      '<option data-type="Number" value="%,.1f">100,000.0%</option>' +
-                      '<option data-type="Number" value="%,.2f">100,000.00%</option>' +
+                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
+                      '<option data-type="Percentage" value="p,.2f">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageA" value="d">97 -> 97%</option>' +
+                      '<option data-type="PercentageA" value="">97 -> 97.00%</option>' +
                     '</optgroup>' +
                 '</select>' +
               '</div>' +
@@ -113,9 +113,10 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Percentage" value="d">100,000%</option>' +
-                      '<option data-type="Percentage" value=",.1f">100,000.0%</option>' +
-                      '<option data-type="Percentage" value=",.2f">100,000.00%</option>' +
+                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
+                      '<option data-type="Percentage" value="p,.2f">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageA" value="d">97 -> 97%</option>' +
+                      '<option data-type="PercentageA" value="">97 -> 97.00%</option>' +
                     '</optgroup>' +
                   '</select>' +
                 '</div>' +
@@ -178,9 +179,10 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Percentage" value="d">100,000%</option>' +
-                      '<option data-type="Percentage" value=",.1f">100,000.0%</option>' +
-                      '<option data-type="Percentage" value=",.2f">100,000.00%</option>' +
+                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
+                      '<option data-type="Percentage" value="p,.2f">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageA" value="d">97 -> 97%</option>' +
+                      '<option data-type="PercentageA" value="">97 -> 97.00%</option>' +
                     '</optgroup>' +
                   '</select>' +
                 '</div>' +
@@ -243,9 +245,10 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Percentage" value="d">100,000%</option>' +
-                      '<option data-type="Percentage" value=",.1f">100,000.0%</option>' +
-                      '<option data-type="Percentage" value=",.2f">100,000.00%</option>' +
+                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
+                      '<option data-type="Percentage" value="p,.2f">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageA" value="d">97 -> 97%</option>' +
+                      '<option data-type="PercentageA" value="">97 -> 97.00%</option>' +
                     '</optgroup>' +
                   '</select>' +
                 '</div>' +
