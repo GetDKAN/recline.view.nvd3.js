@@ -121,12 +121,7 @@ var chartAxes = ['x','y','y1','y2'];
         });
         return self;
       },
-      // return format for all available axes
-      formatAxes: function () {
-        chartAxes.forEach(function (axis) {
-          
-        });
-      },
+      
       calcTickValues: function(axisName, axis, range, step){
         var self = this;
         var ordinalScaled = ['multiBarChart', 'discreteBarChart', 'linePlusBarChart'];
