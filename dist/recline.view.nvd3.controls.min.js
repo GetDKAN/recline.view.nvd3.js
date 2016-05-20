@@ -404,13 +404,13 @@ my.BaseControl = Backbone.View.extend({
   
   linePlusBarXSelect: function () {
     var self = this;
-    var markup = '<legend>Bar Chart Series</legend>' +
-                 '<p>Select which series should be represented as a bard chart</p>' +
+    var markup = '<fieldset><legend>Bar Chart Series</legend>' +
+                 '<p>Select which series should be represented as a bar chart</p>' +
                  '<select id="control-lpb-barchart-field">';
     this.state.get('seriesFields').forEach(function (field) {
                   markup += '<option value="' + field + '">' + field + '</option>';
     });
-                 markup += '</select>';
+                 markup += '</select></fieldset>';
     return markup;
   },
 
