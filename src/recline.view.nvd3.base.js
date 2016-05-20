@@ -4,6 +4,7 @@ this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
 var globalchart;
+var chartAxes = ['x','y','y1','y2'];
 ;(function ($, my) {
   'use strict';
 
@@ -68,7 +69,7 @@ var globalchart;
         var htmls;
         var layout;
         var xFormat;
-        var yFormat;
+        var yFormat, y1Format, y2Format;
 
         layout = self.getLayoutParams();
         tmplData = self.model.toTemplateJSON();
@@ -91,42 +92,19 @@ var globalchart;
 
         nv.addGraph(function() {
           self.chart = self.createGraph(self.graphType);
-
           // Give a chance to alter the chart before it is rendered.
           self.alterChart && self.alterChart(self.chart);
 
-          if(self.chart.xAxis){
-            self.calcTickValues(
-              'x',
-              self.chart.xAxis,
-              self.state.get('xValues'),
-              self.state.get('xValuesStep')
-            );
-          }
-          if(self.chart.yAxis){
-            self.calcTickValues(
-              'y',
-              self.chart.yAxis,
-              self.state.get('yValues'),
-              self.state.get('yValuesStep')
-            );
-          }
-
-          // Format axis
-          xFormat = self.state.get('xFormat') || {type: 'String', format: ''};
-          yFormat = self.state.get('yFormat') || {type: 'String', format: ''};
-
-          self.xFormatter = self.getFormatter(xFormat.type, xFormat.format, 'x');
-          self.yFormatter = self.getFormatter(yFormat.type, yFormat.format, 'y');
-
-          if(self.xFormatter && self.chart.xAxis && self.chart.xAxis.tickFormat)
-            self.chart.xAxis.tickFormat(self.xFormatter);
-          if(self.yFormatter && self.chart.yAxis && self.chart.yAxis.tickFormat)
-            self.chart.yAxis.tickFormat(self.yFormatter);
-          if(self.xFormatter && self.chart.x2Axis)
-            self.chart.x2Axis.tickFormat(self.xFormatter);
-
-
+          // Format axes
+          chartAxes.forEach(function (axis) {
+            if (self.chart[axis+'Axis']) {
+              var format = self.state.get(axis+'Format') || {type: 'String', format: ''};
+              var formatter = self.getFormatter(format.type, format.format, axis);
+              self.calcTickValues(axis, self.chart[axis+'Axis'], self.state.get(axis+'Values'), self.state.get(axis, self.state.get(axis+'ValuesStep')));
+              self.chart[axis+'Axis'].tickFormat(formatter);
+            }
+          })
+					
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
@@ -137,17 +115,19 @@ var globalchart;
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
           }
-
+          console.log(self.chart);
+          if (self.chart.tooltip) {self.chart.tooltip.enabled(self.state.get('options').tooltips)};
           nv.utils.windowResize(self.updateChart.bind(self));
           return self.chart;
         });
         return self;
       },
+      
       calcTickValues: function(axisName, axis, range, step){
         var self = this;
-        var ordinalScaled = ['multiBarChart', 'discreteBarChart'];
+        var ordinalScaled = ['multiBarChart', 'discreteBarChart', 'linePlusBarChart'];
         var tickValues;
-
+        
         step = step || 1;
         
         // check for old formatted range values
@@ -155,11 +135,17 @@ var globalchart;
           range = this.convertRange(range);
         } 
         
+        // If this is linePlusBar use chart.bars.forceY & chart.lines.forceY
         if (range && self.rangesValid(range)) {
           range[0] = parseInt(range[0]);
           range[1] = parseInt(range[1]);
           tickValues = d3.range(range[0], range[1], step);
-          if(!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
+
+          if (self.graphType === 'linePlusBarChart' && axisName === 'y1') {
+            self.chart.bars.yDomain([range[0], range[1]], step);
+          } else if (self.graphType === 'linePlusBarChart' && axisName === 'y2') {
+            self.chart.lines.yDomain([range[0], range[1]], step);
+          } else if (!_.inArray(ordinalScaled, self.graphType) || axisName === 'y') {
             self.chart[axisName + 'Domain']([range[0], range[1]]);
           } else {
             self.chart[axisName + 'Domain'](d3.range(range[0], range[1], step));
@@ -372,6 +358,7 @@ var globalchart;
         return formatter[type];
       },
       formatPercentage: function(format) {
+        if (format === 'd') format = 'r.0';
         return function(d){
           return d3.format(format)(d) + '%';
         };
@@ -418,6 +405,9 @@ var globalchart;
       },
       destroy: function(){
         this.stopListening();
+      },
+      alterChart: function () {
+        // implement
       }
   });
 
