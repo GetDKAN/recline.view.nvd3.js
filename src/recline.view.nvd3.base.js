@@ -115,7 +115,8 @@ var chartAxes = ['x','y','y1','y2'];
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
           }
-          self.chart.tooltip.enabled(self.state.get('options').tooltips);
+          console.log(self.chart);
+          if (self.chart.tooltip) {self.chart.tooltip.enabled(self.state.get('options').tooltips)};
           nv.utils.windowResize(self.updateChart.bind(self));
           return self.chart;
         });

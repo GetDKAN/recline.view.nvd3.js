@@ -445,6 +445,7 @@ my.BaseControl = Backbone.View.extend({
     'submit #control-chart': 'update'
   },
   render: function(){
+    var controlsRendered = false;
     var self = this;
     var sortFields = _.arrayToOptions(_.getFields(self.state.get('model')));
     sortFields.unshift({name:'default', label:'Default', selected: false});
@@ -457,9 +458,12 @@ my.BaseControl = Backbone.View.extend({
     // subclasses define a template with extra controls
     // otherwise we're rendering the base controls using our compose method
     if (self.template) {
-      self.$el.html(Mustache.render(self.template), self.state.toJSON());
-    } else {
-      self.$el.html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
+      $('#extended-controls').html(Mustache.render(self.template), self.state.toJSON());
+    } 
+    
+    if (!self.controlsRendered){
+      self.controlsRendered = true;
+      $('#base-controls').html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
     }
 
     self.$('.chosen-select').chosen({width: '95%'});
