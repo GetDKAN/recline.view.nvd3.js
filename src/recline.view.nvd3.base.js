@@ -115,13 +115,13 @@ var chartAxes = ['x','y','y1','y2'];
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
           }
-          console.log(self.chart);
           if (self.chart.tooltip) {self.chart.tooltip.enabled(self.state.get('options').tooltips)};
           nv.utils.windowResize(self.updateChart.bind(self));
           return self.chart;
         });
         return self;
       },
+      
       calcTickValues: function(axisName, axis, range, step){
         var self = this;
         var ordinalScaled = ['multiBarChart', 'discreteBarChart', 'linePlusBarChart'];
@@ -343,7 +343,6 @@ var chartAxes = ['x','y','y1','y2'];
       },
       getFormatter: function(type, format, axisName){
         var self = this;
-
         axisName = axisName || 'x';
 
         if(self.state.get('computeXLabels') && axisName === 'x')
@@ -359,15 +358,6 @@ var chartAxes = ['x','y','y1','y2'];
         };
         return formatter[type];
       },
-<<<<<<< HEAD
-      formatPercentage: function(format) {
-        if (format === 'd') format = 'r.0';
-        return function(d){
-          return d3.format(format)(d) + '%';
-        };
-      },
-=======
->>>>>>> 2222-fix-percent-formats
       setOptions: function (chart, options) {
         var self = this;
         for(var optionName in options){
