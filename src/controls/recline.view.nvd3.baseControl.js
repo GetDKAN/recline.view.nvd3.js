@@ -1,7 +1,6 @@
 /*jshint multistr:true */
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
-
 ;(function ($, my) {
 'use strict';
 
@@ -36,9 +35,10 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Number" value="%d">100,000%</option>' +
-                      '<option data-type="Number" value="%,.1f">100,000.0%</option>' +
-                      '<option data-type="Number" value="%,.2f">100,000.00%</option>' +
+                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
+                      '<option data-type="Percentage" value="p,.2f">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageA" value="d">97 -> 97%</option>' +
+                      '<option data-type="PercentageA" value="">97 -> 97.00%</option>' +
                     '</optgroup>' +
                 '</select>' +
               '</div>' +
@@ -113,9 +113,10 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Percentage" value="d">100,000%</option>' +
-                      '<option data-type="Percentage" value=",.1f">100,000.0%</option>' +
-                      '<option data-type="Percentage" value=",.2f">100,000.00%</option>' +
+                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
+                      '<option data-type="PercentageB" value=".2f">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageA" value=".0f">97 -> 97%</option>' +
+                      '<option data-type="PercentageA" value=".2f">97 -> 97.00%</option>' +
                     '</optgroup>' +
                   '</select>' +
                 '</div>' +
@@ -178,9 +179,10 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Percentage" value="d">100,000%</option>' +
-                      '<option data-type="Percentage" value=",.1f">100,000.0%</option>' +
-                      '<option data-type="Percentage" value=",.2f">100,000.00%</option>' +
+                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
+                      '<option data-type="Percentage" value="p,.2f">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageA" value="d">97 -> 97%</option>' +
+                      '<option data-type="PercentageA" value="">97 -> 97.00%</option>' +
                     '</optgroup>' +
                   '</select>' +
                 '</div>' +
@@ -198,6 +200,7 @@ my.BaseControl = Backbone.View.extend({
                     '</div>' +
                   '</div>' +
                 '</div>' +
+<<<<<<< HEAD
 
                 /// Axis ticks
                 '<div class="form-group">' +
@@ -263,11 +266,82 @@ my.BaseControl = Backbone.View.extend({
                     '</div>' +
                   '</div>' +
                 '</div>' +
+=======
+>>>>>>> 2222-fix-percent-formats
 
                 /// Axis ticks
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
+<<<<<<< HEAD
+=======
+                      '<label for="control-chart-y1-values">Tick Values</label>' +
+                      '<input class="form-control" placeholder="From.." type="text" id="control-chart-y1-values-from" value="{{y1ValuesFrom}}"/>' +
+                      '<input class="form-control" placeholder="To.." type="text" id="control-chart-y1-values-to" value="{{y1ValuesTo}}"/>' +
+                    '</div>' +
+                    '<div class="col-md-3 col-sm-3">' +
+                      '<label for="control-chart-y1-values-step">Step</label>' +
+                      '<input class="form-control" type="number" id="control-chart-y1-values-step" value="{{y1ValuesStep}}"/>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</fieldset>',
+  templateY2Format: 
+              //////// Y2 AXIS
+              '<fieldset>' +
+                '<legend>Y-2 Axis</legend>' +
+
+                /// Format
+                '<div class="form-group">' +
+                  '<label for="control-chart-y2-format">Format</label>' +
+                  '<select class="form-control" id="control-chart-y2-format">' +
+                    '<optgroup label="Text">' +
+                      '<option data-type="String" value="">Text</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Numbers">' +
+                      '<option data-type="Number" value="d">100,000</option>' +
+                      '<option data-type="Number" value=",.1f">100,000.0</option>' +
+                      '<option data-type="Number" value=",.2f">100,000.00</option>' +
+                      '<option data-type="Number" value="s">100K</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Date">' +
+                      '<option data-type="Date" value="%m/%d/%Y">mm/dd/yyyy</option>' +
+                      '<option data-type="Date" value=""%m-%d-%Y">mm-dd-yyyy</option>' +
+                      '<option data-type="Date" value="%Y">Year</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Currency">' +
+                      '<option data-type="Number" value="$,.2f">$100,000.00</option>' +
+                      '<option data-type="Number" value="$,.1f">$100,000.0</option>' +
+                      '<option data-type="Number" value="$,">$100,000</option>' +
+                    '</optgroup>' +
+                    '<optgroup label="Percentage">' +
+                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
+                      '<option data-type="Percentage" value="p,.2f">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageA" value="d">97 -> 97%</option>' +
+                      '<option data-type="PercentageA" value="">97 -> 97.00%</option>' +
+                    '</optgroup>' +
+                  '</select>' +
+                '</div>' +
+
+                /// Axis label
+                '<div class="form-group">' +
+                  '<div class="row">' +
+                    '<div class="col-md-9 col-sm-9">' +
+                      '<label for="control-chart-y2-axis-label">Y Axis Label</label>' +
+                      '<input class="form-control" type="text" id="control-chart-y2-axis-label" value="{{options.y2Axis.axisLabel}}"/>' +
+                    '</div>' +
+                    '<div class="col-md-3 col-sm-3">' +
+                      '<label for="control-chart-y2-axis-label-distance">Distance</label>' +
+                      '<input class="form-control" type="number" id="control-chart-y2-axis-label-distance" value="{{options.y2Axis.axisLabelDistance}}"/>' +
+                    '</div>' +
+                  '</div>' +
+                '</div>' +
+
+                /// Axis ticks
+                '<div class="form-group">' +
+                  '<div class="row">' +
+                    '<div class="col-md-9 col-sm-9">' +
+>>>>>>> 2222-fix-percent-formats
                       '<label for="control-chart-y2-values">Tick Values</label>' +
                       '<input class="form-control" placeholder="From.." type="text" id="control-chart-y2-values-from" value="{{y2ValuesFrom}}"/>' +
                       '<input class="form-control" placeholder="To.." type="text" id="control-chart-y2-values-to" value="{{y2ValuesTo}}"/>' +
@@ -404,13 +478,22 @@ my.BaseControl = Backbone.View.extend({
   
   linePlusBarXSelect: function () {
     var self = this;
+<<<<<<< HEAD
     var markup = '<fieldset><legend>Bar Chart Series</legend>' +
                  '<p>Select which series should be represented as a bar chart</p>' +
+=======
+    var markup = '<legend>Bar Chart Series</legend>' +
+                 '<p>Select which series should be represented as a bard chart</p>' +
+>>>>>>> 2222-fix-percent-formats
                  '<select id="control-lpb-barchart-field">';
     this.state.get('seriesFields').forEach(function (field) {
                   markup += '<option value="' + field + '">' + field + '</option>';
     });
+<<<<<<< HEAD
                  markup += '</select></fieldset>';
+=======
+                 markup += '</select>';
+>>>>>>> 2222-fix-percent-formats
     return markup;
   },
 
@@ -419,6 +502,7 @@ my.BaseControl = Backbone.View.extend({
     
     template += this.templateTop;
     template += this.templateXFormat;
+<<<<<<< HEAD
 
     if (this.state.get('graphType') === 'linePlusBarChart') {
       template += this.templateY1Format
@@ -428,6 +512,17 @@ my.BaseControl = Backbone.View.extend({
       template += this.templateYFormat;
     }
 
+=======
+
+    if (this.state.get('graphType') === 'linePlusBarChart') {
+      template += this.templateY1Format
+      template += this.templateY2Format;
+      template += this.linePlusBarXSelect();
+    } else {
+      template += this.templateYFormat;
+    }
+
+>>>>>>> 2222-fix-percent-formats
     template += this.templateGeneral;
     
     return template;
@@ -458,12 +553,18 @@ my.BaseControl = Backbone.View.extend({
     // subclasses define a template with extra controls
     // otherwise we're rendering the base controls using our compose method
     if (self.template) {
+<<<<<<< HEAD
       $('#extended-controls').html(Mustache.render(self.template), self.state.toJSON());
     } 
     
     if (!self.controlsRendered){
       self.controlsRendered = true;
       $('#base-controls').html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
+=======
+      self.$el.html(Mustache.render(self.template), self.state.toJSON());
+    } else {
+      self.$el.html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
+>>>>>>> 2222-fix-percent-formats
     }
 
     self.$('.chosen-select').chosen({width: '95%'});
