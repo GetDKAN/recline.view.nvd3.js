@@ -115,7 +115,6 @@ var chartAxes = ['x','y','y1','y2'];
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
           }
-          console.log(self.chart);
           if (self.chart.tooltip) {self.chart.tooltip.enabled(self.state.get('options').tooltips)};
           nv.utils.windowResize(self.updateChart.bind(self));
           return self.chart;
@@ -353,15 +352,11 @@ var chartAxes = ['x','y','y1','y2'];
           'String': _.identity,
           'Date': _.compose(d3.time.format(format || '%x'),_.instantiate(Date)),
           'Number': d3.format(format || '.02f'),
-          'Percentage': self.formatPercentage(format || '.02f'),
+          'Percentage': d3.format(format || '.02f'),
+          'PercentageA': function (n) { return d3.format(format || '.02f')(n) + '%'; },
+          'PercentageB': function (n) { return d3.format(format || '.02f')(n*100) + '%'; },
         };
         return formatter[type];
-      },
-      formatPercentage: function(format) {
-        if (format === 'd') format = 'r.0';
-        return function(d){
-          return d3.format(format)(d) + '%';
-        };
       },
       setOptions: function (chart, options) {
         var self = this;
