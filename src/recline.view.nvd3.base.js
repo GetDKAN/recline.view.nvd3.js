@@ -104,7 +104,7 @@ var chartAxes = ['x','y','y1','y2'];
               self.chart[axis+'Axis'].tickFormat(formatter);
             }
           })
-					
+
           d3.select('#' + self.uuid + ' svg')
             .datum(self.series)
             .transition()
@@ -115,25 +115,34 @@ var chartAxes = ['x','y','y1','y2'];
           if(self.graphType === 'discreteBarChart' && self.state.get('options') && self.state.get('options').reduceXTicks){
             self.reduceXTicks();
           }
-          if (self.chart.tooltip) {self.chart.tooltip.enabled(self.state.get('options').tooltips)};
+
+          // Ensure backward compatibility
+          // 1.8.1 version
+          if (typeof self.chart.tooltips === 'function') {
+            self.chart.tooltips(self.state.get('options').tooltips);
+          // 1.8.2 version
+          } else {
+            self.chart.tooltip.enabled(self.state.get('options').tooltips);
+          }
+
           nv.utils.windowResize(self.updateChart.bind(self));
           return self.chart;
         });
         return self;
       },
-      
+
       calcTickValues: function(axisName, axis, range, step){
         var self = this;
         var ordinalScaled = ['multiBarChart', 'discreteBarChart', 'linePlusBarChart'];
         var tickValues;
-        
+
         step = step || 1;
-        
+
         // check for old formatted range values
         if (this.isOldRangeType(range)) {
           range = this.convertRange(range);
-        } 
-        
+        }
+
         // If this is linePlusBar use chart.bars.forceY & chart.lines.forceY
         if (range && self.rangesValid(range)) {
           range[0] = parseInt(range[0]);
@@ -188,15 +197,17 @@ var chartAxes = ['x','y','y1','y2'];
       },
       lightUpdate: function(){
         var self = this;
-        self.series = self.createSeries(self.model.records);
-        self.setOptions(self.chart, self.state.get('options'));
-        setTimeout(function(){
-          d3.select('#' + self.uuid + ' svg')
-            .datum(self.series)
-            .transition()
-            .duration(500)
-            .call(self.chart);
-        }, 0);
+        if(self.chart){
+          self.series = self.createSeries(self.model.records);
+          self.setOptions(self.chart, self.state.get('options'));
+          setTimeout(function(){
+            d3.select('#' + self.uuid + ' svg')
+              .datum(self.series)
+              .transition()
+              .duration(500)
+              .call(self.chart);
+          }, 0);
+        }
       },
       canRenderGoal: function(goal){
         return !d3.select('svg').empty() &&
