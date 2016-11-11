@@ -100,7 +100,7 @@ var chartAxes = ['x','y','y1','y2'];
             if (self.chart[axis+'Axis']) {
               var format = self.state.get(axis+'Format') || {type: 'String', format: ''};
               var formatter = self.getFormatter(format.type, format.format, axis);
-              self.calcTickValues(axis, self.chart[axis+'Axis'], self.state.get(axis+'Values'), self.state.get(axis, self.state.get(axis+'ValuesStep')));
+              self.calcTickValues(axis, self.chart[axis+'Axis'], self.state.get(axis+'Values'), self.state.get(axis+'ValuesStep'));
               self.chart[axis+'Axis'].tickFormat(formatter);
             }
           })
