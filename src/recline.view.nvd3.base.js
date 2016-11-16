@@ -364,8 +364,7 @@ var chartAxes = ['x','y','y1','y2'];
           'Date': _.compose(d3.time.format(format || '%x'),_.instantiate(Date)),
           'Number': d3.format(format || '.02f'),
           'Percentage': d3.format(format || '.02f'),
-          'PercentageA': function (n) { return d3.format(format || '.02f')(n) + '%'; },
-          'PercentageB': function (n) { return d3.format(format || '.02f')(n*100) + '%'; },
+          'PercentageInt': function (n) { return d3.format(format || '.02f')(n) + '%'; },
         };
         return formatter[type];
       },

@@ -15,7 +15,7 @@ my.BaseControl = Backbone.View.extend({
                 '<legend>X Axis</legend>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
-                '<select class="form-control" id="control-chart-x-format">' +                    
+                '<select class="form-control" id="control-chart-x-format">' +
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
                     '</optgroup>' +
@@ -27,7 +27,7 @@ my.BaseControl = Backbone.View.extend({
                     '</optgroup>' +
                     '<optgroup label="Date">' +
                       '<option data-type="Date" value="%m/%d/%Y">mm/dd/yyyy</option>' +
-                      '<option data-type="Date" value=""%m-%d-%Y">mm-dd-yyyy</option>' +
+                      '<option data-type="Date" value="%m-%d-%Y">mm-dd-yyyy</option>' +
                       '<option data-type="Date" value="%Y">Year</option>' +
                     '</optgroup>' +
                     '<optgroup label="Currency">' +
@@ -37,9 +37,9 @@ my.BaseControl = Backbone.View.extend({
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
                       '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
-                      '<option data-type="Percentage" value="p,.2f">.97 -> 97.00%</option>' +
-                      '<option data-type="PercentageA" value="d">97 -> 97%</option>' +
-                      '<option data-type="PercentageA" value="">97 -> 97.00%</option>' +
+                      '<option data-type="Percentage" value="p">.97 -> 97.00%</option>' +
+                      '<option data-type="PercentageInt" value="d">97 -> 97%</option>' +
+                      '<option data-type="PercentageInt" value=",.2f">97 -> 97.00%</option>' +
                     '</optgroup>' +
                 '</select>' +
               '</div>' +
@@ -52,7 +52,7 @@ my.BaseControl = Backbone.View.extend({
                 '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
               '</div>' +
               '<div class="form-group">' +
-                  
+
                   '<label for="control-chart-color-picker">Color</label>' +
                   '<input type="text" class="form-control" id="control-chart-color-picker"/>' +
                   '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
@@ -216,7 +216,7 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
               '</fieldset>',
-  templateY2Format: 
+  templateY2Format:
               //////// Y2 AXIS
               '<fieldset>' +
                 '<legend>Y-2 Axis</legend>' +
@@ -282,7 +282,7 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
               '</fieldset>',
-  templateGeneral: 
+  templateGeneral:
               //////// GENERAL
               '<fieldset>' +
                 '<legend>General</legend>' +
@@ -404,35 +404,13 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
               '</div>' +
             '</fieldset>',
-  
-  linePlusBarXSelect: function () {
-    var self = this;
-    var markup = '<fieldset><legend>Bar Chart Series</legend>' +
-                 '<p>Select which series should be represented as a bar chart</p>' +
-                 '<select id="control-lpb-barchart-field">';
-    this.state.get('seriesFields').forEach(function (field) {
-                  markup += '<option value="' + field + '">' + field + '</option>';
-    });
-                 markup += '</select></fieldset>';
-    return markup;
-  },
-
   composeTemplate: function() {
     var template = '';
-    
     template += this.templateTop;
     template += this.templateXFormat;
-
-    if (this.state.get('graphType') === 'linePlusBarChart') {
-      template += this.templateY1Format
-      template += this.templateY2Format;
-      template += this.linePlusBarXSelect();
-    } else {
-      template += this.templateYFormat;
-    }
-
+    template += this.templateYFormat;
     template += this.templateGeneral;
-    
+    template += this.customOptions ? this.customOptions : '';
     return template;
   },
   initialize: function(options){
@@ -451,31 +429,25 @@ my.BaseControl = Backbone.View.extend({
     var controlsRendered = false;
     var self = this;
     var sortFields = _.arrayToOptions(_.getFields(self.state.get('model')));
+    var formatX, formatY;
     sortFields.unshift({name:'default', label:'Default', selected: false});
     self.state.set('sortFields', _.applyOption(sortFields, [self.state.get('sort')]));
 
     var options = self.state.get('options') || {};
     options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
     self.state.set('options', options, {silent : true});
-    
-    // subclasses define a template with extra controls
-    // otherwise we're rendering the base controls using our compose method
-    if (self.template) {
-      $('#extended-controls').html(Mustache.render(self.template), self.state.toJSON());
-    } 
-    
-    if (!self.controlsRendered){
-      self.controlsRendered = true;
-      $('#base-controls').html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
-    }
+    $('#base-controls').html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
 
     self.$('.chosen-select').chosen({width: '95%'});
-
     if(self.state.get('xFormat') && self.state.get('xFormat').format) {
-      self.$('#control-chart-x-format option[value="' + self.state.get('xFormat').format + '"]').attr('selected', 'selected');
+      formatX = self.state.get('xFormat');
+      self.$('#control-chart-x-format option[value="' + formatX.format + '"][data-type="' + formatX.type + '"]')
+        .attr('selected', 'selected');
     }
     if(self.state.get('yFormat') && self.state.get('yFormat').format) {
-      self.$('#control-chart-y-format option[value="' + self.state.get('yFormat').format + '"]').attr('selected', 'selected');
+      formatY = self.state.get('yFormat');
+      self.$('#control-chart-y-format option[value="' + formatY.format + '"][data-type="' + formatY.type + '"]')
+      .attr('selected', 'selected');
     }
     $('#control-chart-color').on('blur', function (e) {
       self.update(e);
@@ -598,7 +570,7 @@ my.BaseControl = Backbone.View.extend({
       outside: self.$('#control-chart-goal-outside').is(':checked'),
       label: self.$('#control-chart-goal-label').is(':checked'),
     };
-    
+
     // replace NaN Vals with 0
     _.each(_.keys(margin), function (key) {
       margin[key] = (isNaN(margin[key])) ? 0 : margin[key];
