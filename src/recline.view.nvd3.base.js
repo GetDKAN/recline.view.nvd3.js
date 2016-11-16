@@ -50,7 +50,6 @@ var chartAxes = ['x','y','y1','y2'];
         self.model = self.options.model;
         self.state.set(stateData);
         self.chartMap = d3.map();
-        self.listenTo(self.state, 'change', self.render.bind(self));
         self.listenTo(self.model.records, 'add remove reset change', self.lightUpdate.bind(self));
         globalchart = self;
       },
@@ -70,6 +69,9 @@ var chartAxes = ['x','y','y1','y2'];
         var layout;
         var xFormat;
         var yFormat, y1Format, y2Format;
+
+        // Reattach listener
+        self.listenToOnce(self.state, 'change', self.render.bind(self));
 
         layout = self.getLayoutParams();
         tmplData = self.model.toTemplateJSON();
