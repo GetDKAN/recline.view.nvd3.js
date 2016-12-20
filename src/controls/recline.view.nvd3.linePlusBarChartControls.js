@@ -14,7 +14,7 @@ this.recline.View = this.recline.View || {};
                    '<p>Select which series should be represented as a bar chart</p>' +
                    '<select id="control-lpb-barchart-field">';
       this.state.get('seriesFields').forEach(function (field) {
-      markup += '<option value="' + field + '">' + field + '</option>';
+        markup += '<option value="' + field + '">' + field + '</option>';
       });
       markup += '</select></fieldset>';
       return markup;
@@ -22,11 +22,11 @@ this.recline.View = this.recline.View || {};
     composeTemplate: function() {
       var template = '';
       template += this.templateTop;
+      template += this.templateGeneral;
       template += this.templateXFormat;
       template += this.templateY1Format
       template += this.templateY2Format;
       template += this.linePlusBarXSelect();
-      template += this.templateGeneral;
       template += this.customOptions ? this.customOptions : '';
       return template;
     },
