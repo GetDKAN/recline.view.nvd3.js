@@ -45,47 +45,30 @@ my.BaseControl = Backbone.View.extend({
               '</div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-label-x-rotation">X Label Rotation</label>' +
-                '<input value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
-              '</div>' +
-              '<div class="form-group">' +
-                '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
-                '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
-              '</div>' +
-              '<div class="form-group">' +
-
-                  '<label for="control-chart-color-picker">Color</label>' +
-                  '<input type="text" class="form-control" id="control-chart-color-picker"/>' +
-                  '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
+                '<input aria-label="X label rotation" value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
               '</div>' +
               '<div class="form-group">' +
                   '<label for="control-chart-x-axis-label">X Axis Label</label>' +
-                  '<input class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
-              '</div>' +
-              '<div class="form-group">' +
-                '<label for="control-chart-sort">Sort</label>' +
-                '<select id="control-chart-sort" class="form-control chosen-select">' +
-                  '{{#sortFields}}' +
-                    '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
-                  '{{/sortFields}}' +
-                '</select>' +
+                  '<input aria-label="X axis label" class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
               '</div>' +
 
-                /// Axis ticks
-                '<div class="form-group">' +
-                  '<div class="row">' +
-                    '<div class="col-md-9 col-sm-9">' +
-                      '<label for="control-chart-x-values">Tick Values</label>' +
-                      '<input class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
-                      '<input class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
-                    '</div>' +
-                    '<div class="col-md-3 col-sm-3">' +
-                      '<label for="control-chart-x-values-step">Step</label>' +
-                      '<input class="form-control" type="number" id="control-chart-x-values-step" value="{{xValuesStep}}"/>' +
-                    '</div>' +
+              /// Axis ticks
+              '<div class="form-group">' +
+                '<div class="row">' +
+                  '<div class="col-md-9 col-sm-9">' +
+                    '<label for="control-chart-x-values">Tick Values</label>' +
+                    '<input aria-label="Tick values from" class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
+                    '<input aria-label="Tick values to" class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
+                  '</div>' +
+                  '<div class="col-md-3 col-sm-3">' +
+                    '<label for="control-chart-x-values-step">Step</label>' +
+                    '<input aria-label="x step value" class="form-control" type="number" id="control-chart-x-values-step" value="{{xValuesStep}}"/>' +
                   '</div>' +
                 '</div>' +
-              '</fieldset>',
-  templateYFormat:
+              '</div>' +
+            '</fieldset>',
+          templateYFormat:
+
               //////// Y AXIS
               '<fieldset>' +
                 '<legend>Y Axis</legend>' +
@@ -93,7 +76,7 @@ my.BaseControl = Backbone.View.extend({
                 /// Format
                 '<div class="form-group">' +
                   '<label for="control-chart-y-format">Format</label>' +
-                  '<select class="form-control" id="control-chart-y-format">' +
+                  '<select aria-label="y axis format" class="form-control" id="control-chart-y-format">' +
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
                     '</optgroup>' +
@@ -127,11 +110,11 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y-axis-label">Y Axis Label</label>' +
-                      '<input class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
+                      '<input aria-label="y axis label" class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y-axis-label-distance">Distance</label>' +
-                      '<input class="form-control" type="number" id="control-chart-y-axis-label-distance" value="{{options.yAxis.axisLabelDistance}}"/>' +
+                      '<input aria-label="y axis label distance" class="form-control" type="number" id="control-chart-y-axis-label-distance" value="{{options.yAxis.axisLabelDistance}}"/>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -141,12 +124,12 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y-values">Tick Values</label>' +
-                      '<input class="form-control" placeholder="From.." type="text" id="control-chart-y-values-from" value="{{yValuesFrom}}"/>' +
-                      '<input class="form-control" placeholder="To.." type="text" id="control-chart-y-values-to" value="{{yValuesTo}}"/>' +
+                      '<input aria-label="y axis tick values from" class="form-control" placeholder="From.." type="text" id="control-chart-y-values-from" value="{{yValuesFrom}}"/>' +
+                      '<input aria-label="y axis tick values to" class="form-control" placeholder="To.." type="text" id="control-chart-y-values-to" value="{{yValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y-values-step">Step</label>' +
-                      '<input class="form-control" type="number" id="control-chart-y-values-step" value="{{yValuesStep}}"/>' +
+                      '<input aria-label="y step value" class="form-control" type="number" id="control-chart-y-values-step" value="{{yValuesStep}}"/>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -159,7 +142,7 @@ my.BaseControl = Backbone.View.extend({
                 /// Format
                 '<div class="form-group">' +
                   '<label for="control-chart-y1-format">Format</label>' +
-                  '<select class="form-control" id="control-chart-y1-format">' +
+                  '<select aria-label="y1 axis format" class="form-control" id="control-chart-y1-format">' +
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
                     '</optgroup>' +
@@ -192,11 +175,11 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y1-axis-label">Y Axis Label</label>' +
-                      '<input class="form-control" type="text" id="control-chart-y1-axis-label" value="{{options.y1Axis.axisLabel}}"/>' +
+                      '<input aria-label="y1 axis label" class="form-control" type="text" id="control-chart-y1-axis-label" value="{{options.y1Axis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y1-axis-label-distance">Distance</label>' +
-                      '<input class="form-control" type="number" id="control-chart-y1-axis-label-distance" value="{{options.y1Axis.axisLabelDistance}}"/>' +
+                      '<input aria-label="y1 axis label distance" class="form-control" type="number" id="control-chart-y1-axis-label-distance" value="{{options.y1Axis.axisLabelDistance}}"/>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -206,12 +189,12 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y1-values">Tick Values</label>' +
-                      '<input class="form-control" placeholder="From.." type="text" id="control-chart-y1-values-from" value="{{y1ValuesFrom}}"/>' +
-                      '<input class="form-control" placeholder="To.." type="text" id="control-chart-y1-values-to" value="{{y1ValuesTo}}"/>' +
+                      '<input aria-label="y1 axis tick values from" class="form-control" placeholder="From.." type="text" id="control-chart-y1-values-from" value="{{y1ValuesFrom}}"/>' +
+                      '<input aria-label="y1 axis tick values to" class="form-control" placeholder="To.." type="text" id="control-chart-y1-values-to" value="{{y1ValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y1-values-step">Step</label>' +
-                      '<input class="form-control" type="number" id="control-chart-y1-values-step" value="{{y1ValuesStep}}"/>' +
+                      '<input aria-label="y1 step value" class="form-control" type="number" id="control-chart-y1-values-step" value="{{y1ValuesStep}}"/>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -224,7 +207,7 @@ my.BaseControl = Backbone.View.extend({
                 /// Format
                 '<div class="form-group">' +
                   '<label for="control-chart-y2-format">Format</label>' +
-                  '<select class="form-control" id="control-chart-y2-format">' +
+                  '<select aria-label="y2 axis format" class="form-control" id="control-chart-y2-format">' +
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
                     '</optgroup>' +
@@ -258,11 +241,11 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y2-axis-label">Y Axis Label</label>' +
-                      '<input class="form-control" type="text" id="control-chart-y2-axis-label" value="{{options.y2Axis.axisLabel}}"/>' +
+                      '<input aria-label="y2 axis label" class="form-control" type="text" id="control-chart-y2-axis-label" value="{{options.y2Axis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y2-axis-label-distance">Distance</label>' +
-                      '<input class="form-control" type="number" id="control-chart-y2-axis-label-distance" value="{{options.y2Axis.axisLabelDistance}}"/>' +
+                      '<input aria-label="y2 axis label distance" class="form-control" type="number" id="control-chart-y2-axis-label-distance" value="{{options.y2Axis.axisLabelDistance}}"/>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -272,12 +255,12 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
                       '<label for="control-chart-y2-values">Tick Values</label>' +
-                      '<input class="form-control" placeholder="From.." type="text" id="control-chart-y2-values-from" value="{{y2ValuesFrom}}"/>' +
-                      '<input class="form-control" placeholder="To.." type="text" id="control-chart-y2-values-to" value="{{y2ValuesTo}}"/>' +
+                      '<input aria-label="y2 axis tick values from" class="form-control" placeholder="From.." type="text" id="control-chart-y2-values-from" value="{{y2ValuesFrom}}"/>' +
+                      '<input aria-label="y2 axis tick values to" class="form-control" placeholder="To.." type="text" id="control-chart-y2-values-to" value="{{y2ValuesTo}}"/>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<label for="control-chart-y2-values-step">Step</label>' +
-                      '<input class="form-control" type="number" id="control-chart-y2-values-step" value="{{y2ValuesStep}}"/>' +
+                      '<input aria-label="y2 step value" class="form-control" type="number" id="control-chart-y2-values-step" value="{{y2ValuesStep}}"/>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -290,13 +273,13 @@ my.BaseControl = Backbone.View.extend({
                 /// Color
                 '<div class="form-group">' +
                     '<label for="control-chart-color">Color</label>' +
-                    '<input class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
+                    '<input aria-label="chart colors" class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
                 '</div>' +
 
                 /// Transition time
                 '<div class="form-group">' +
                   '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
-                  '<input value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
+                  '<input aria-label="Transition time" value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
                 '</div>' +
 
                 /// Goal
@@ -308,15 +291,15 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                   '<div class="row">' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input id="control-chart-goal-value" type="text" class="form-control" aria-label="" placeholder="e.g.: 50" value="{{goal.value}}">' +
+                      '<input id="control-chart-goal-value" type="text" class="form-control" aria-label="Goal value" placeholder="e.g.: 50" value="{{goal.value}}">' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input id="control-chart-goal-color" type="text" class="form-control" aria-label="" placeholder="e.g.: red" value="{{goal.color}}">' +
+                      '<input id="control-chart-goal-color" type="text" class="form-control" aria-label="Goal color" placeholder="e.g.: red" value="{{goal.color}}">' +
                     '</div>' +
                     '<div class="col-md-6 col-sm-3">' +
                       '<div class="form-group checkbox checkbox-without-margin">' +
                         '<label for="control-chart-goal-outside">' +
-                          '<input type="checkbox" id="control-chart-goal-outside" value="{{goal.outside}}" {{#goal.outside}}checked{{/goal.outside}}/> Label outside' +
+                          '<input aria-label="Goal label outside" type="checkbox" id="control-chart-goal-outside" value="{{goal.outside}}" {{#goal.outside}}checked{{/goal.outside}}/> Label outside' +
                         '</label>' +
                       '</div>' +
                       '<div class="form-group checkbox checkbox-without-margin">' +
@@ -331,7 +314,7 @@ my.BaseControl = Backbone.View.extend({
                 /// Data sort
                 '<div class="form-group">' +
                   '<label for="control-chart-sort">Sort</label>' +
-                  '<select id="control-chart-sort" class="form-control chosen-select">' +
+                  '<select aria-label="Data sort" id="control-chart-sort" class="form-control chosen-select">' +
                     '{{#sortFields}}' +
                       '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
                     '{{/sortFields}}' +
@@ -347,16 +330,16 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                   '<div class="row">' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input id="control-chart-margin-top" type="text" class="form-control" aria-label="" placeholder="Top" value="{{options.margin.top}}">' +
+                      '<input aria-label="Margin top" id="control-chart-margin-top" type="text" class="form-control" placeholder="Top" value="{{options.margin.top}}">' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input id="control-chart-margin-right" type="text" class="form-control" aria-label="" placeholder="Right" value="{{options.margin.right}}">' +
+                      '<input aria-label="Margin right" id="control-chart-margin-right" type="text" class="form-control" placeholder="Right" value="{{options.margin.right}}">' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input id="control-chart-margin-bottom" type="text" class="form-control" aria-label="" placeholder="Bottom" value="{{options.margin.bottom}}">' +
+                      '<input aria-label="Margin bottom" id="control-chart-margin-bottom" type="text" class="form-control" placeholder="Bottom" value="{{options.margin.bottom}}">' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input id="control-chart-margin-left" type="text" class="form-control" aria-label="" placeholder="Left" value="{{options.margin.left}}">' +
+                      '<input aria-label="Margin left" id="control-chart-margin-left" type="text" class="form-control" placeholder="Left" value="{{options.margin.left}}">' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -364,42 +347,42 @@ my.BaseControl = Backbone.View.extend({
                 /// Show title
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-title">' +
-                    '<input type="checkbox" id="control-chart-show-title" value="{{showTitle}}" {{#showTitle}}checked{{/showTitle}}/> Show title' +
+                    '<input aria-label="Show title" type="checkbox" id="control-chart-show-title" value="{{showTitle}}" {{#showTitle}}checked{{/showTitle}}/> Show title' +
                   '</label>' +
                 '</div>' +
 
                 /// Show controls
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-controls">' +
-                    '<input type="checkbox" id="control-chart-show-controls" value="{{options.showControls}}" {{#options.showControls}}checked{{/options.showControls}}/> Show controls' +
+                    '<input aria-label="Show controls" type="checkbox" id="control-chart-show-controls" value="{{options.showControls}}" {{#options.showControls}}checked{{/options.showControls}}/> Show controls' +
                   '</label>' +
                 '</div>' +
 
                 /// Show legend
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-legend">' +
-                    '<input type="checkbox" id="control-chart-show-legend" value="{{options.showLegend}}" {{#options.showLegend}}checked{{/options.showLegend}}/> Show legend' +
+                    '<input aria-label="show legend" type="checkbox" id="control-chart-show-legend" value="{{options.showLegend}}" {{#options.showLegend}}checked{{/options.showLegend}}/> Show legend' +
                   '</label>' +
                 '</div>' +
 
                 /// Group
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-group">' +
-                    '<input type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by X-Field' +
+                    '<input aria-label="group" type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by X-Field' +
                   '</label>' +
                 '</div>' +
 
                 /// Show tooltips
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-tooltips">' +
-                    '<input type="checkbox" id="control-chart-show-tooltips" {{#options.tooltips}}checked{{/options.tooltips}}/> Show Tooltips' +
+                    '<input aria-label="show tooltips" type="checkbox" id="control-chart-show-tooltips" {{#options.tooltips}}checked{{/options.tooltips}}/> Show Tooltips' +
                   '</label>' +
                 '</div>' +
 
                 /// Reduce ticks
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-reduce-ticks">' +
-                    '<input type="checkbox" id="control-chart-reduce-ticks" {{#options.reduceXTicks}}checked{{/options.reduceXTicks}}/> Reduce Ticks' +
+                    '<input aria-label="reduce ticks" type="checkbox" id="control-chart-reduce-ticks" {{#options.reduceXTicks}}checked{{/options.reduceXTicks}}/> Reduce Ticks' +
                   '</label>' +
                 '</div>' +
               '</div>' +
@@ -407,9 +390,9 @@ my.BaseControl = Backbone.View.extend({
   composeTemplate: function() {
     var template = '';
     template += this.templateTop;
+    template += this.templateGeneral;
     template += this.templateXFormat;
     template += this.templateYFormat;
-    template += this.templateGeneral;
     template += this.customOptions ? this.customOptions : '';
     return template;
   },
@@ -589,7 +572,7 @@ my.QueryEditor = Backbone.View.extend({
             <div class="input-group-btn"> \
               <button type="button" class="btn btn-default">Go &raquo;</button> \
             </div> \
-            <input class="form-control search-query" type="text" name="q" value="{{q}}" placeholder="Search data ..."> \
+            <input aria-label="Search query" class="form-control search-query" type="text" name="q" value="{{q}}" placeholder="Search data ..."/> \
           </div> \
         </div> \
       </form> \
@@ -623,7 +606,7 @@ my.QueryEditor = Backbone.View.extend({
         <div class="form-stacked js-add"> \
           <div class="form-group"> \
             <label>Field</label> \
-            <select class="fields form-control"> \
+            <select aria-label="Field to filter" class="fields form-control"> \
               {{#fields}} \
               <option value="{{id}}">{{label}}</option> \
               {{/fields}} \
@@ -631,7 +614,7 @@ my.QueryEditor = Backbone.View.extend({
           </div> \
           <div class="form-group"> \
             <label>Filter type</label> \
-            <select class="filterType form-control"> \
+            <select aria-label="Field filter type" class="filterType form-control"> \
               <option value="term">Value</option> \
               <option value="range">Range</option> \
               <option value="geo_distance">Geo distance</option> \
@@ -657,7 +640,7 @@ my.QueryEditor = Backbone.View.extend({
               {{field}} <small>{{type}}</small> \
               <a class="js-remove-filter" href="#" title="Remove this filter" data-filter-id="{{id}}">&times;</a> \
             </label> \
-            <input class="form-control" type="text" value="{{term}}" name="term" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+            <input aria-label="Field filter value" class="form-control" type="text" value="{{term}}" name="term" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
           </div> \
         </div> \
       ',
@@ -672,11 +655,11 @@ my.QueryEditor = Backbone.View.extend({
             </div> \
             <div class="form-group"> \
               <label for="">From</label> \
-              <input class="form-control" type="text" value="{{from}}" name="from" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+              <input aria-label="Field filter value from" class="form-control" type="text" value="{{from}}" name="from" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
             </div> \
             <div class="form-group"> \
               <label for="">To</label> \
-              <input class="form-control" type="text" value="{{to}}" name="to" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+              <input aria-label="Field filter value to" class="form-control" type="text" value="{{to}}" name="to" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
             </div> \
           </fieldset> \
         </div> \
@@ -690,15 +673,15 @@ my.QueryEditor = Backbone.View.extend({
             </legend> \
             <div class="form-group"> \
               <label class="control-label" for="">Longitude</label> \
-              <input class="input-sm" type="text" value="{{point.lon}}" name="lon" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+              <input aria-label="Field filter longitude value" class="input-sm" type="text" value="{{point.lon}}" name="lon" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
             </div> \
             <div class="form-group"> \
               <label class="control-label" for="">Latitude</label> \
-              <input class="input-sm" type="text" value="{{point.lat}}" name="lat" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+              <input aria-label="Field filter latitude value" class="input-sm" type="text" value="{{point.lat}}" name="lat" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
             </div> \
             <div class="form-group"> \
               <label class="control-label" for="">Distance (km)</label> \
-              <input class="input-sm" type="text" value="{{distance}}" name="distance" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
+              <input aria-label="Field filter distance value" class="input-sm" type="text" value="{{distance}}" name="distance" data-filter-field="{{field}}" data-filter-id="{{id}}" data-filter-type="{{type}}" /> \
             </div> \
           </fieldset> \
         </div> \
