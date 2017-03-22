@@ -265,24 +265,7 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
               '</fieldset>',
-  templateGeneral:
-              //////// GENERAL
-              '<fieldset>' +
-                '<legend>General</legend>' +
-
-                /// Color
-                '<div class="form-group">' +
-                    '<label for="control-chart-color">Color</label>' +
-                    '<input aria-label="chart colors" class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
-                '</div>' +
-
-                /// Transition time
-                '<div class="form-group">' +
-                  '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
-                  '<input aria-label="Transition time" value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
-                '</div>' +
-
-                /// Goal
+  templateGoal:
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-12 col-sm-12">' +
@@ -309,7 +292,26 @@ my.BaseControl = Backbone.View.extend({
                       '</div>' +
                     '</div>' +
                   '</div>' +
+                '</div>',
+  templateGeneral:
+              //////// GENERAL
+              '<fieldset>' +
+                '<legend>General</legend>' +
+
+                /// Color
+                '<div class="form-group">' +
+                    '<label for="control-chart-color">Color</label>' +
+                    '<input aria-label="chart colors" class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
                 '</div>' +
+
+                /// Transition time
+                '<div class="form-group">' +
+                  '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
+                  '<input aria-label="Transition time" value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
+                '</div>' +
+
+                /// Goal
+                '<div id="goal-controls"></div>' +
 
                 /// Data sort
                 '<div class="form-group">' +
@@ -420,6 +422,7 @@ my.BaseControl = Backbone.View.extend({
     options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
     self.state.set('options', options, {silent : true});
     $('#base-controls').html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
+    $('#goal-controls').html(Mustache.render(self.templateGoal, self.state.toJSON()));
 
     self.$('.chosen-select').chosen({width: '95%'});
     if(self.state.get('xFormat') && self.state.get('xFormat').format) {
