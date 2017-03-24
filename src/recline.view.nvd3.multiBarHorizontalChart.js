@@ -35,7 +35,7 @@ this.recline.View = this.recline.View || {};
             var margin = self.chart.margin();
             var y = yScale(goal.value) + margin.top;
             var x = margin.left;
-            var xHeight = (d3.select('svg').size())? parseInt(d3.select('svg').style('height')) - 10 : 0;
+            var yHeight = jQuery('g').get(0).getBBox().height;
             var g = d3.select('svg').append('g');
             var labelX, labelY;
 
@@ -56,7 +56,7 @@ this.recline.View = this.recline.View || {};
             .attr('class', 'goal')
             .attr('y1', x - 10)
             .attr('x1', y + 10)
-            .attr('y2', xHeight - 90)
+            .attr('y2', yHeight - 5)
             .attr('x2', y + 10)
             .attr('stroke-width', 1)
             .attr('stroke', goal.color || 'red')
