@@ -31,21 +31,21 @@ this.recline.View = this.recline.View || {};
         nv.dispatch.on('render_end', null);
         if(this.canRenderGoal(goal)){
           nv.dispatch.on('render_end', function(){
-            var yScale = self.chart.yAxis.scale();
+            var scale = self.chart.yAxis.scale();
             var margin = self.chart.margin();
-            var y = yScale(goal.value) + margin.top;
-            var x = margin.left;
-            var yHeight = jQuery('g').get(0).getBBox().height;
+            var x = scale(goal.value) + margin.left;
+            var y = margin.top;
+            var height = jQuery('g').get(0).getBBox().height;
             var g = d3.select('svg').append('g');
             var labelX, labelY;
 
             if(goal.label) {
-              labelX =  x + 15;
-              labelY = y + 15;
+              labelX =  x + 5;
+              labelY = y + 5;
               g.append('text')
-              .text('TARGET')
-              .attr('x', labelY)
-              .attr('y', labelX)
+              .text(goal.title || 'TARGET')
+              .attr('x', labelX)
+              .attr('y', labelY)
               .attr('fill', goal.color || 'red' )
               .style('font-size','10px')
               .style('font-weight','bold')
@@ -54,10 +54,10 @@ this.recline.View = this.recline.View || {};
 
             g.append('line')
             .attr('class', 'goal')
-            .attr('y1', x - 10)
-            .attr('x1', y + 10)
-            .attr('y2', yHeight - 5)
-            .attr('x2', y + 10)
+            .attr('y1', y)
+            .attr('x1', x)
+            .attr('y2', height - 5)
+            .attr('x2', x)
             .attr('stroke-width', 1)
             .attr('stroke', goal.color || 'red')
             .style('stroke-dasharray', ('3, 3'));
