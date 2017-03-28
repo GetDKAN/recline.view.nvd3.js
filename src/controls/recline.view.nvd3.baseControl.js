@@ -344,6 +344,12 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
 
+                /// Custom height
+                '<div class="form-group">' +
+                  '<label for="control-chart-height">Chart height (optional)</label>' +
+                  '<input aria-label="Chart height" value="{{chartHeight}}" type="text" id="control-chart-height" class="form-control" placeholder="e.g: 480"/>' +
+                '</div>' +
+
                 /// Show title
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-title">' +
@@ -479,6 +485,7 @@ my.BaseControl = Backbone.View.extend({
     var computedState = {
       group: self.$('#control-chart-group').is(':checked'),
       transitionTime: self.$('#control-chart-transition-time').val(),
+      chartHeight: self.$('#control-chart-height').val(),
       xFormat:{
         type: self.$('#control-chart-x-format option:selected').data('type'),
         format: self.$('#control-chart-x-format option:selected').val()
