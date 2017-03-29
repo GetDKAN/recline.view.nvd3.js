@@ -47,9 +47,19 @@ my.BaseControl = Backbone.View.extend({
                 '<label for="control-chart-label-x-rotation">X Label Rotation</label>' +
                 '<input aria-label="X label rotation" value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
               '</div>' +
+              
+              /// Axis label
               '<div class="form-group">' +
-                  '<label for="control-chart-x-axis-label">X Axis Label</label>' +
-                  '<input aria-label="X axis label" class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
+                '<div class="row">' +
+                  '<div class="col-md-9 col-sm-9">' +
+                    '<label for="control-chart-x-axis-label">X Axis Label</label>' +
+                    '<input aria-label="X axis label" class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
+                  '</div>' +
+                  '<div class="col-md-3 col-sm-3">' +
+                    '<label for="control-chart-y-axis-label-distance">Distance</label>' +
+                    '<input aria-label="X axis label distance" class="form-control" type="number" id="control-chart-x-axis-label-distance" value="{{options.xAxis.axisLabelDistance}}"/>' +
+                  '</div>' +
+                '</div>' +
               '</div>' +
 
               /// Axis ticks
@@ -531,6 +541,7 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.xAxis.rotateLabels = (isNaN(rotationVal)) ? 0 : rotationVal;
     color = _.invoke(self.$('#control-chart-color').val().split(','), 'trim');
     computedState.options.xAxis.axisLabel = self.$('#control-chart-x-axis-label').val();
+    computedState.options.xAxis.axisLabelDistance = parseInt(self.$('#control-chart-x-axis-label-distance').val()) || 0;
     computedState.options.yAxis.axisLabel = self.$('#control-chart-y-axis-label').val();
     computedState.options.yAxis.axisLabelDistance = parseInt(self.$('#control-chart-y-axis-label-distance').val()) || 0;
     computedState.options.y1Axis.axisLabel = self.$('#control-chart-y1-axis-label').val();
