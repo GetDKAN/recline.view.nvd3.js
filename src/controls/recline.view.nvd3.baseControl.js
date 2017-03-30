@@ -429,7 +429,7 @@ my.BaseControl = Backbone.View.extend({
     self.state.set('sortFields', _.applyOption(sortFields, [self.state.get('sort')]));
 
     var options = self.state.get('options') || {};
-    options.margin = options.margin || {top: 15, right: 10, bottom: 50, left: 60};
+    options.margin = options.margin || {top: 30, right: 20, bottom: 50, left: 60};
     self.state.set('options', options, {silent : true});
     $('#base-controls').html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
     $('#goal-controls').html(Mustache.render(self.templateGoal, self.state.toJSON()));
