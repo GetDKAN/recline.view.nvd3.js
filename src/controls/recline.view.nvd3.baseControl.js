@@ -411,7 +411,6 @@ my.BaseControl = Backbone.View.extend({
     'submit #control-chart': 'update'
   },
   render: function(){
-    var controlsRendered = false;
     var self = this;
     var sortFields = _.arrayToOptions(_.getFields(self.state.get('model')));
     var formatX, formatY;
@@ -472,7 +471,20 @@ my.BaseControl = Backbone.View.extend({
       if(self.$(e.target).closest('.chosen-container').length) return;
       if(e.type === 'keydown' && e.keyCode !== 13) return;
     }
-    newState = _.merge({}, self.state.toJSON(), self.getUIState());
+
+    // Get old and new settings.
+    var oldSettings = self.state.toJSON();
+    var newSettings = self.getUIState();
+    // Merge old and new settings.
+    newState = _.merge({}, oldSettings, newSettings);
+    // The merge function is recursive so all the settings that are saved as
+    // arrays are merged as well. Chart colors are saved on arrays and we need
+    // the new settings to replace the old ones so the following was added in order
+    // to fix those settings after the merge is done.
+    if (newSettings.options.color) {
+      newState.options.color = newSettings.options.color;
+    }
+
     self.state.set(newState);
   },
   getUIState: function(){
@@ -540,9 +552,7 @@ my.BaseControl = Backbone.View.extend({
     if(self.$('#control-chart-color').val()){
       computedState.options.color = color;
     } else {
-      if(computedState.options.color){
-        delete computedState.options.color;
-      }
+      computedState.options.color = nv.utils.defaultColor();
     }
     var margin = {
       top: parseInt(self.$('#control-chart-margin-top').val()),
