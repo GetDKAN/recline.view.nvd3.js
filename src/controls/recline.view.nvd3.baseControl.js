@@ -47,8 +47,8 @@ my.BaseControl = Backbone.View.extend({
                 '<label for="control-chart-label-x-rotation">X Label Rotation</label>' +
                 '<input aria-label="X label rotation" value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
               '</div>' +
-              
-              /// Axis label
+
+              // Axis label.
               '<div class="form-group">' +
                 '<div class="row">' +
                   '<div class="col-md-9 col-sm-9">' +
@@ -62,7 +62,7 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
               '</div>' +
 
-              /// Axis ticks
+              // Axis ticks.
               '<div class="form-group">' +
                 '<div class="row">' +
                   '<div class="col-md-9 col-sm-9">' +
@@ -79,11 +79,11 @@ my.BaseControl = Backbone.View.extend({
             '</fieldset>',
           templateYFormat:
 
-              //////// Y AXIS
+              // ////// Y AXIS.
               '<fieldset>' +
                 '<legend>Y Axis</legend>' +
 
-                /// Format
+                // Format.
                 '<div class="form-group">' +
                   '<label for="control-chart-y-format">Format</label>' +
                   '<select aria-label="y axis format" class="form-control" id="control-chart-y-format">' +
@@ -115,7 +115,7 @@ my.BaseControl = Backbone.View.extend({
                   '</select>' +
                 '</div>' +
 
-                /// Axis label
+                // Axis label.
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
@@ -129,7 +129,7 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
 
-                /// Axis ticks
+                // Axis ticks.
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
@@ -145,11 +145,11 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
               '</fieldset>',
   templateY1Format:
-              //////// Y1 AXIS
+              // ////// Y1 AXIS.
               '<fieldset>' +
                 '<legend>Y-1 Axis</legend>' +
 
-                /// Format
+                // Format.
                 '<div class="form-group">' +
                   '<label for="control-chart-y1-format">Format</label>' +
                   '<select aria-label="y1 axis format" class="form-control" id="control-chart-y1-format">' +
@@ -180,7 +180,7 @@ my.BaseControl = Backbone.View.extend({
                   '</select>' +
                 '</div>' +
 
-                /// Axis label
+                // Axis label.
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
@@ -194,7 +194,7 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
 
-                /// Axis ticks
+                // Axis ticks.
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
@@ -210,11 +210,11 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
               '</fieldset>',
   templateY2Format:
-              //////// Y2 AXIS
+              // ////// Y2 AXIS.
               '<fieldset>' +
                 '<legend>Y-2 Axis</legend>' +
 
-                /// Format
+                // Format.
                 '<div class="form-group">' +
                   '<label for="control-chart-y2-format">Format</label>' +
                   '<select aria-label="y2 axis format" class="form-control" id="control-chart-y2-format">' +
@@ -246,7 +246,7 @@ my.BaseControl = Backbone.View.extend({
                   '</select>' +
                 '</div>' +
 
-                /// Axis label
+                // Axis label.
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
@@ -260,7 +260,7 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
 
-                /// Axis ticks
+                // Axis ticks.
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-9 col-sm-9">' +
@@ -280,14 +280,18 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-12 col-sm-12">' +
                       '<label>Goal</label>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                      'title="Display a goal line" data-content="Setting a goal line will provide your users with a way of tracking performance against expectation. ' +
+                      'Enter the value for the goal in the first field. Enter a color value in the second field if you do not want to use the default color red. Check the Show label box to label the goal line. ' +
+                      'The label will display inside the chart unless you also check the Label outside box."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                     '</div>' +
                   '</div>' +
                   '<div class="row">' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input id="control-chart-goal-value" type="text" class="form-control" aria-label="Goal value" placeholder="e.g.: 50" value="{{goal.value}}">' +
+                      '<input id="control-chart-goal-value" type="text" class="form-control" aria-label="Goal value" placeholder="50" value="{{goal.value}}">' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input id="control-chart-goal-color" type="text" class="form-control" aria-label="Goal color" placeholder="e.g.: red" value="{{goal.color}}">' +
+                      '<input id="control-chart-goal-color" type="text" class="form-control" aria-label="Goal color" placeholder="red" value="{{goal.color}}">' +
                     '</div>' +
                     '<div class="col-md-6 col-sm-3">' +
                       '<div class="form-group checkbox checkbox-without-margin">' +
@@ -304,28 +308,34 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>',
   templateGeneral:
-              //////// GENERAL
+              // ////// GENERAL.
               '<fieldset>' +
                 '<legend>General</legend>' +
 
-                /// Color
+                // Color.
                 '<div class="form-group">' +
                     '<label for="control-chart-color">Color</label>' +
+                    '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                    'title="Select Colors" data-content="You can override the default colors used for the chart by entering different hex values or color names here."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                     '<input aria-label="chart colors" class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
                 '</div>' +
 
-                /// Transition time
+                // Transition time.
                 '<div class="form-group">' +
                   '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                    'title="Adjust transition duration" data-content="Duration in ms to take when updating the chart."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                   '<input aria-label="Transition time" value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
                 '</div>' +
 
-                /// Goal
+                // Goal.
                 '<div id="goal-controls"></div>' +
 
-                /// Data sort
+                // Data sort.
                 '<div class="form-group">' +
                   '<label for="control-chart-sort">Sort</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                    'title="Adjust sort order" data-content="Select the column by which to sort the data."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                   '<select aria-label="Data sort" id="control-chart-sort" class="form-control chosen-select">' +
                     '{{#sortFields}}' +
                       '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
@@ -333,11 +343,14 @@ my.BaseControl = Backbone.View.extend({
                   '</select>' +
                 '</div>' +
 
-                /// Margin
+                // Margin.
                 '<div class="form-group">' +
                   '<div class="row">' +
                     '<div class="col-md-12 col-sm-12">' +
                       '<label>Margin</label>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                      'title="Adjust space around the chart" data-content="If your labels, legends and controls are being cut off or overlapping, you can increase ' +
+                      'the default margins around the chart. The order is Top, Right, Bottom, and Left."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                     '</div>' +
                   '</div>' +
                   '<div class="row">' +
@@ -356,56 +369,71 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
 
-                /// Custom height
+                // Custom height.
                 '<div class="form-group">' +
                   '<label for="control-chart-height">Chart height (optional)</label>' +
-                  '<input aria-label="Chart height" value="{{chartHeight}}" type="text" id="control-chart-height" class="form-control" placeholder="e.g: 480"/>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                      'title="Adjust height of the chart" data-content="If your y-axis labels appear crowded or are overlapping, you can define a height value here to give the data more space."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<input aria-label="Chart height" value="{{chartHeight}}" type="text" id="control-chart-height" class="form-control" placeholder="480"/>' +
                 '</div>' +
 
-                /// Show title
+                // Show title.
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-title">' +
                     '<input aria-label="Show title" type="checkbox" id="control-chart-show-title" value="{{showTitle}}" {{#showTitle}}checked{{/showTitle}}/> Show title' +
                   '</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                      'title="Show chart title" data-content="Click this box to display the title above the cart."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                 '</div>' +
 
-                /// Show controls
+                // Show controls.
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-controls">' +
                     '<input aria-label="Show controls" type="checkbox" id="control-chart-show-controls" value="{{options.showControls}}" {{#options.showControls}}checked{{/options.showControls}}/> Show controls' +
                   '</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                    'title="Show chart controls" data-content="Selecting this option will allow users to toggle between a Grouped or Stacked display of the chart."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                 '</div>' +
 
-                /// Show legend
+                // Show legend.
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-legend">' +
-                    '<input aria-label="show legend" type="checkbox" id="control-chart-show-legend" value="{{options.showLegend}}" {{#options.showLegend}}checked{{/options.showLegend}}/> Show legend' +
+                  '<input aria-label="show legend" type="checkbox" id="control-chart-show-legend" value="{{options.showLegend}}" {{#options.showLegend}}checked{{/options.showLegend}}/> Show legend' +
                   '</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                    'title="Show chart legend" data-content="Selecting this option will allow users to toggle specific data on or off. The legend consists of legend labels presented alongside a colored bullet. ' +
+                    'The bullets are selectable. When nothing is selected, all data will display. Double-clicking a bullet, will turn all the others off. A single click will act as a radio button."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                 '</div>' +
 
-                /// Group
+                // Group.
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-group">' +
                     '<input aria-label="group" type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by X-Field' +
                   '</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                    'title="Group by X-Field" data-content="Group the things."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                 '</div>' +
 
-                /// Show tooltips
+                // Show tooltips.
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-show-tooltips">' +
                     '<input aria-label="show tooltips" type="checkbox" id="control-chart-show-tooltips" {{#options.tooltips}}checked{{/options.tooltips}}/> Show Tooltips' +
                   '</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                    'title="Show tooltips" data-content="This option will allow users to see specific data information when hovering over the chart."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                 '</div>' +
 
-                /// Reduce ticks
+                // Reduce ticks.
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-reduce-ticks">' +
                     '<input aria-label="reduce ticks" type="checkbox" id="control-chart-reduce-ticks" {{#options.reduceXTicks}}checked{{/options.reduceXTicks}}/> Reduce Ticks' +
                   '</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                    'title="Reduce ticks" data-content="This option will reduce the number of labeled ticks along the x-axis."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
                 '</div>' +
               '</div>' +
             '</fieldset>',
-  composeTemplate: function() {
+  composeTemplate: function () {
     var template = '';
     template += this.templateTop;
     template += this.templateGeneral;
@@ -414,7 +442,7 @@ my.BaseControl = Backbone.View.extend({
     template += this.customOptions ? this.customOptions : '';
     return template;
   },
-  initialize: function(options){
+  initialize: function (options) {
     _.extend(this, options);
   },
   events: {
@@ -426,7 +454,7 @@ my.BaseControl = Backbone.View.extend({
     'change input[type="number"]': 'update',
     'submit #control-chart': 'update'
   },
-  render: function(){
+  render: function () {
     var self = this;
     var sortFields = _.arrayToOptions(_.getFields(self.state.get('model')));
     var formatX, formatY;
@@ -440,12 +468,12 @@ my.BaseControl = Backbone.View.extend({
     $('#goal-controls').html(Mustache.render(self.templateGoal, self.state.toJSON()));
 
     self.$('.chosen-select').chosen({width: '95%'});
-    if(self.state.get('xFormat') && self.state.get('xFormat').format) {
+    if (self.state.get('xFormat') && self.state.get('xFormat').format) {
       formatX = self.state.get('xFormat');
       self.$('#control-chart-x-format option[value="' + formatX.format + '"][data-type="' + formatX.type + '"]')
         .attr('selected', 'selected');
     }
-    if(self.state.get('yFormat') && self.state.get('yFormat').format) {
+    if (self.state.get('yFormat') && self.state.get('yFormat').format) {
       formatY = self.state.get('yFormat');
       self.$('#control-chart-y-format option[value="' + formatY.format + '"][data-type="' + formatY.type + '"]')
       .attr('selected', 'selected');
@@ -457,8 +485,12 @@ my.BaseControl = Backbone.View.extend({
       change : function (color) {
         $('#control-chart-color').val(function (i, val) {
           var newVal;
-          if (val) { newVal = val + ', ' + color.toHexString(); }
-          else { newVal = color.toHexString(); }
+          if (val) {
+            newVal = val + ', ' + color.toHexString();
+          }
+          else {
+            newVal = color.toHexString();
+          }
           return newVal;
         });
         $('input#control-chart-color').trigger('blur');
@@ -479,13 +511,14 @@ my.BaseControl = Backbone.View.extend({
         state: this.state
       });
     }
+    $('[data-toggle="popover"]').popover();
   },
-  update: function(e){
+  update: function (e) {
     var self = this;
     var newState = {};
     if (e) {
-      if(self.$(e.target).closest('.chosen-container').length) return;
-      if(e.type === 'keydown' && e.keyCode !== 13) return;
+      if (self.$(e.target).closest('.chosen-container').length) return;
+      if (e.type === 'keydown' && e.keyCode !== 13) return;
     }
 
     // Get old and new settings.
@@ -503,7 +536,7 @@ my.BaseControl = Backbone.View.extend({
 
     self.state.set(newState);
   },
-  getUIState: function(){
+  getUIState: function () {
     var self = this;
     var color;
     var rotationVal = parseInt(self.$('#control-chart-label-x-rotation').val());
@@ -567,9 +600,10 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.y1Axis.axisLabelDistance = parseInt(self.$('#control-chart-y1-axis-label-distance').val()) || 0;
     computedState.options.y2Axis.axisLabel = self.$('#control-chart-y2-axis-label').val();
     computedState.options.y2Axis.axisLabelDistance = parseInt(self.$('#control-chart-y2-axis-label-distance').val()) || 0;
-    if(self.$('#control-chart-color').val()){
+    if (self.$('#control-chart-color').val()) {
       computedState.options.color = color;
-    } else {
+    }
+    else {
       computedState.options.color = nv.utils.defaultColor();
     }
     var margin = {
@@ -585,7 +619,7 @@ my.BaseControl = Backbone.View.extend({
       label: self.$('#control-chart-goal-label').is(':checked'),
     };
 
-    // replace NaN Vals with 0
+    // Replace NaN Vals with 0.
     _.each(_.keys(margin), function (key) {
       margin[key] = (isNaN(margin[key])) ? 0 : margin[key];
     });
@@ -614,17 +648,17 @@ my.QueryEditor = Backbone.View.extend({
       'change input': 'onFormSubmit'
     },
 
-    initialize: function() {
+    initialize: function () {
       _.bindAll(this, 'render');
       this.listenTo(this.model, 'change', this.render);
       this.render();
     },
-    onFormSubmit: function(e) {
+    onFormSubmit: function (e) {
       e.preventDefault();
       var query = this.$el.find('.search-query').val();
       this.model.set({q: query});
     },
-    render: function() {
+    render: function () {
       var tmplData = this.model.toJSON();
       var templated = Mustache.render(this.template, tmplData);
       this.$el.html(templated);
@@ -724,35 +758,35 @@ my.QueryEditor = Backbone.View.extend({
       'click .js-edit button': 'onTermFiltersUpdate',
       'click #add-filter-btn': 'onAddFilter'
     },
-    initialize: function(opts) {
+    initialize: function (opts) {
       _.bindAll(this, 'render');
       this.listenTo(this.model.fields, 'all', this.render);
       this.listenTo(this.model.queryState, 'change change:filters:new-blank', this.render);
       _.extend(this, opts);
       this.render();
     },
-    render: function() {
+    render: function () {
       var self = this;
       var tmplData = $.extend(true, {}, this.model.queryState.toJSON());
-      // we will use idx in list as there id ...
-      tmplData.filters = _.map(tmplData.filters, function(filter, idx) {
+      // We will use idx in list as the id.
+      tmplData.filters = _.map(tmplData.filters, function (filter, idx) {
         filter.id = idx;
         return filter;
       });
       tmplData.fields = this.model.fields.toJSON();
-      tmplData.filterRender = function() {
+      tmplData.filterRender = function () {
         return Mustache.render(self.filterTemplates[this.type], this);
       };
       var out = Mustache.render(this.template, tmplData);
       this.$el.html(out);
     },
-    onAddFilterShow: function(e) {
+    onAddFilterShow: function (e) {
       e.preventDefault();
       var $target = $(e.target);
       $target.hide();
       this.$el.find('.js-add').show();
     },
-    onAddFilter: function(e) {
+    onAddFilter: function (e) {
       e.preventDefault();
       var $target = $(e.target).closest('.form-stacked');
       $target.hide();
@@ -760,18 +794,18 @@ my.QueryEditor = Backbone.View.extend({
       var field      = $target.find('select.fields').val();
       this.model.queryState.addFilter({type: filterType, field: field});
     },
-    onRemoveFilter: function(e) {
+    onRemoveFilter: function (e) {
       e.preventDefault();
       var $target = $(e.target);
       var filterId = $target.attr('data-filter-id');
       this.model.queryState.removeFilter(filterId);
     },
-    onTermFiltersUpdate: function(e) {
+    onTermFiltersUpdate: function (e) {
      var self = this;
       e.preventDefault();
       var filters = self.model.queryState.get('filters');
       var $form = $(e.target).closest('.form-stacked');
-      _.each($form.find('input'), function(input) {
+      _.each($form.find('input'), function (input) {
         var $input = $(input);
         var filterType  = $input.attr('data-filter-type');
         var filterIndex = parseInt($input.attr('data-filter-id'), 10);
@@ -782,11 +816,13 @@ my.QueryEditor = Backbone.View.extend({
           case 'term':
             filters[filterIndex].term = value;
             break;
+
           case 'range':
             filters[filterIndex][name] = value;
             break;
+
           case 'geo_distance':
-            if(name === 'distance') {
+            if (name === 'distance') {
               filters[filterIndex].distance = parseFloat(value);
             }
             else {
