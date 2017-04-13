@@ -14,7 +14,7 @@ this.recline.View = this.recline.View || {};
                   '<input type="checkbox" id="control-chart-donut" {{#options.donut}}checked{{/options.donut}}/> Donut' +
                   '</label>' +
                   '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" ' +
-                  'title="Donut" data-content="Turn your pie chart into a donut chart."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  'title="Donut" data-content="Turn your pie chart into a donut chart."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '</div>' +
               '</fieldset>',
     events: function(){

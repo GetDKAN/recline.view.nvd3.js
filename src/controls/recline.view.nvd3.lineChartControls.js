@@ -13,7 +13,7 @@ this.recline.View = this.recline.View || {};
                   '<input type="checkbox" id="control-chart-datapoints" {{#options.datapoints}}checked{{/options.datapoints}}/> Show data points' +
                   '</label>' +
                   '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" ' +
-                  'title="Show data points" data-content="This will display the data points along each line."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  'title="Show data points" data-content="This will display the data points along each line."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '</div>' +
               '</fieldset>',
     events: function(){

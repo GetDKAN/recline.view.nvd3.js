@@ -16,8 +16,8 @@ my.BaseControl = Backbone.View.extend({
                 '<legend>X Axis</legend>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
-                '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                  'title="X Axis Data Format" data-content="Select the format and display option for the x-axis data."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                  'title="X Axis Data Format" data-content="Select the format and display option for the x-axis data."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '<select class="form-control" id="control-chart-x-format">' +
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
@@ -48,8 +48,8 @@ my.BaseControl = Backbone.View.extend({
               '</div>' +
               '<div class="form-group">' +
                 '<label for="control-chart-label-x-rotation">X Label Rotation</label>' +
-                '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                  'title="X Label Rotation" data-content="If your x-axis labels are long text values it will help to rotate them to avoid overlapping text. Enter a value to define the angle of the labels, 45 is recommended."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                  'title="X Label Rotation" data-content="If your x-axis labels are long text values it will help to rotate them to avoid overlapping text. Enter a value to define the angle of the labels, 45 is recommended."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '<input aria-label="X label rotation" value="{{options.xAxis.rotateLabels}}" type="text" id="control-chart-label-x-rotation" class="form-control" placeholder="e.g: -45"/>' +
               '</div>' +
 
@@ -58,15 +58,15 @@ my.BaseControl = Backbone.View.extend({
                 '<div class="row">' +
                   '<div class="col-md-8 col-sm-8">' +
                     '<label for="control-chart-x-axis-label">X Axis Label</label>' +
-                    '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="X Axis Label" data-content="Provide a label to appear along the x-axis."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                    '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="X Axis Label" data-content="Provide a label to appear along the x-axis."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                     '<input aria-label="X axis label" class="form-control" type="text" id="control-chart-x-axis-label" value="{{options.xAxis.axisLabel}}"/>' +
                   '</div>' +
                   '<div class="col-md-4 col-sm-4">' +
                     '<label for="control-chart-y-axis-label-distance">Distance</label>' +
                     '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
                       'title="Adjust x-axis label position" data-content="This only effects the x-axis label if using the horizontal bar chart. If your axis label overlaps the data labels you can move the label left with positive values, and right with negative values. ' +
-                      'You may need to adjust the left margin of the chart as well."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      'You may need to adjust the left margin of the chart as well."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                     '<input aria-label="X axis label distance" class="form-control" type="number" id="control-chart-x-axis-label-distance" value="{{options.xAxis.axisLabelDistance}}"/>' +
                   '</div>' +
                 '</div>' +
@@ -77,8 +77,8 @@ my.BaseControl = Backbone.View.extend({
                 '<div class="row">' +
                   '<div class="col-md-8 col-sm-8">' +
                     '<label for="control-chart-x-values">Tick Values' +
-                    '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Tick and Step Values" data-content="Enter a numerical range to set the start and end values to display. Use the Step field to define the value between each tick within the range."><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>' +
+                    '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Tick and Step Values" data-content="Enter a numerical range to set the start and end values to display. Use the Step field to define the value between each tick within the range."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a></label>' +
                     '<input aria-label="Tick values from" class="form-control" type="text" placeholder="From.." id="control-chart-x-values-from" value="{{xValuesFrom}}"/>' +
                     '<input aria-label="Tick values to" class="form-control" type="text" placeholder="To.." id="control-chart-x-values-to" value="{{xValuesTo}}"/>' +
                   '</div>' +
@@ -98,8 +98,8 @@ my.BaseControl = Backbone.View.extend({
                 // Format.
                 '<div class="form-group">' +
                   '<label for="control-chart-y-format">Format</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                  'title="Y Axis Data Format" data-content="Select the format and display option for the y-axis data."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                  'title="Y Axis Data Format" data-content="Select the format and display option for the y-axis data."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                   '<select aria-label="y axis format" class="form-control" id="control-chart-y-format">' +
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
@@ -134,14 +134,14 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y-axis-label">Y Axis Label</label>' +
-                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Y Axis Label" data-content="Provide a label to appear along the y-axis"><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Y Axis Label" data-content="Provide a label to appear along the y-axis"><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                       '<input aria-label="y axis label" class="form-control" type="text" id="control-chart-y-axis-label" value="{{options.yAxis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-4 col-sm-4">' +
                       '<label for="control-chart-y-axis-label-distance">Distance</label>' +
                       '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Adjust y-axis label position." data-content="If your axis label overlaps the data labels you can move the label left with positive values, and right with negative values. You may need to adjust the left margin of the chart as well."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      'title="Adjust y-axis label position." data-content="If your axis label overlaps the data labels you can move the label left with positive values, and right with negative values. You may need to adjust the left margin of the chart as well."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                       '<input aria-label="y axis label distance" class="form-control" type="number" id="control-chart-y-axis-label-distance" value="{{options.yAxis.axisLabelDistance}}"/>' +
                     '</div>' +
                   '</div>' +
@@ -152,8 +152,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y-values">Tick Values' +
-                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Tick and Step Values" data-content="Enter a numerical range to set the start and end values to display. Use the Step field to define the value between each tick within the range."><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Tick and Step Values" data-content="Enter a numerical range to set the start and end values to display. Use the Step field to define the value between each tick within the range."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a></label>' +
                       '<input aria-label="y axis tick values from" class="form-control" placeholder="From.." type="text" id="control-chart-y-values-from" value="{{yValuesFrom}}"/>' +
                       '<input aria-label="y axis tick values to" class="form-control" placeholder="To.." type="text" id="control-chart-y-values-to" value="{{yValuesTo}}"/>' +
                     '</div>' +
@@ -172,8 +172,8 @@ my.BaseControl = Backbone.View.extend({
                 // Format.
                 '<div class="form-group">' +
                   '<label for="control-chart-y1-format">Format</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                  'title="Y Axis Data Format" data-content="Select the format and display option for the y-axis data."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                  'title="Y Axis Data Format" data-content="Select the format and display option for the y-axis data."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                   '<select aria-label="y1 axis format" class="form-control" id="control-chart-y1-format">' +
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
@@ -207,14 +207,14 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y1-axis-label">Y Axis Label</label>' +
-                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Y Axis Label" data-content="Provide a label to appear along the y-axis"><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Y Axis Label" data-content="Provide a label to appear along the y-axis"><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                       '<input aria-label="y1 axis label" class="form-control" type="text" id="control-chart-y1-axis-label" value="{{options.y1Axis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-4 col-sm-4">' +
                       '<label for="control-chart-y1-axis-label-distance">Distance</label>' +
                       '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Adjust y-axis label position." data-content="If your axis label overlaps the data labels you can move the label left with positive values, and right with negative values. You may need to adjust the left margin of the chart as well."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      'title="Adjust y-axis label position." data-content="If your axis label overlaps the data labels you can move the label left with positive values, and right with negative values. You may need to adjust the left margin of the chart as well."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                       '<input aria-label="y1 axis label distance" class="form-control" type="number" id="control-chart-y1-axis-label-distance" value="{{options.y1Axis.axisLabelDistance}}"/>' +
                     '</div>' +
                   '</div>' +
@@ -225,8 +225,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y1-values">Tick Values' +
-                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Tick and Step Values" data-content="Enter a numerical range to set the start and end values to display. Use the Step field to define the value between each tick within the range."><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Tick and Step Values" data-content="Enter a numerical range to set the start and end values to display. Use the Step field to define the value between each tick within the range."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a></label>' +
                       '<input aria-label="y1 axis tick values from" class="form-control" placeholder="From.." type="text" id="control-chart-y1-values-from" value="{{y1ValuesFrom}}"/>' +
                       '<input aria-label="y1 axis tick values to" class="form-control" placeholder="To.." type="text" id="control-chart-y1-values-to" value="{{y1ValuesTo}}"/>' +
                     '</div>' +
@@ -245,8 +245,8 @@ my.BaseControl = Backbone.View.extend({
                 // Format.
                 '<div class="form-group">' +
                   '<label for="control-chart-y2-format">Format</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                  'title="Y Axis Data Format" data-content="Select the format and display option for the y-axis data."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                  'title="Y Axis Data Format" data-content="Select the format and display option for the y-axis data."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                   '<select aria-label="y2 axis format" class="form-control" id="control-chart-y2-format">' +
                     '<optgroup label="Text">' +
                       '<option data-type="String" value="">Text</option>' +
@@ -281,14 +281,14 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y2-axis-label">Y Axis Label</label>' +
-                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Y Axis label" data-content="Provide a label to appear along the y-axis"><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Y Axis label" data-content="Provide a label to appear along the y-axis"><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                       '<input aria-label="y2 axis label" class="form-control" type="text" id="control-chart-y2-axis-label" value="{{options.y2Axis.axisLabel}}"/>' +
                     '</div>' +
                     '<div class="col-md-4 col-sm-4">' +
                       '<label for="control-chart-y2-axis-label-distance">Distance</label>' +
                       '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Adjust y-axis label position." data-content="If your axis label overlaps the data labels you can move the label left with positive values, and right with negative values. You may need to adjust the left margin of the chart as well."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      'title="Adjust y-axis label position." data-content="If your axis label overlaps the data labels you can move the label left with positive values, and right with negative values. You may need to adjust the left margin of the chart as well."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                       '<input aria-label="y2 axis label distance" class="form-control" type="number" id="control-chart-y2-axis-label-distance" value="{{options.y2Axis.axisLabelDistance}}"/>' +
                     '</div>' +
                   '</div>' +
@@ -299,8 +299,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y2-values">Tick Values' +
-                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Tick and Step Values" data-content="Enter a numerical range to set the start and end values to display. Use the Step field to define the value between each tick within the range."><i class="fa fa-question-circle" aria-hidden="true"></i></a></label>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Tick and Step Values" data-content="Enter a numerical range to set the start and end values to display. Use the Step field to define the value between each tick within the range."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a></label>' +
                       '<input aria-label="y2 axis tick values from" class="form-control" placeholder="From.." type="text" id="control-chart-y2-values-from" value="{{y2ValuesFrom}}"/>' +
                       '<input aria-label="y2 axis tick values to" class="form-control" placeholder="To.." type="text" id="control-chart-y2-values-to" value="{{y2ValuesTo}}"/>' +
                     '</div>' +
@@ -316,10 +316,8 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-12 col-sm-12">' +
                       '<label>Goal</label>' +
-                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Display a goal line" data-content="Setting a goal line will provide your users with a way of tracking performance against expectation. ' +
-                      'Enter the value for the goal in the first field. Enter a color value in the second field if you do not want to use the default color red. Check the Show label box to label the goal line. ' +
-                      'The label will display inside the chart unless you also check the Label outside box."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Display a goal line" data-content="Setting a goal line will provide your users with a way of tracking performance against expectation. Enter a value for the goal in the first field. Enter a color value in the second field if you do not want to use the default color (red). Check the [Show label] box to label the goal line with the word [TARGET]. The label will display inside the chart unless you also check the [Label outside] box."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                     '</div>' +
                   '</div>' +
                   '<div class="row">' +
@@ -351,17 +349,9 @@ my.BaseControl = Backbone.View.extend({
                 // Color.
                 '<div class="form-group">' +
                     '<label for="control-chart-color">Color</label>' +
-                    '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                    'title="Select Colors" data-content="Override the default colors used for the chart by entering hex values or color names here. Separate colors with commas."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                    '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                    'title="Select Colors" data-content="Override the default colors used for the chart by entering hex values or color names here. Separate colors with commas."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                     '<input aria-label="chart colors" class="form-control" type="text" id="control-chart-color" value="{{options.color}}" placeholder="e.g: #FF0000,green,blue,#00FF00"/>' +
-                '</div>' +
-
-                // Transition time.
-                '<div class="form-group">' +
-                  '<label for="control-chart-transition-time">Transition Time (milliseconds)</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                    'title="Adjust animation duration" data-content="How long (in ms) it takes to re-draw the chart when loading or updating."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
-                  '<input aria-label="Transition time" value="{{transitionTime}}" type="text" id="control-chart-transition-time" class="form-control" placeholder="e.g: 2000"/>' +
                 '</div>' +
 
                 // Goal.
@@ -370,8 +360,8 @@ my.BaseControl = Backbone.View.extend({
                 // Data sort.
                 '<div class="form-group">' +
                   '<label for="control-chart-sort">Sort</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                    'title="Adjust Sort Order" data-content="Select the column by which to sort the data."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                    'title="Adjust Sort Order" data-content="Select the column by which to sort the data."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                   '<select aria-label="Data sort" id="control-chart-sort" class="form-control chosen-select">' +
                     '{{#sortFields}}' +
                       '<option value="{{value}}" {{#selected}} selected{{/selected}}>{{name}}</option>' +
@@ -384,9 +374,9 @@ my.BaseControl = Backbone.View.extend({
                   '<div class="row">' +
                     '<div class="col-md-12 col-sm-12">' +
                       '<label>Margin</label>' +
-                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                      '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
                       'title="Adjust space around the chart" data-content="If your labels, legends and controls are being cut off or overlapping, you can increase ' +
-                      'the default margins around the chart. The order is Top, Right, Bottom, and Left."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                      'the default margins around the chart. The order is Top, Right, Bottom, and Left."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                     '</div>' +
                   '</div>' +
                   '<div class="row">' +
@@ -408,8 +398,8 @@ my.BaseControl = Backbone.View.extend({
                 // Custom height.
                 '<div class="form-group">' +
                   '<label for="control-chart-height">Chart height (optional)</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Adjust height of the chart" data-content="If your y-axis labels appear crowded or are overlapping, you can define a height value here to give the data more space."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Adjust height of the chart" data-content="If your y-axis labels appear crowded or are overlapping, you can define a height value here to give the data more space."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                   '<input aria-label="Chart height" value="{{chartHeight}}" type="text" id="control-chart-height" class="form-control" placeholder="480"/>' +
                 '</div>' +
 
@@ -418,8 +408,8 @@ my.BaseControl = Backbone.View.extend({
                   '<label for="control-chart-show-title">' +
                     '<input aria-label="Show title" type="checkbox" id="control-chart-show-title" value="{{showTitle}}" {{#showTitle}}checked{{/showTitle}}/> Show title' +
                   '</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                      'title="Show Chart Title" data-content="Click this box to display the title above the cart."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                      'title="Show Chart Title" data-content="Click this box to display the title above the cart."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '</div>' +
 
                 // Show controls.
@@ -427,8 +417,8 @@ my.BaseControl = Backbone.View.extend({
                   '<label for="control-chart-show-controls">' +
                     '<input aria-label="Show controls" type="checkbox" id="control-chart-show-controls" value="{{options.showControls}}" {{#options.showControls}}checked{{/options.showControls}}/> Show controls' +
                   '</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                    'title="Show Chart Controls" data-content="Selecting this option will allow users to toggle between a Grouped or Stacked display of the chart."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                    'title="Show Chart Controls" data-content="Selecting this option will allow users to toggle between a Grouped or Stacked display of the chart."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '</div>' +
 
                 // Show legend.
@@ -436,18 +426,9 @@ my.BaseControl = Backbone.View.extend({
                   '<label for="control-chart-show-legend">' +
                   '<input aria-label="show legend" type="checkbox" id="control-chart-show-legend" value="{{options.showLegend}}" {{#options.showLegend}}checked{{/options.showLegend}}/> Show legend' +
                   '</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
                     'title="Show Chart Legend" data-content="Selecting this option will allow users to toggle specific data on or off. The legend consists of legend labels presented alongside a colored bullet. ' +
-                    'The bullets are selectable. When nothing is selected, all data will display. Double-clicking a bullet, will turn all the others off. A single click will act to toggle the data on or off."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
-                '</div>' +
-
-                // Group.
-                '<div class="form-group checkbox">' +
-                  '<label for="control-chart-group">' +
-                    '<input aria-label="group" type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by X-Field' +
-                  '</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                    'title="Group by X-Field" data-content="Group the data series based on the x-axis field."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                    'The bullets are selectable. When nothing is selected, all data will display. Double-clicking a bullet, will turn all the others off. A single click will act to toggle the data on or off."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '</div>' +
 
                 // Show tooltips.
@@ -455,17 +436,26 @@ my.BaseControl = Backbone.View.extend({
                   '<label for="control-chart-show-tooltips">' +
                     '<input aria-label="show tooltips" type="checkbox" id="control-chart-show-tooltips" {{#options.tooltips}}checked{{/options.tooltips}}/> Show Tooltips' +
                   '</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                    'title="Show Tooltips" data-content="This option will allow users to see specific data information when hovering over the chart."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                    'title="Show Tooltips" data-content="This option will allow users to see specific data information when hovering over the chart."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '</div>' +
 
-                // Reduce ticks.
+                // Group.
+                '<div class="form-group checkbox">' +
+                  '<label for="control-chart-group">' +
+                    '<input aria-label="group" type="checkbox" id="control-chart-group" value="{{group}}" {{#group}}checked{{/group}}/> Group by X-Field' +
+                  '</label>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                    'title="Group by X-Field" data-content="If there are two or more rows that have the same value in the column assigned to the x-axis field, those rows will be combined and display as a single data point. This is only relevant for combining numerical data."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
+                '</div>' +
+
+                // Fewer x-axis labels.
                 '<div class="form-group checkbox">' +
                   '<label for="control-chart-reduce-ticks">' +
-                    '<input aria-label="reduce ticks" type="checkbox" id="control-chart-reduce-ticks" {{#options.reduceXTicks}}checked{{/options.reduceXTicks}}/> Reduce Ticks' +
+                    '<input aria-label="fewer labels" type="checkbox" id="control-chart-reduce-ticks" {{#options.reduceXTicks}}checked{{/options.reduceXTicks}}/> Fewer X-axis Labels' +
                   '</label>' +
-                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-placement="left" data-trigger="focus"' +
-                    'title="Reduce Ticks" data-content="This option will reduce the number of labeled ticks along the x-axis."><i class="fa fa-question-circle" aria-hidden="true"></i></a>' +
+                  '<a class="help" tabindex="0" role="button" data-toggle="popover" data-trigger="focus"' +
+                    'title="Reduce Ticks" data-content="This option will reduce the number of labels along the x-axis."><i class="fa fa-question-circle-o" aria-hidden="true"></i></a>' +
                 '</div>' +
               '</div>' +
             '</fieldset>',
@@ -547,7 +537,9 @@ my.BaseControl = Backbone.View.extend({
         state: this.state
       });
     }
-    $('[data-toggle="popover"]').popover();
+    $('[data-toggle="popover"]').popover({
+      placement: 'auto right'
+    });
   },
   update: function (e) {
     var self = this;
@@ -578,7 +570,6 @@ my.BaseControl = Backbone.View.extend({
     var rotationVal = parseInt(self.$('#control-chart-label-x-rotation').val());
     var computedState = {
       group: self.$('#control-chart-group').is(':checked'),
-      transitionTime: self.$('#control-chart-transition-time').val(),
       chartHeight: self.$('#control-chart-height').val(),
       xFormat:{
         type: self.$('#control-chart-x-format option:selected').data('type'),
