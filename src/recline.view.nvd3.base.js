@@ -319,8 +319,17 @@ var chartAxes = ['x','y','y1','y2'];
           }, []);
 
           data.values = _.map(rc, function(record, index){
-            var y = self.cleanupY(self.y(record, serie));
-            y = _.cast(y, _.inferType(y));
+            // Cleanup 'y' value removing special characters.
+            var y = self.cleanupY(self.y(record, serie));  
+            // Get specified type for 'y' values.
+            if(self.state.get('yDataType') && self.state.get('yDataType') === 'Number'){
+              // If 'Number' then parse it.
+              y = numeral(y).value();
+            } else {
+              // If any other type, then infer it and cast the value.
+              y = _.cast(y, _.inferType(y));
+            }
+
             if(self.state.get('computeXLabels')){
               self.chartMap.set(index, self.x(record, self.state.get('xfield')));
               return {y: y, x: index, label: self.x(record, self.state.get('xfield'))};
