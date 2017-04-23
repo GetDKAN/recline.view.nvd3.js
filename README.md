@@ -2,15 +2,15 @@
 This library provides recline views and UI controls to create NVD3 charts.
 
 ## Supported charts
- - Cumulative line
- - Discrete bar
- - Line
- - Line with explorer
- - Multibar
- - Multibar horizontal
- - Pie
- - Scatter
- - Stacked area 
+ - Cumulative line.
+ - Discrete bar.
+ - Line.
+ - Line with explorer.
+ - Multibar.
+ - Multibar horizontal.
+ - Pie.
+ - Scatter.
+ - Stacked area. 
 
 ## Getting started
 
