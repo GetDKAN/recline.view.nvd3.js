@@ -6,13 +6,15 @@ this.recline.View = this.recline.View || {};
 ;(function ($, my) {
 'use strict';
 
+var ALLOWED_TICKS = 100;
+
 my.BaseControl = Backbone.View.extend({
   templateTop:
             '<div id="control-chart-container">' +
               '<div class="recline-nvd3-query-editor"></div>' +
               '<div class="recline-nvd3-filter-editor"></div>' ,
   templateXFormat:
-              '<fieldset>' +
+              '<fieldset id="x-axis">' +
                 '<legend>X Axis</legend>' +
               '<div class="form-group">' +
                 '<label for="control-chart-x-format">X-Format</label>' +
@@ -72,8 +74,8 @@ my.BaseControl = Backbone.View.extend({
                 '</div>' +
               '</div>' +
 
-              // Axis ticks.
-              '<div class="form-group">' +
+              /// Axis ticks
+              '<div class="form-group axis-ticks">' +
                 '<div class="row">' +
                   '<div class="col-md-8 col-sm-8">' +
                     '<label for="control-chart-x-values">Tick Values' +
@@ -88,11 +90,12 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
               '</div>' +
+              '<span class="help-block alert-danger">{{errors.xTicks}}</span>' +
             '</fieldset>',
           templateYFormat:
 
-              // ////// Y AXIS.
-              '<fieldset>' +
+              //////// Y AXIS
+              '<fieldset id="y-axis">' +
                 '<legend>Y Axis</legend>' +
 
                 // Format.
@@ -147,8 +150,8 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
 
-                // Axis ticks.
-                '<div class="form-group">' +
+                /// Axis ticks
+                '<div class="form-group axis-ticks">' +
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y-values">Tick Values' +
@@ -163,10 +166,11 @@ my.BaseControl = Backbone.View.extend({
                     '</div>' +
                   '</div>' +
                 '</div>' +
+                '<span class="help-block alert-danger">{{errors.yTicks}}</span>' +
               '</fieldset>',
   templateY1Format:
-              // ////// Y1 AXIS.
-              '<fieldset>' +
+              //////// Y1 AXIS
+              '<fieldset id="y1-axis">' +
                 '<legend>Y-1 Axis</legend>' +
 
                 // Format.
@@ -220,8 +224,8 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
 
-                // Axis ticks.
-                '<div class="form-group">' +
+                /// Axis ticks
+                '<div class="form-group axis-ticks">' +
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y1-values">Tick Values' +
@@ -236,10 +240,11 @@ my.BaseControl = Backbone.View.extend({
                     '</div>' +
                   '</div>' +
                 '</div>' +
+                '<span class="help-block alert-danger">{{errors.y1Ticks}}</span>' +
               '</fieldset>',
   templateY2Format:
-              // ////// Y2 AXIS.
-              '<fieldset>' +
+              //////// Y2 AXIS
+              '<fieldset id="y2-axis">' +
                 '<legend>Y-2 Axis</legend>' +
 
                 // Format.
@@ -294,8 +299,8 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                 '</div>' +
 
-                // Axis ticks.
-                '<div class="form-group">' +
+                /// Axis ticks
+                '<div class="form-group axis-ticks">' +
                   '<div class="row">' +
                     '<div class="col-md-8 col-sm-8">' +
                       '<label for="control-chart-y2-values">Tick Values' +
@@ -310,6 +315,7 @@ my.BaseControl = Backbone.View.extend({
                     '</div>' +
                   '</div>' +
                 '</div>' +
+                '<span class="help-block alert-danger">{{errors.y2Ticks}}</span>' +
               '</fieldset>',
   templateGoal:
                 '<div class="form-group">' +
@@ -549,20 +555,26 @@ my.BaseControl = Backbone.View.extend({
       if (e.type === 'keydown' && e.keyCode !== 13) return;
     }
 
-    // Get old and new settings.
-    var oldSettings = self.state.toJSON();
-    var newSettings = self.getUIState();
-    // Merge old and new settings.
-    newState = _.merge({}, oldSettings, newSettings);
-    // The merge function is recursive so all the settings that are saved as
-    // arrays are merged as well. Chart colors are saved on arrays and we need
-    // the new settings to replace the old ones so the following was added in order
-    // to fix those settings after the merge is done.
-    if (newSettings.options.color) {
+    // If the form is valid then update the state.
+    if (self.validate()) {
+      // Get old settings.
+      var oldSettings = self.state.toJSON();
+      // Get new settings.
+      var newSettings = self.getUIState();
+      // Merge old and new settings.
+      newState = _.merge({}, oldSettings, newSettings);
+      // The merge function is recursive so all the settings that are saved as
+      // arrays are merged as well. Chart colors are saved on arrays and we need
+      // the new settings to replace the old ones so the following was added in order
+      // to fix those settings after the merge is done.
       newState.options.color = newSettings.options.color;
+
+      // Update state.
+      self.state.set(newState);
     }
 
-    self.state.set(newState);
+    // Render form again to display updated information + errors.
+    self.render();
   },
   getUIState: function () {
     var self = this;
@@ -591,7 +603,7 @@ my.BaseControl = Backbone.View.extend({
       showTitle: self.$('#control-chart-show-title').is(':checked'),
       xValues: [self.$('#control-chart-x-values-from').val(), self.$('#control-chart-x-values-to').val()],
       xValuesFrom: self.$('#control-chart-x-values-from').val(),
-      xValuesTo: self.$('#control-chart-x-values-to').val(),
+      xValuesTo: self.$('#control-chart-x-values-to').val(),      
       xValuesStep: parseInt(self.$('#control-chart-x-values-step').val() || 1),
       yValues: [self.$('#control-chart-y-values-from').val(), self.$('#control-chart-y-values-to').val()],
       yValuesFrom: self.$('#control-chart-y-values-from').val(),
@@ -629,9 +641,8 @@ my.BaseControl = Backbone.View.extend({
     computedState.options.y2Axis.axisLabelDistance = parseInt(self.$('#control-chart-y2-axis-label-distance').val()) || 0;
     if (self.$('#control-chart-color').val()) {
       computedState.options.color = color;
-    }
-    else {
-      computedState.options.color = nv.utils.defaultColor();
+    } else {
+      delete computedState.options.color;
     }
     var margin = {
       top: parseInt(self.$('#control-chart-margin-top').val()),
@@ -653,6 +664,67 @@ my.BaseControl = Backbone.View.extend({
     computedState.goal = goal;
     computedState.options.margin = margin;
     return computedState;
+  },
+  validate: function() {
+    var self = this;
+    var currentSettings = self.state.toJSON();
+    var newSettings = self.getUIState();
+
+    var error = "The number of ticks should be lower than " + ALLOWED_TICKS;
+    var isValid = true;
+
+    // Process tick settings in X axis.
+    var valid_x = self.processTicks(newSettings.xValuesFrom, newSettings.xValuesTo, newSettings.xValuesStep);
+    if (!valid_x) {
+      currentSettings.errors.xTicks = error;
+      isValid = false;
+    }
+
+    // Process tick settings in Y axis.
+    var valid_y = self.processTicks(newSettings.yValuesFrom, newSettings.yValuesTo, newSettings.yValuesStep);
+    if (!valid_y) {
+      currentSettings.errors.yTicks = error;
+      isValid = false;
+    }
+
+    // Process tick settings in Y1 axis.
+    var valid_y1 = self.processTicks(newSettings.y1ValuesFrom, newSettings.y1ValuesTo, newSettings.y1ValuesStep);
+    if (!valid_y1) {
+      currentSettings.errors.y1Ticks = error;    
+      isValid = false;
+    }
+
+    // Process tick settings in Y2 axis.
+    var valid_y2 = self.processTicks(newSettings.y2ValuesFrom, newSettings.y2ValuesTo, newSettings.y2ValuesStep);
+    if (!valid_y2) {
+      currentSettings.errors.y2Ticks = error;    
+      isValid = false;
+    }
+
+    if (isValid) {
+      // Clear all errors if any.
+      currentSettings.errors = {};        
+    }
+
+    // Update state.
+    self.state.set(currentSettings);
+
+    return isValid;
+  },
+  processTicks: function(fromValue, toValue, stepValue) {
+    // Check if the number of ticks is valid.
+    // Check if both 'from' and 'to' values are set.
+    if (fromValue && toValue) {
+      // Calculate the number of ticks.
+      var ticks = (toValue - fromValue) / stepValue;
+      // If the number of ticks is higher than ALLOWED_TICKS value  
+      // then return FALSE.
+      if (ticks > ALLOWED_TICKS) {
+        return false;
+      } 
+    }
+
+    return true;
   }
 });
 
