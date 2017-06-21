@@ -287,6 +287,7 @@ var chartAxes = ['x','y','y1','y2'];
         if(!self.state.get('xfield') || !self.getSeries()) return [];
 
         records = records.toJSON();
+
         fieldType = _.compose(_.inferType,_.iteratee(self.state.get('xfield')));
 
         if(!self.state.get('xDataType') || self.state.get('xDataType') === 'Auto'){
@@ -309,7 +310,7 @@ var chartAxes = ['x','y','y1','y2'];
 
           rc = _.reduce(rc, function(memo, record){
             var y = self.cleanupY(self.y(record, serie));
-            if(y || self.graphType === 'stackedAreaChart') {
+            if(y || y === 0 || self.graphType === 'stackedAreaChart') {
               memo.push(record);
             } else if(self.state.get('options').stacked) {
               record[serie] = 0;
@@ -320,7 +321,7 @@ var chartAxes = ['x','y','y1','y2'];
 
           data.values = _.map(rc, function(record, index){
             // Cleanup 'y' value removing special characters.
-            var y = self.cleanupY(self.y(record, serie));  
+            var y = self.cleanupY(self.y(record, serie));
             // Get specified type for 'y' values.
             if(self.state.get('yDataType') && self.state.get('yDataType') === 'Number'){
               // If 'Number' then parse it.
