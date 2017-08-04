@@ -379,7 +379,6 @@ var chartAxes = ['x','y','y1','y2'];
           'Number': d3.format(format || '.02f'),
           'Percentage': function (n) { return d3.format(format || '.02f')(n*100) + '%'; },
           'PercentageA': function (n) { return d3.format(format || '.02f')(n) + '%'; },
-          'PercentageB': function (n) { return d3.format(format || '.02f')(n*100) + '%'; },
         };
         return formatter[type];
       },
