@@ -125,7 +125,7 @@ my.BaseControl = Backbone.View.extend({
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
                       '<option data-type="Percentage" value=".0f">.97 -> 97%</option>' +
-                      '<option data-type="PercentageB" value=".2f">.97 -> 97.00%</option>' +
+                      '<option data-type="Percentage" value=".2f">.97 -> 97.00%</option>' +
                       '<option data-type="PercentageA" value=".0f">97 -> 97%</option>' +
                       '<option data-type="PercentageA" value=".2f">97 -> 97.00%</option>' +
                     '</optgroup>' +
