@@ -124,8 +124,8 @@ my.BaseControl = Backbone.View.extend({
                       '<option data-type="Number" value="$,">$100,000</option>' +
                     '</optgroup>' +
                     '<optgroup label="Percentage">' +
-                      '<option data-type="Percentage" value="%">.97 -> 97%</option>' +
-                      '<option data-type="PercentageB" value=".2f">.97 -> 97.00%</option>' +
+                      '<option data-type="Percentage" value=".0f">.97 -> 97%</option>' +
+                      '<option data-type="Percentage" value=".2f">.97 -> 97.00%</option>' +
                       '<option data-type="PercentageA" value=".0f">97 -> 97%</option>' +
                       '<option data-type="PercentageA" value=".2f">97 -> 97.00%</option>' +
                     '</optgroup>' +
@@ -603,7 +603,7 @@ my.BaseControl = Backbone.View.extend({
       showTitle: self.$('#control-chart-show-title').is(':checked'),
       xValues: [self.$('#control-chart-x-values-from').val(), self.$('#control-chart-x-values-to').val()],
       xValuesFrom: self.$('#control-chart-x-values-from').val(),
-      xValuesTo: self.$('#control-chart-x-values-to').val(),      
+      xValuesTo: self.$('#control-chart-x-values-to').val(),
       xValuesStep: parseInt(self.$('#control-chart-x-values-step').val() || 1),
       yValues: [self.$('#control-chart-y-values-from').val(), self.$('#control-chart-y-values-to').val()],
       yValuesFrom: self.$('#control-chart-y-values-from').val(),
@@ -690,20 +690,20 @@ my.BaseControl = Backbone.View.extend({
     // Process tick settings in Y1 axis.
     var valid_y1 = self.processTicks(newSettings.y1ValuesFrom, newSettings.y1ValuesTo, newSettings.y1ValuesStep);
     if (!valid_y1) {
-      currentSettings.errors.y1Ticks = error;    
+      currentSettings.errors.y1Ticks = error;
       isValid = false;
     }
 
     // Process tick settings in Y2 axis.
     var valid_y2 = self.processTicks(newSettings.y2ValuesFrom, newSettings.y2ValuesTo, newSettings.y2ValuesStep);
     if (!valid_y2) {
-      currentSettings.errors.y2Ticks = error;    
+      currentSettings.errors.y2Ticks = error;
       isValid = false;
     }
 
     if (isValid) {
       // Clear all errors if any.
-      currentSettings.errors = {};        
+      currentSettings.errors = {};
     }
 
     // Update state.
@@ -717,11 +717,11 @@ my.BaseControl = Backbone.View.extend({
     if (fromValue && toValue) {
       // Calculate the number of ticks.
       var ticks = (toValue - fromValue) / stepValue;
-      // If the number of ticks is higher than ALLOWED_TICKS value  
+      // If the number of ticks is higher than ALLOWED_TICKS value
       // then return FALSE.
       if (ticks > ALLOWED_TICKS) {
         return false;
-      } 
+      }
     }
 
     return true;

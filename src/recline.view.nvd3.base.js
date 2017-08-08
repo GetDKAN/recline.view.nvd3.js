@@ -1,5 +1,6 @@
 /*jshint multistr:true */
  /*jshint -W030 */
+
 this.recline = this.recline || {};
 this.recline.View = this.recline.View || {};
 this.recline.View.nvd3 = this.recline.View.nvd3 || {};
@@ -322,6 +323,7 @@ var chartAxes = ['x','y','y1','y2'];
           data.values = _.map(rc, function(record, index){
             // Cleanup 'y' value removing special characters.
             var y = self.cleanupY(self.y(record, serie));
+
             // Get specified type for 'y' values.
             if(self.state.get('yDataType') && self.state.get('yDataType') === 'Number'){
               // If 'Number' then parse it.
@@ -375,8 +377,8 @@ var chartAxes = ['x','y','y1','y2'];
           'String': _.identity,
           'Date': _.compose(d3.time.format(format || '%x'),_.instantiate(Date)),
           'Number': d3.format(format || '.02f'),
-          'Percentage': d3.format(format || '.02f'),
-          'PercentageInt': function (n) { return d3.format(format || '.02f')(n) + '%'; },
+          'Percentage': function (n) { return d3.format(format || '.02f')(n*100) + '%'; },
+          'PercentageA': function (n) { return d3.format(format || '.02f')(n) + '%'; },
         };
         return formatter[type];
       },
