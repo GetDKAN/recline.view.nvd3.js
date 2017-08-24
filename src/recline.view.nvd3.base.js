@@ -24,7 +24,7 @@ var chartAxes = ['x','y','y1','y2'];
                   '<div class="{{columnClass}} {{viewId}} recline-nvd3"style="display: block;">' +
                     '<div id="{{viewId}}" class="recline-nvd3">' +
                         '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" ' +
-                        ' height="{{height}}" width="{{width}}">' +
+                        'style="height:{{height}}px;width: 100%;">' +
                         '</svg>' +
                     '</div>' +
                   '</div>' +
@@ -39,7 +39,6 @@ var chartAxes = ['x','y','y1','y2'];
 
         var stateData = _.merge({
             width: 640,
-            height: 480,
             group: false
           },
           self.getDefaults(),
@@ -59,7 +58,7 @@ var chartAxes = ['x','y','y1','y2'];
         var layout = {
           columnClass: 'col-md-12',
           width: self.state.get('width') || self.$el.innerWidth() || DEFAULT_CHART_WIDTH,
-          height: self.state.get('height') || DEFAULT_CHART_HEIGHT
+          height: self.state.get('chartHeight') || DEFAULT_CHART_HEIGHT
         };
         return layout;
       },
