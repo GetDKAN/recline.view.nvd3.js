@@ -383,6 +383,13 @@ var chartAxes = ['x','y','y1','y2'];
       },
       setOptions: function (chart, options) {
         var self = this;
+        // TODO: move to own function. REF CIVIC-6683
+        if (chart && chart.legend) {
+          var legendHeight = chart.legend.height();
+          if (options.margin.top <= legendHeight) {
+            options.margin.top = legendHeight + 10;
+          }
+        }
         for(var optionName in options){
           var optionValue = options[optionName];
           if(optionName === 'margin'){
