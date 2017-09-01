@@ -381,18 +381,32 @@ var chartAxes = ['x','y','y1','y2'];
         };
         return formatter[type];
       },
-      setOptions: function (chart, options) {
+      adjustMarginTop: function(chart, marginTop) {
         var self = this;
-        // TODO: move to own function. REF CIVIC-6683
+
         if (chart && chart.legend) {
+          var seriesLength = self.series.length;
           var legendHeight = chart.legend.height();
-          if (options.margin.top <= legendHeight) {
-            options.margin.top = legendHeight + 10;
+
+          if (marginTop <= legendHeight) {
+            marginTop = legendHeight + 10;
+          }
+          else if (seriesLength == 1) {
+            marginTop = 30;
+          }
+          else {
+            marginTop = 0;
           }
         }
+
+        return marginTop;
+      },
+      setOptions: function(chart, options) {
+        var self = this;
         for(var optionName in options){
           var optionValue = options[optionName];
           if(optionName === 'margin'){
+            optionValue.top = self.adjustMarginTop(chart, optionValue.top)
             chart.margin(optionValue);
           }
           if(chart && _.isObject(optionValue) && !_.isArray(optionValue)){
