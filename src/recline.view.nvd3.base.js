@@ -381,32 +381,14 @@ var chartAxes = ['x','y','y1','y2'];
         };
         return formatter[type];
       },
-      adjustMarginTop: function(chart, marginTop) {
-        var self = this;
-
-        if (chart && chart.legend) {
-          var seriesLength = self.series.length;
-          var legendHeight = chart.legend.height();
-
-          if (marginTop <= legendHeight) {
-            marginTop = legendHeight + 10;
-          }
-          else if (seriesLength == 1) {
-            marginTop = 30;
-          }
-          else {
-            marginTop = 0;
-          }
-        }
-
-        return marginTop;
-      },
       setOptions: function(chart, options) {
         var self = this;
         for(var optionName in options){
           var optionValue = options[optionName];
           if(optionName === 'margin'){
-            optionValue.top = self.adjustMarginTop(chart, optionValue.top)
+            // Force zero since auto-legend adjustment fails with other values.
+            // REF novus/nvd3#515
+            optionValue.top = 0;
             chart.margin(optionValue);
           }
           if(chart && _.isObject(optionValue) && !_.isArray(optionValue)){
