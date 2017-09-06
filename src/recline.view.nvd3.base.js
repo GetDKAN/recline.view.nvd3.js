@@ -381,11 +381,14 @@ var chartAxes = ['x','y','y1','y2'];
         };
         return formatter[type];
       },
-      setOptions: function (chart, options) {
+      setOptions: function(chart, options) {
         var self = this;
         for(var optionName in options){
           var optionValue = options[optionName];
           if(optionName === 'margin'){
+            // Force zero since auto-legend adjustment fails with other values.
+            // REF novus/nvd3#515
+            optionValue.top = 0;
             chart.margin(optionValue);
           }
           if(chart && _.isObject(optionValue) && !_.isArray(optionValue)){

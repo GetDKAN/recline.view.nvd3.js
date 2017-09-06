@@ -387,7 +387,7 @@ my.BaseControl = Backbone.View.extend({
                   '</div>' +
                   '<div class="row">' +
                     '<div class="col-md-3 col-sm-3">' +
-                      '<input aria-label="Margin top" id="control-chart-margin-top" type="text" class="form-control" placeholder="Top" value="{{options.margin.top}}">' +
+                      '<input aria-label="Margin top" id="control-chart-margin-top" type="text" class="form-control" placeholder="Top" value="{{options.margin.top}}" disabled>' +
                     '</div>' +
                     '<div class="col-md-3 col-sm-3">' +
                       '<input aria-label="Margin right" id="control-chart-margin-right" type="text" class="form-control" placeholder="Right" value="{{options.margin.right}}">' +
@@ -494,7 +494,7 @@ my.BaseControl = Backbone.View.extend({
     self.state.set('sortFields', _.applyOption(sortFields, [self.state.get('sort')]));
 
     var options = self.state.get('options') || {};
-    options.margin = options.margin || {top: 30, right: 20, bottom: 50, left: 60};
+    options.margin = options.margin || {top: 0, right: 20, bottom: 50, left: 60};
     self.state.set('options', options, {silent : true});
     $('#base-controls').html(Mustache.render(self.composeTemplate(), self.state.toJSON()));
     $('#goal-controls').html(Mustache.render(self.templateGoal, self.state.toJSON()));
